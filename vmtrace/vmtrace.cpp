@@ -36,7 +36,7 @@ static void trace(jvmtiEnv* jvmti, const char* fmt, ...) {
     jvmti->RawMonitorEnter(vmtrace_lock);
 
     fprintf(out, "[%.5f] %s\n", (current_time - start_time) / 1000000000.0, buf);
-    
+
     jvmti->RawMonitorExit(vmtrace_lock);
 }
 
@@ -181,6 +181,21 @@ void JNICALL GarbageCollectionFinish(jvmtiEnv* jvmti) {
     trace(jvmti, "GC finished");
 }
 
+void JNICALL VMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
+                           jobject object, jclass object_klass, jlong size) {
+  trace(jvmti, "VM Object allocated, very nice");
+}
+
+void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
+                                jthread thread, jobject object,
+                                jclass object_klass, jlong size) {
+  trace(jvmti, "Sampled Object allocated, very nice");
+}
+
+void JNICALL ObjectFree(jvmtiEnv* jvmti, jlong size) {
+    trace(jvmti, "Object is freed, i is sad :(");
+}
+
 JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* vm, char* options, void* reserved) {
     if (options == NULL || !options[0]) {
         out = stderr;
@@ -201,6 +216,9 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* vm, char* options, void* reserved) {
     capabilities.can_generate_all_class_hook_events = 1;
     capabilities.can_generate_compiled_method_load_events = 1;
     capabilities.can_generate_garbage_collection_events = 1;
+    capabilities.can_generate_object_free_events = 1;
+    capabilities.can_generate_vm_object_alloc_events = 1;
+    capabilities.can_generate_sampled_object_alloc_events = 1;
     jvmti->AddCapabilities(&capabilities);
 
     jvmtiEventCallbacks callbacks = {0};
@@ -216,6 +234,9 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* vm, char* options, void* reserved) {
     callbacks.ThreadEnd = ThreadEnd;
     callbacks.GarbageCollectionStart = GarbageCollectionStart;
     callbacks.GarbageCollectionFinish = GarbageCollectionFinish;
+    callbacks.VMObjectAlloc = VMObjectAlloc;
+    callbacks.SampledObjectAlloc = SampledObjectAlloc;
+    callbacks.ObjectFree = ObjectFree;
     jvmti->SetEventCallbacks(&callbacks, sizeof(callbacks));
 
     jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_VM_START, NULL);
@@ -230,6 +251,10 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM* vm, char* options, void* reserved) {
     jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_THREAD_END, NULL);
     jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_GARBAGE_COLLECTION_START, NULL);
     jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_GARBAGE_COLLECTION_FINISH, NULL);
+
+    jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_VM_OBJECT_ALLOC, NULL);
+    jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_SAMPLED_OBJECT_ALLOC, NULL);
+    jvmti->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_OBJECT_FREE, NULL);
 
     return 0;
 }
