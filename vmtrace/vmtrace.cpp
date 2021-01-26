@@ -172,13 +172,42 @@ void JNICALL GarbageCollectionFinish(jvmtiEnv *jvmti) {
 
 void JNICALL VMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
                            jobject object, jclass object_klass, jlong size) {
-  trace(jvmti, "VM Object allocated, very nice");
+  char *signature = NULL;
+  char *generic = NULL;
+
+  jvmti->GetClassSignature(object_klass, &signature, &generic);
+
+  trace(jvmti, "VM Object allocated, very nice. Object signature: %s, Object generic: %s",
+        signature, generic);
+
+  if (signature) {
+    jvmti->Deallocate((unsigned char *)signature);
+  }
+  if (generic) {
+    jvmti->Deallocate((unsigned char *)generic);
+  }
+
 }
 
 void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
                                 jthread thread, jobject object,
                                 jclass object_klass, jlong size) {
-  trace(jvmti, "Sampled Object allocated, very nice");
+
+  char *signature = NULL;
+  char *generic = NULL;
+
+  jvmti->GetClassSignature(object_klass, &signature, &generic);
+
+  trace(jvmti, "Sampled Object allocated, very nice. Object signature: %s, Object generic: %s",
+        signature, generic);
+
+  if (signature) {
+    jvmti->Deallocate((unsigned char *)signature);
+  }
+  if (generic) {
+    jvmti->Deallocate((unsigned char *)generic);
+  }
+
 }
 
 void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
