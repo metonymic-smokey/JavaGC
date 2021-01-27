@@ -1,0 +1,21 @@
+* vmtrace
+** What can it do?
+It can trace basic JVM events like:
+- Thread started / terminated.
+- GC started / finished.
+- Class loading / class prepared.
+- Method compiled / unloaded.
+- Dynamic code generated.
+** How do you run it?
+First generated the shared object.
+#+BEGIN_SRC sh
+mkdir build
+cd build
+cmake ..
+make
+#+END_SRC
+Next run it using
+#+BEGIN_SRC sh
+java -agentpath:/path/to/vmtrace/build/libvmtrace.so -jar test.jar
+#+END_SRC
+
