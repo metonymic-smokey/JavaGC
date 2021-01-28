@@ -177,7 +177,9 @@ void JNICALL VMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
 
   jvmti->GetClassSignature(object_klass, &signature, &generic);
 
-  trace(jvmti, "VM Object allocated, very nice. Object signature: %s, Object generic: %s",
+  trace(jvmti,
+        "VM Object allocated, very nice. Object signature: %s, Object generic: "
+        "%s",
         signature, generic);
 
   if (signature) {
@@ -186,7 +188,6 @@ void JNICALL VMObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env, jthread thread,
   if (generic) {
     jvmti->Deallocate((unsigned char *)generic);
   }
-
 }
 
 void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
@@ -198,7 +199,9 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
 
   jvmti->GetClassSignature(object_klass, &signature, &generic);
 
-  trace(jvmti, "Sampled Object allocated, very nice. Object signature: %s, Object generic: %s",
+  trace(jvmti,
+        "Sampled Object allocated, very nice. Object signature: %s, Object "
+        "generic: %s",
         signature, generic);
 
   if (signature) {
@@ -207,7 +210,6 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
   if (generic) {
     jvmti->Deallocate((unsigned char *)generic);
   }
-
 }
 
 void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
@@ -238,6 +240,15 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
   capabilities.can_generate_vm_object_alloc_events = 1;
   capabilities.can_generate_sampled_object_alloc_events = 1;
   jvmti->AddCapabilities(&capabilities);
+
+  jvmtiCapabilities *capabilities_avail;
+  jvmti->GetCapabilities(capabilities_avail);
+  if (capabilities_avail->can_generate_object_free_events == 1) {
+    trace(jvmti, "Can generate free events");
+  } else {
+    trace(jvmti, "CANNOT GENERATE FREE EVENTS");
+    // return 1;
+  }
 
   jvmtiEventCallbacks callbacks = {0};
   callbacks.VMStart = VMStart;

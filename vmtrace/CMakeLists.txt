@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.0)
 project (vmtrace)
 
 # exports compile_commands.json to be used by your IDE for completion
