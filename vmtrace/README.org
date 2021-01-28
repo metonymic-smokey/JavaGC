@@ -21,8 +21,8 @@ java -agentpath:/path/to/vmtrace/build/libvmtrace.so -jar test.jar
 #+END_SRC
 ** Function Descriptions
 
-*** [VMObjectAlloc](vmtrace.cpp:174)
-Gets class signature and generic.
+ * [VMObjectAlloc](https://github.com/metonymic-smokey/JavaGC/blob/ab51fe2d6c57bcab48f6ae394b81ded415632f31/vmtrace/vmtrace.cpp#L178) - Gets class signature and generic.
+
 *** Random Terms
 - JNIEnv: interface through which java stuff can be called.
 - Signature: Class Type
