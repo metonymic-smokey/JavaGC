@@ -250,6 +250,8 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
     // return 1;
   }
 
+  jvmti->SetHeapSamplingInterval(100);
+
   jvmtiEventCallbacks callbacks = {0};
   callbacks.VMStart = VMStart;
   callbacks.VMInit = VMInit;
