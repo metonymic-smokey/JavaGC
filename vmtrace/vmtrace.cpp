@@ -18,7 +18,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include<ctime>
+#include <ctime>
 
 static FILE *out;
 static jrawMonitorID vmtrace_lock;
