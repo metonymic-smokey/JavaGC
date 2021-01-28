@@ -18,6 +18,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include<ctime>
 
 static FILE *out;
 static jrawMonitorID vmtrace_lock;
@@ -34,8 +35,12 @@ static void trace(jvmtiEnv *jvmti, const char *fmt, ...) {
   va_end(args);
 
   jvmti->RawMonitorEnter(vmtrace_lock);
+ 
+  time_t now = time(0);
+  tm *ltm = localtime(&now);
 
   fprintf(out, "[%.5f] %s\n", (current_time - start_time) / 1000000000.0, buf);
+  fprintf(out,"%d-%d-%dT%d:%d:%d\n",1900+ltm->tm_year,1+ltm->tm_mon,ltm->tm_mday,ltm->tm_hour,ltm->tm_min,ltm->tm_sec);
 
   jvmti->RawMonitorExit(vmtrace_lock);
 }
