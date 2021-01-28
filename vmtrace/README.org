@@ -6,6 +6,7 @@ It can trace basic JVM events like:
 - Class loading / class prepared.
 - Method compiled / unloaded.
 - Dynamic code generated.
+- Object Allocations.
 ** How do you run it?
 First generated the shared object.
 #+BEGIN_SRC sh
@@ -18,4 +19,12 @@ Next run it using
 #+BEGIN_SRC sh
 java -agentpath:/path/to/vmtrace/build/libvmtrace.so -jar test.jar
 #+END_SRC
+** Function Descriptions
+
+*** [VMObjectAlloc](vmtrace.cpp:174)
+Gets class signature and generic.
+*** Random Terms
+- JNIEnv: interface through which java stuff can be called.
+- Signature: Class Type
+- Generic: Generics associated with it? NULL if none are present.
 
