@@ -15,3 +15,5 @@ CTestTestfile.cmake
 
 # clangd cache
 vmtrace/.cache
+
+# benchmarks

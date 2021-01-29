@@ -1,0 +1,366 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fef52690a75, pid=26709, tid=26710
+#
+# JRE version:  (11.0.10+8) (build )
+# Java VM: OpenJDK 64-Bit Server VM (11.0.10+8, mixed mode, sharing, tiered, compressed oops, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libvmtrace.so+0x2a75]  Agent_OnLoad+0xd5
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h" (or dumping to /home/psiayn/dev/custom-benchmark/build/libs/core.26709)
+#
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentpath:/home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so custom-benchmark-1.0-SNAPSHOT.jar
+
+Host: Intel(R) Core(TM) i5-8300H CPU @ 2.30GHz, 8 cores, 15G, Arch Linux
+Time: Thu Jan 28 16:44:08 2021 IST elapsed time: 0.002262 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread is native thread
+
+Stack: [0x00007fef526a8000,0x00007fef527a9000],  sp=0x00007fef527a79c0,  free space=1022k
+Native frames: (J=compiled Java code, A=aot compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libvmtrace.so+0x2a75]  Agent_OnLoad+0xd5
+
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x0000000000000004
+
+Registers:
+RAX=0x0000000000000064, RBX=0x00007fef4c0096e0, RCX=0x00007fef53c96320, RDX=0x0000000000000000
+RSP=0x00007fef527a79c0, RBP=0x00007fef53c4a8e0, RSI=0x0000000000000000, RDI=0x00007fef4c00a520
+R8 =0x000000000000fcf0, R9 =0x00007fef53c9632e, R10=0x0000000000000001, R11=0x0000000000000000
+R12=0x00007fef527a7b38, R13=0x00007fef539ce60e, R14=0x00007fef539cdda8, R15=0x0000000000000000
+RIP=0x00007fef52690a75, EFLAGS=0x0000000000010206, CSGSFS=0x002b000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007fef527a79c0)
+0x00007fef527a79c0:   00007fef4c000dd0 00007fef4c00a520
+0x00007fef527a79d0:   00000801ac000000 0000000000000000
+0x00007fef527a79e0:   0000000000000000 00007fef527a7bb0
+0x00007fef527a79f0:   0000000000000001 0000000000000000 
+
+Instructions: (pc=0x00007fef52690a75)
+0x00007fef52690975:   28 00 00 00 75 0a 48 83 c4 30 5d 41 5c 41 5d c3
+0x00007fef52690985:   e8 e6 f6 ff ff 48 89 c5 e9 ba f7 ff ff 66 66 2e
+0x00007fef52690995:   0f 1f 84 00 00 00 00 00 0f 1f 00 41 54 55 48 89
+0x00007fef526909a5:   fd 48 81 ec 58 01 00 00 64 48 8b 04 25 28 00 00
+0x00007fef526909b5:   00 48 89 84 24 48 01 00 00 31 c0 48 85 f6 74 0c
+0x00007fef526909c5:   80 3e 00 49 89 f4 0f 85 af 03 00 00 48 8b 05 d0
+0x00007fef526909d5:   25 00 00 48 8b 00 48 89 05 be 26 00 00 48 8b 45
+0x00007fef526909e5:   00 48 8d 74 24 08 ba 00 00 01 30 48 89 ef ff 50
+0x00007fef526909f5:   30 48 8b 7c 24 08 48 8d 15 96 26 00 00 48 8d 35
+0x00007fef52690a05:   e9 06 00 00 48 8b 07 ff 90 f0 00 00 00 48 8b 7c
+0x00007fef52690a15:   24 08 48 8d 35 72 26 00 00 48 8b 07 ff 90 50 04
+0x00007fef52690a25:   00 00 48 8b 7c 24 08 31 c0 48 8d 35 ca 06 00 00
+0x00007fef52690a35:   e8 26 f8 ff ff 48 8b 7c 24 08 48 8d 74 24 10 48
+0x00007fef52690a45:   b8 00 00 00 ac 01 08 00 00 48 89 44 24 10 48 c7
+0x00007fef52690a55:   44 24 18 00 00 00 00 48 8b 07 ff 90 68 04 00 00
+0x00007fef52690a65:   48 8b 7c 24 08 31 f6 48 8b 07 ff 90 c0 02 00 00
+0x00007fef52690a75:   f6 04 25 04 00 00 00 01 0f 85 e5 02 00 00 48 8b
+0x00007fef52690a85:   7c 24 08 48 8d 35 99 06 00 00 31 c0 e8 ca f7 ff
+0x00007fef52690a95:   ff 31 c0 48 8d 7c 24 20 b9 25 00 00 00 ba 28 01
+0x00007fef52690aa5:   00 00 f3 48 ab 48 8b 05 0f 25 00 00 48 8b 7c 24
+0x00007fef52690ab5:   08 48 8d 74 24 20 48 89 44 24 58 48 8b 05 31 25
+0x00007fef52690ac5:   00 00 48 89 44 24 20 48 8b 05 cd 24 00 00 48 89
+0x00007fef52690ad5:   44 24 28 48 8b 05 d1 24 00 00 48 89 44 24 40 48
+0x00007fef52690ae5:   8b 05 8d 24 00 00 48 89 44 24 50 48 8b 05 e1 24
+0x00007fef52690af5:   00 00 48 89 84 24 c0 00 00 00 48 8b 05 ca 24 00
+0x00007fef52690b05:   00 48 89 84 24 b0 00 00 00 48 8b 05 7b 24 00 00
+0x00007fef52690b15:   48 89 84 24 b8 00 00 00 48 8b 05 64 24 00 00 48
+0x00007fef52690b25:   89 44 24 30 48 8b 05 20 24 00 00 48 89 44 24 38
+0x00007fef52690b35:   48 8b 05 2c 24 00 00 48 89 84 24 18 01 00 00 48
+0x00007fef52690b45:   8b 05 0d 24 00 00 48 89 84 24 20 01 00 00 48 8b
+0x00007fef52690b55:   05 06 24 00 00 48 89 84 24 30 01 00 00 48 8b 05
+0x00007fef52690b65:   4f 24 00 00 48 89 84 24 40 01 00 00 48 8b 05 08 
+
+
+
+---------------  P R O C E S S  ---------------
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+
+[error occurred during error reporting (printing compressed oops mode), id 0xb, SIGSEGV (0xb) at pc=0x00007fef53886f24]
+
+
+Dynamic libraries:
+56134f9d2000-56134f9d3000 r--p 00000000 08:05 681974                     /usr/lib/jvm/java-11-openjdk/bin/java
+56134f9d3000-56134f9d4000 r-xp 00001000 08:05 681974                     /usr/lib/jvm/java-11-openjdk/bin/java
+56134f9d4000-56134f9d5000 r--p 00002000 08:05 681974                     /usr/lib/jvm/java-11-openjdk/bin/java
+56134f9d5000-56134f9d6000 r--p 00002000 08:05 681974                     /usr/lib/jvm/java-11-openjdk/bin/java
+56134f9d6000-56134f9d7000 rw-p 00003000 08:05 681974                     /usr/lib/jvm/java-11-openjdk/bin/java
+56134ff5b000-56134ff7c000 rw-p 00000000 00:00 0                          [heap]
+7fef43892000-7fef4c000000 r--s 00000000 08:05 794478                     /usr/lib/jvm/java-11-openjdk/lib/modules
+7fef4c000000-7fef4c021000 rw-p 00000000 00:00 0 
+7fef4c021000-7fef50000000 ---p 00000000 00:00 0 
+7fef5268e000-7fef52690000 r--p 00000000 08:06 4067513                    /home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so
+7fef52690000-7fef52691000 r-xp 00002000 08:06 4067513                    /home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so
+7fef52691000-7fef52692000 r--p 00003000 08:06 4067513                    /home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so
+7fef52692000-7fef52693000 r--p 00003000 08:06 4067513                    /home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so
+7fef52693000-7fef52694000 rw-p 00004000 08:06 4067513                    /home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so
+7fef52694000-7fef52696000 r--p 00000000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef52696000-7fef52699000 r-xp 00002000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef52699000-7fef5269a000 r--p 00005000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef5269a000-7fef5269b000 ---p 00006000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef5269b000-7fef5269c000 r--p 00006000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef5269c000-7fef5269d000 rw-p 00007000 08:05 794447                     /usr/lib/jvm/java-11-openjdk/lib/libjimage.so
+7fef5269d000-7fef526a0000 r--p 00000000 08:05 6163862                    /usr/lib/librt-2.32.so
+7fef526a0000-7fef526a4000 r-xp 00003000 08:05 6163862                    /usr/lib/librt-2.32.so
+7fef526a4000-7fef526a6000 r--p 00007000 08:05 6163862                    /usr/lib/librt-2.32.so
+7fef526a6000-7fef526a7000 r--p 00008000 08:05 6163862                    /usr/lib/librt-2.32.so
+7fef526a7000-7fef526a8000 rw-p 00009000 08:05 6163862                    /usr/lib/librt-2.32.so
+7fef526a8000-7fef527a9000 rw-p 00000000 00:00 0 
+7fef527a9000-7fef527ac000 r--p 00000000 08:05 6164605                    /usr/lib/libgcc_s.so.1
+7fef527ac000-7fef527bd000 r-xp 00003000 08:05 6164605                    /usr/lib/libgcc_s.so.1
+7fef527bd000-7fef527c1000 r--p 00014000 08:05 6164605                    /usr/lib/libgcc_s.so.1
+7fef527c1000-7fef527c2000 r--p 00017000 08:05 6164605                    /usr/lib/libgcc_s.so.1
+7fef527c2000-7fef527c3000 rw-p 00018000 08:05 6164605                    /usr/lib/libgcc_s.so.1
+7fef527c3000-7fef527d2000 r--p 00000000 08:05 6163826                    /usr/lib/libm-2.32.so
+7fef527d2000-7fef5286e000 r-xp 0000f000 08:05 6163826                    /usr/lib/libm-2.32.so
+7fef5286e000-7fef52907000 r--p 000ab000 08:05 6163826                    /usr/lib/libm-2.32.so
+7fef52907000-7fef52908000 r--p 00143000 08:05 6163826                    /usr/lib/libm-2.32.so
+7fef52908000-7fef52909000 rw-p 00144000 08:05 6163826                    /usr/lib/libm-2.32.so
+7fef52909000-7fef5299f000 r--p 00000000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef5299f000-7fef52a8b000 r-xp 00096000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef52a8b000-7fef52ad4000 r--p 00182000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef52ad4000-7fef52ad5000 ---p 001cb000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef52ad5000-7fef52ae2000 r--p 001cb000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef52ae2000-7fef52ae3000 rw-p 001d8000 08:05 6164635                    /usr/lib/libstdc++.so.6.0.28
+7fef52ae3000-7fef52ae6000 rw-p 00000000 00:00 0 
+7fef52ae6000-7fef52d56000 r--p 00000000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef52d56000-7fef53942000 r-xp 00270000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef53942000-7fef53b85000 r--p 00e5c000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef53b85000-7fef53b86000 ---p 0109f000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef53b86000-7fef53c44000 r--p 0109f000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef53c44000-7fef53c7d000 rw-p 0115d000 08:05 1320884                    /usr/lib/jvm/java-11-openjdk/lib/server/libjvm.so
+7fef53c7d000-7fef53cd6000 rw-p 00000000 00:00 0 
+7fef53cd6000-7fef53cdd000 r--p 00000000 08:05 6163854                    /usr/lib/libpthread-2.32.so
+7fef53cdd000-7fef53ced000 r-xp 00007000 08:05 6163854                    /usr/lib/libpthread-2.32.so
+7fef53ced000-7fef53cf2000 r--p 00017000 08:05 6163854                    /usr/lib/libpthread-2.32.so
+7fef53cf2000-7fef53cf3000 r--p 0001b000 08:05 6163854                    /usr/lib/libpthread-2.32.so
+7fef53cf3000-7fef53cf4000 rw-p 0001c000 08:05 6163854                    /usr/lib/libpthread-2.32.so
+7fef53cf4000-7fef53cf8000 rw-p 00000000 00:00 0 
+7fef53cf8000-7fef53cf9000 r--p 00000000 08:05 6163820                    /usr/lib/libdl-2.32.so
+7fef53cf9000-7fef53cfb000 r-xp 00001000 08:05 6163820                    /usr/lib/libdl-2.32.so
+7fef53cfb000-7fef53cfc000 r--p 00003000 08:05 6163820                    /usr/lib/libdl-2.32.so
+7fef53cfc000-7fef53cfd000 r--p 00003000 08:05 6163820                    /usr/lib/libdl-2.32.so
+7fef53cfd000-7fef53cfe000 rw-p 00004000 08:05 6163820                    /usr/lib/libdl-2.32.so
+7fef53cfe000-7fef53d01000 r--p 00000000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d01000-7fef53d0f000 r-xp 00003000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d0f000-7fef53d15000 r--p 00011000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d15000-7fef53d16000 ---p 00017000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d16000-7fef53d17000 r--p 00017000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d17000-7fef53d18000 rw-p 00018000 08:05 6173614                    /usr/lib/libz.so.1.2.11
+7fef53d18000-7fef53d3e000 r--p 00000000 08:05 6163813                    /usr/lib/libc-2.32.so
+7fef53d3e000-7fef53e8b000 r-xp 00026000 08:05 6163813                    /usr/lib/libc-2.32.so
+7fef53e8b000-7fef53ed7000 r--p 00173000 08:05 6163813                    /usr/lib/libc-2.32.so
+7fef53ed7000-7fef53eda000 r--p 001be000 08:05 6163813                    /usr/lib/libc-2.32.so
+7fef53eda000-7fef53edd000 rw-p 001c1000 08:05 6163813                    /usr/lib/libc-2.32.so
+7fef53edd000-7fef53ee1000 rw-p 00000000 00:00 0 
+7fef53ee4000-7fef53ee5000 ---p 00000000 00:00 0 
+7fef53ee5000-7fef53ee6000 r--p 00000000 00:00 0 
+7fef53ee6000-7fef53ef4000 r--p 00000000 08:05 794441                     /usr/lib/jvm/java-11-openjdk/lib/libjava.so
+7fef53ef4000-7fef53f09000 r-xp 0000e000 08:05 794441                     /usr/lib/jvm/java-11-openjdk/lib/libjava.so
+7fef53f09000-7fef53f10000 r--p 00023000 08:05 794441                     /usr/lib/jvm/java-11-openjdk/lib/libjava.so
+7fef53f10000-7fef53f11000 r--p 00029000 08:05 794441                     /usr/lib/jvm/java-11-openjdk/lib/libjava.so
+7fef53f11000-7fef53f12000 rw-p 0002a000 08:05 794441                     /usr/lib/jvm/java-11-openjdk/lib/libjava.so
+7fef53f12000-7fef53f13000 rw-p 00000000 00:00 0 
+7fef53f13000-7fef53f18000 r--p 00000000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f18000-7fef53f1f000 r-xp 00005000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f1f000-7fef53f21000 r--p 0000c000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f21000-7fef53f22000 ---p 0000e000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f22000-7fef53f24000 r--p 0000e000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f24000-7fef53f25000 rw-p 00010000 08:05 794475                     /usr/lib/jvm/java-11-openjdk/lib/libverify.so
+7fef53f25000-7fef53f28000 r--p 00000000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f28000-7fef53f32000 r-xp 00003000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f32000-7fef53f35000 r--p 0000d000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f35000-7fef53f36000 ---p 00010000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f36000-7fef53f37000 r--p 00010000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f37000-7fef53f38000 rw-p 00011000 08:05 1054393                    /usr/lib/jvm/java-11-openjdk/lib/jli/libjli.so
+7fef53f38000-7fef53f3a000 rw-p 00000000 00:00 0 
+7fef53f3a000-7fef53f3c000 r--p 00000000 08:05 6163802                    /usr/lib/ld-2.32.so
+7fef53f3c000-7fef53f5d000 r-xp 00002000 08:05 6163802                    /usr/lib/ld-2.32.so
+7fef53f5d000-7fef53f66000 r--p 00023000 08:05 6163802                    /usr/lib/ld-2.32.so
+7fef53f66000-7fef53f67000 r--p 0002b000 08:05 6163802                    /usr/lib/ld-2.32.so
+7fef53f67000-7fef53f69000 rw-p 0002c000 08:05 6163802                    /usr/lib/ld-2.32.so
+7ffdeb318000-7ffdeb339000 rw-p 00000000 00:00 0                          [stack]
+7ffdeb3f4000-7ffdeb3f8000 r--p 00000000 00:00 0                          [vvar]
+7ffdeb3f8000-7ffdeb3fa000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+
+VM Arguments:
+jvm_args: -agentpath:/home/psiayn/clones/JavaGC/vmtrace/build/libvmtrace.so 
+java_command: custom-benchmark-1.0-SNAPSHOT.jar
+java_class_path (initial): custom-benchmark-1.0-SNAPSHOT.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 259684928                                 {product} {ergonomic}
+   size_t MaxHeapSize                              = 4154958848                                {product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+PATH=/home/psiayn/bin:/usr/local/bin:/home/psiayn/clones/spark-3.0.1-bin-hadoop3.2/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+SHELL=/usr/bin/zsh
+DISPLAY=:0
+LANG=en_US.UTF-8
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xde76b0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xde76b0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0xde76b0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0xbda8c0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0xbda8c0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0xde76b0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR2: [libjvm.so+0xbda750], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGINT: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGTERM: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGQUIT: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+
+
+---------------  S Y S T E M  ---------------
+
+OS:NAME="Arch Linux"
+PRETTY_NAME="Arch Linux"
+ID=arch
+BUILD_ID=rolling
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://www.archlinux.org/"
+DOCUMENTATION_URL="https://wiki.archlinux.org/"
+SUPPORT_URL="https://bbs.archlinux.org/"
+BUG_REPORT_URL="https://bugs.archlinux.org/"
+LOGO=archlinux
+uname:Linux 5.10.10-arch1-1 #1 SMP PREEMPT Sat, 23 Jan 2021 23:59:48 +0000 x86_64
+OS uptime: 0 days 7:12 hours
+libc:glibc 2.32 NPTL 2.32 
+rlimit (soft/hard): STACK 9788k/infinity , CORE infinity/infinity , NPROC 63328/63328 , NOFILE 524288/524288 , AS infinity/infinity , CPU infinity/infinity , DATA infinity/infinity , FSIZE infinity/infinity , MEMLOCK 64k/64k
+load average:3.18 3.80 4.11
+
+/proc/meminfo:
+MemTotal:       16230308 kB
+MemFree:          206736 kB
+MemAvailable:    9346060 kB
+Buffers:           60808 kB
+Cached:         10136988 kB
+SwapCached:         3604 kB
+Active:          7332556 kB
+Inactive:        7826100 kB
+Active(anon):    1936812 kB
+Inactive(anon):  3986576 kB
+Active(file):    5395744 kB
+Inactive(file):  3839524 kB
+Unevictable:       79240 kB
+Mlocked:               0 kB
+SwapTotal:      22282236 kB
+SwapFree:       21735388 kB
+Dirty:                56 kB
+Writeback:             0 kB
+AnonPages:       5037416 kB
+Mapped:           856412 kB
+Shmem:            965356 kB
+KReclaimable:     246104 kB
+Slab:             390468 kB
+SReclaimable:     246104 kB
+SUnreclaim:       144364 kB
+KernelStack:       17264 kB
+PageTables:        55592 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    30397388 kB
+Committed_AS:   16791296 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       83348 kB
+VmallocChunk:          0 kB
+Percpu:             8000 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   1898496 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:      451116 kB
+DirectMap2M:    14069760 kB
+DirectMap1G:     2097152 kB
+
+/sys/kernel/mm/transparent_hugepage/enabled:
+always [madvise] never
+/sys/kernel/mm/transparent_hugepage/defrag (defrag/compaction efforts parameter):
+always defer defer+madvise [madvise] never
+
+/proc/sys/kernel/threads-max (system-wide limit on the number of threads):
+126657
+/proc/sys/vm/max_map_count (maximum number of memory map areas a process may have):
+65530
+/proc/sys/kernel/pid_max (system-wide limit on number of process identifiers):
+4194304
+
+container (cgroup) information:
+container_type: cgroupv1
+cpu_cpuset_cpus: 0-7
+cpu_memory_nodes: 0
+active_processor_count: 8
+cpu_quota: -1
+cpu_period: 100000
+cpu_shares: -1
+memory_limit_in_bytes: -1
+memory_and_swap_limit_in_bytes: -1
+memory_soft_limit_in_bytes: -1
+memory_usage_in_bytes: 14811164672
+memory_max_usage_in_bytes: 15021973504
+
+Steal ticks since vm start: 0
+Steal ticks percentage since vm start:  0.000
+
+CPU:total 8 (initial active 8) 
+CPU Model and flags from /proc/cpuinfo:
+model name	: Intel(R) Core(TM) i5-8300H CPU @ 2.30GHz
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+Online cpus:
+0-7
+Offline cpus:
+
+BIOS frequency limitation:
+<Not Available>
+Frequency switch latency (ns):
+0
+Available cpu frequencies:
+<Not Available>
+Current governor:
+powersave
+Core performance/turbo boost:
+<Not Available>
+
+Memory: 4k page, physical 16230308k(206736k free), swap 22282236k(21735388k free)
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.10+8) for linux-amd64 JRE (11.0.10+8), built on Jan 11 2021 13:07:29 by "builduser" with gcc 10.2.0
+
+END.

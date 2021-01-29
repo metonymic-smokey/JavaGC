@@ -1,0 +1,2134 @@
+
+======================
+   General JIT info   
+======================
+
+            JIT is :      on
+  Compiler threads :       4
+
+CodeCache overview
+--------------------------------------------------------
+
+         Reserved size :  245760 KB
+        Committed size :    7488 KB
+  Unallocated capacity :  244497 KB
+
+
+CodeCache cleaning overview
+--------------------------------------------------------
+
+Code cache sweeper statistics:
+  Total sweep time:                0 ms
+  Total number of full sweeps:     0
+  Total number of flushed methods: 0 (thereof 0 C2 methods)
+  Total size of flushed methods:   0 kB
+--------------------------------------------------------
+
+
+__ CodeHeapStateAnalytics lock wait took      0.000 seconds _________
+
+
+__ CodeCache lock wait took      0.000 seconds _________
+
+=============================================================
+=  C O D E   H E A P   A N A L Y S I S   (general remarks)  =
+=============================================================
+   The code heap analysis function provides deep insights into
+   the inner workings and the internal state of the Java VM's
+   code cache - the place where all the JVM generated machine
+   code is stored.
+   
+   This function is designed and provided for support engineers
+   to help them understand and solve issues in customer systems.
+   It is not intended for use and interpretation by other persons.
+   
+
+======================================================================================================
+=  C O D E   H E A P   A N A L Y S I S   (used blocks) for segment CodeHeap 'non-profiled nmethods'  =
+======================================================================================================
+   The aggregate step takes an aggregated snapshot of the CodeHeap.
+   Subsequent print functions create their output based on this snapshot.
+   The CodeHeap is a living thing, and every effort has been made for the
+   collected data to be consistent. Only the method names and signatures
+   are retrieved at print time. That may lead to rare cases where the
+   name of a method is no longer available, e.g. because it was unloaded.
+
+   CodeHeap committed size 2496K (2M), reserved size 120032K (117M), 2% occupied.
+   CodeHeap allocation segment size is 128 bytes. This is the smallest possible granularity.
+   CodeHeap (committed part) is mapped to 624 granules of size 4096 bytes.
+   Each granule takes 40 bytes of C heap, that is 24K in total for statistics data.
+   The number of granules is limited to 512k, requiring a granules size of at least 2048 bytes for a 1GB heap.
+
++---------------------------------------------------------------------------+
+|  Global CodeHeap statistics for segment CodeHeap 'non-profiled nmethods'  |
++---------------------------------------------------------------------------+
+freeSpace        =        0k, nBlocks_free     =      0,      0.000% of capacity,      0.000% of max_capacity
+usedSpace        =       28k, nBlocks_used     =     33,      1.127% of capacity,      0.023% of max_capacity
+  Tier1 Space    =       19k, nBlocks_t1       =     22,      0.761% of capacity,      0.016% of max_capacity
+  Tier2 Space    =        7k, nBlocks_t2       =     10,      0.316% of capacity,      0.007% of max_capacity
+  Alive Space    =        1k, nBlocks_alive    =      1,      0.050% of capacity,      0.001% of max_capacity
+    disconnected =        0k, nBlocks_disconn  =      0,      0.000% of capacity,      0.000% of max_capacity
+    not entrant  =        1k, nBlocks_notentr  =      1,      0.050% of capacity,      0.001% of max_capacity
+  inconstrSpace  =        0k, nBlocks_inconstr =      0,      0.000% of capacity,      0.000% of max_capacity
+  unloadedSpace  =        0k, nBlocks_unloaded =      0,      0.000% of capacity,      0.000% of max_capacity
+  deadSpace      =        0k, nBlocks_dead     =      0,      0.000% of capacity,      0.000% of max_capacity
+  stubSpace      =        0k, nBlocks_stub     =      0,      0.000% of capacity,      0.000% of max_capacity
+ZombieBlocks     =        0. These are HeapBlocks which could not be identified as CodeBlobs.
+
+Segment start          = 0x00007f909835a000, used space      =     2496k
+Segment end (used)     = 0x00007f90985ca000, remaining space =   117536k
+Segment end (reserved) = 0x00007f909f892000, reserved space  =   120032k
+
+latest allocated compilation id = 154
+highest observed compilation id = 149
+Building TopSizeList iterations = 344
+
++-------------------------------------------------------+
+|  Method hotness information at time of this analysis  |
++-------------------------------------------------------+
+Highest possible method temperature:                   480
+Threshold for method to be considered 'cold':     -469.788
+min. hotness =    234
+avg. hotness =    480
+max. hotness =    480
+
+Verifying collected data......done
+
+
++------------------------------------------------------------+
+|  no free blocks found in CodeHeap 'non-profiled nmethods'  |
++------------------------------------------------------------+
+==================================================================================================
+=  C O D E   H E A P   A N A L Y S I S   (used blocks) for segment CodeHeap 'profiled nmethods'  =
+==================================================================================================
+   The aggregate step takes an aggregated snapshot of the CodeHeap.
+   Subsequent print functions create their output based on this snapshot.
+   The CodeHeap is a living thing, and every effort has been made for the
+   collected data to be consistent. Only the method names and signatures
+   are retrieved at print time. That may lead to rare cases where the
+   name of a method is no longer available, e.g. because it was unloaded.
+
+   CodeHeap committed size 2496K (2M), reserved size 120028K (117M), 2% occupied.
+   CodeHeap allocation segment size is 128 bytes. This is the smallest possible granularity.
+   CodeHeap (committed part) is mapped to 624 granules of size 4096 bytes.
+   Each granule takes 40 bytes of C heap, that is 24K in total for statistics data.
+   The number of granules is limited to 512k, requiring a granules size of at least 2048 bytes for a 1GB heap.
+
++-----------------------------------------------------------------------+
+|  Global CodeHeap statistics for segment CodeHeap 'profiled nmethods'  |
++-----------------------------------------------------------------------+
+freeSpace        =        0k, nBlocks_free     =      0,      0.000% of capacity,      0.000% of max_capacity
+usedSpace        =      220k, nBlocks_used     =    113,      8.829% of capacity,      0.184% of max_capacity
+  Tier1 Space    =      207k, nBlocks_t1       =    102,      8.328% of capacity,      0.173% of max_capacity
+  Tier2 Space    =        0k, nBlocks_t2       =      0,      0.000% of capacity,      0.000% of max_capacity
+  Alive Space    =       12k, nBlocks_alive    =     11,      0.501% of capacity,      0.010% of max_capacity
+    disconnected =        0k, nBlocks_disconn  =      0,      0.000% of capacity,      0.000% of max_capacity
+    not entrant  =       12k, nBlocks_notentr  =     11,      0.501% of capacity,      0.010% of max_capacity
+  inconstrSpace  =        0k, nBlocks_inconstr =      0,      0.000% of capacity,      0.000% of max_capacity
+  unloadedSpace  =        0k, nBlocks_unloaded =      0,      0.000% of capacity,      0.000% of max_capacity
+  deadSpace      =        0k, nBlocks_dead     =      0,      0.000% of capacity,      0.000% of max_capacity
+  stubSpace      =        0k, nBlocks_stub     =      0,      0.000% of capacity,      0.000% of max_capacity
+ZombieBlocks     =        0. These are HeapBlocks which could not be identified as CodeBlobs.
+
+Segment start          = 0x00007f9090e23000, used space      =     2496k
+Segment end (used)     = 0x00007f9091093000, remaining space =   117532k
+Segment end (reserved) = 0x00007f909835a000, reserved space  =   120028k
+
+latest allocated compilation id = 154
+highest observed compilation id = 154
+Building TopSizeList iterations = 2528
+
++-------------------------------------------------------+
+|  Method hotness information at time of this analysis  |
++-------------------------------------------------------+
+Highest possible method temperature:                   480
+Threshold for method to be considered 'cold':     -469.788
+min. hotness =    234
+avg. hotness =    480
+max. hotness =    480
+
+Verifying collected data......done
+
+
++--------------------------------------------------------+
+|  no free blocks found in CodeHeap 'profiled nmethods'  |
++--------------------------------------------------------+
+=============================================================================================
+=  C O D E   H E A P   A N A L Y S I S   (used blocks) for segment CodeHeap 'non-nmethods'  =
+=============================================================================================
+   The aggregate step takes an aggregated snapshot of the CodeHeap.
+   Subsequent print functions create their output based on this snapshot.
+   The CodeHeap is a living thing, and every effort has been made for the
+   collected data to be consistent. Only the method names and signatures
+   are retrieved at print time. That may lead to rare cases where the
+   name of a method is no longer available, e.g. because it was unloaded.
+
+   CodeHeap committed size 2496K (2M), reserved size 5700K (5M), 43% occupied.
+   CodeHeap allocation segment size is 128 bytes. This is the smallest possible granularity.
+   CodeHeap (committed part) is mapped to 624 granules of size 4096 bytes.
+   Each granule takes 40 bytes of C heap, that is 24K in total for statistics data.
+   The number of granules is limited to 512k, requiring a granules size of at least 2048 bytes for a 1GB heap.
+
++------------------------------------------------------------------+
+|  Global CodeHeap statistics for segment CodeHeap 'non-nmethods'  |
++------------------------------------------------------------------+
+freeSpace        =       17k, nBlocks_free     =      1,      0.701% of capacity,      0.307% of max_capacity
+usedSpace        =     1015k, nBlocks_used     =    296,     40.685% of capacity,     17.816% of max_capacity
+  Tier1 Space    =        0k, nBlocks_t1       =      0,      0.000% of capacity,      0.000% of max_capacity
+  Tier2 Space    =        0k, nBlocks_t2       =      0,      0.000% of capacity,      0.000% of max_capacity
+  Alive Space    =        0k, nBlocks_alive    =      0,      0.000% of capacity,      0.000% of max_capacity
+    disconnected =        0k, nBlocks_disconn  =      0,      0.000% of capacity,      0.000% of max_capacity
+    not entrant  =        0k, nBlocks_notentr  =      0,      0.000% of capacity,      0.000% of max_capacity
+  inconstrSpace  =        0k, nBlocks_inconstr =      0,      0.000% of capacity,      0.000% of max_capacity
+  unloadedSpace  =        0k, nBlocks_unloaded =      0,      0.000% of capacity,      0.000% of max_capacity
+  deadSpace      =        0k, nBlocks_dead     =      0,      0.000% of capacity,      0.000% of max_capacity
+  stubSpace      =     1015k, nBlocks_stub     =    296,     40.685% of capacity,     17.816% of max_capacity
+ZombieBlocks     =        0. These are HeapBlocks which could not be identified as CodeBlobs.
+
+Segment start          = 0x00007f9090892000, used space      =     2496k
+Segment end (used)     = 0x00007f9090b02000, remaining space =     3204k
+Segment end (reserved) = 0x00007f9090e23000, reserved space  =     5700k
+
+latest allocated compilation id = 154
+highest observed compilation id = 0
+Building TopSizeList iterations = 3100
+
++-------------------------------------------------------+
+|  Method hotness information at time of this analysis  |
++-------------------------------------------------------+
+Highest possible method temperature:                   480
+Threshold for method to be considered 'cold':     -462.210
+No hotness data available
+
+Verifying collected data......done
+
+
+=============================================================================================
+=  C O D E   H E A P   A N A L Y S I S   (free blocks) for segment CodeHeap 'non-nmethods'  =
+=============================================================================================
+   The aggregate step collects information about all free blocks in CodeHeap.
+   Subsequent print functions create their output based on this snapshot.
+
+   Free space in CodeHeap 'non-nmethods' is distributed over 1 free blocks.
+   Each free block takes 24 bytes of C heap for statistics data, that is 0K in total.
+
+=================================================================================================
+=  C O D E   H E A P   A N A L Y S I S   C O M P L E T E   for segment CodeHeap 'non-nmethods'  =
+=================================================================================================
+
+
+__ CodeCache lock hold took      0.000 seconds _________
+
+======================================================================================
+=  U S E D   S P A C E   S T A T I S T I C S   for CodeHeap 'non-profiled nmethods'  =
+======================================================================================
+Note: The Top31 list of the largest used blocks associates method names
+      and other identifying information with the block size data.
+
+      Method names are dynamically retrieved from the code cache at print time.
+      Due to the living nature of the code cache and because the CodeCache_lock
+      is not continuously held, the displayed name might be wrong or no name
+      might be found at all. The likelihood for that to happen increases
+      over time passed between analysis and print step.
+
+
++-----------------------------------------------------------+
+|  Largest Used Blocks in CodeHeap 'non-profiled nmethods'  |
++-----------------------------------------------------------+
+
++---------------------------------------------------+
+|  Block types used in the following CodeHeap dump  |
++---------------------------------------------------+
+    - noType
+  C - nMethod (under construction)
+  N - nMethod (active)
+  I - nMethod (inactive)
+  X - nMethod (deopt)
+  Z - nMethod (zombie)
+  U - nMethod (unloaded)
+  R - runtime stub
+  ? - ricochet stub
+  D - deopt stub
+  T - uncommon trap stub
+  E - exception stub
+  S - safepoint stub
+  A - adapter blob
+  M - MH adapter blob
+  B - buffer blob
+  -----------------------------------------------------
+
+                                                   blob  compiler method
+Addr(module)              offset              size type  type lvl   temp Name
+0x00007f909835da10 (+0x00003a10) 0x00000338(   0K)   X     c2   4    480 java.lang.String.hashCode()I
+0x00007f9098360610 (+0x00006610) 0x000002f0(   0K)   N     c2   4    480 java.util.Random.nextBytes([B)V
+0x00007f909835a010 (+0x00000010) 0x00000280(   0K)   N     c2   4    480 java.lang.StringLatin1.hashCode([B)I
+0x00007f909835b310 (+0x00001310) 0x00000000(   0K)   N   none   0    480 jdk.internal.misc.Unsafe.compareAndSetObject(Ljava/lang/Object;JLjava/lang/Object;Ljava/lang/Object;)Z
+0x00007f909835b790 (+0x00001790) 0x00000000(   0K)   N   none   0    480 jdk.internal.misc.Unsafe.compareAndSetLong(Ljava/lang/Object;JJJ)Z
+0x00007f909835bf10 (+0x00001f10) 0x00000000(   0K)   N   none   0    480 java.lang.System.arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+0x00007f909835c690 (+0x00002690) 0x00000000(   0K)   N   none   0    480 java.lang.Object.hashCode()I
+0x00007f909835f310 (+0x00005310) 0x00000000(   0K)   N   none   0    480 java.lang.Object.getClass()Ljava/lang/Class;
+0x00007f909835fe10 (+0x00005e10) 0x00000000(   0K)   N   none   0    480 java.lang.Thread.currentThread()Ljava/lang/Thread;
+0x00007f909835df10 (+0x00003f10) 0x00000000(   0K)   N   none   0    480 java.lang.Module.addExportsToAllUnnamed0(Ljava/lang/Module;Ljava/lang/String;)V
+0x00007f909835f790 (+0x00005790) 0x00000000(   0K)   N   none   0    480 java.lang.System.nanoTime()J
+0x00007f9098360290 (+0x00006290) 0x00000160(   0K)   N     c2   4    480 java.util.Random.next(I)I
+0x00007f909835a710 (+0x00000710) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleDescriptor.name()Ljava/lang/String;
+0x00007f909835aa10 (+0x00000a10) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleReference.descriptor()Ljava/lang/module/ModuleDescriptor;
+0x00007f909835ad10 (+0x00000d10) 0x000000d8(   0K)   N     c1   1    480 java.util.KeyValueHolder.getKey()Ljava/lang/Object;
+0x00007f909835b010 (+0x00001010) 0x000000d8(   0K)   N     c1   1    480 java.util.KeyValueHolder.getValue()Ljava/lang/Object;
+0x00007f909835bc10 (+0x00001c10) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ResolvedModule.reference()Ljava/lang/module/ModuleReference;
+0x00007f909835c390 (+0x00002390) 0x000000d8(   0K)   N     c1   1    480 java.util.ImmutableCollections$SetN.size()I
+0x00007f909835cb10 (+0x00002b10) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleDescriptor.isAutomatic()Z
+0x00007f909835ce10 (+0x00002e10) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleDescriptor$Exports.source()Ljava/lang/String;
+0x00007f909835d110 (+0x00003110) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ResolvedModule.configuration()Ljava/lang/module/Configuration;
+0x00007f909835d410 (+0x00003410) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleDescriptor$Exports.targets()Ljava/util/Set;
+0x00007f909835d710 (+0x00003710) 0x000000d8(   0K)   N     c1   1    480 java.lang.module.ModuleDescriptor.isOpen()Z
+0x00007f909835e310 (+0x00004310) 0x00000108(   0K)   N     c2   4    480 java.util.ImmutableCollections$SetN$SetNIterator.nextIndex()I
+0x00007f909835e890 (+0x00004890) 0x000000d8(   0K)   N     c1   1    480 java.lang.Module.getDescriptor()Ljava/lang/module/ModuleDescriptor;
+0x00007f909835f010 (+0x00005010) 0x000000d8(   0K)   N     c1   1    480 java.util.concurrent.atomic.AtomicLong.get()J
+0x00007f9098360b10 (+0x00006b10) 0x00000150(   0K)   N     c2   4    480 java.lang.StringUTF16.putChar([BII)V
+0x00007f909835a490 (+0x00000490) 0x00000080(   0K)   N     c2   4    480 java.lang.Object.<init>()V
+0x00007f909835fb90 (+0x00005b90) 0x00000080(   0K)   N     c2   4    480 java.lang.Math.min(II)I
+0x00007f9098360e10 (+0x00006e10) 0x00000080(   0K)   N     c2   4    480 java.lang.Number.<init>()V
+0x00007f909835ee10 (+0x00004e10) 0x00000000(   0K)   N   none   0    480 java.lang.invoke.MethodHandle.linkToStatic(Ljava/lang/Object;Ljava/lang/Object;IILjava/lang/invoke/MemberName;)I
+
+
++--------------------------------------------------------------+
+|  Block count histogram for CodeHeap 'non-profiled nmethods'  |
++--------------------------------------------------------------+
+Note: The histogram indicates how many blocks (as a percentage
+      of all blocks) have a size in the given range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:      33
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):         0 |        0 |
+[  512 .. 1024 ):       733 |       22 |*******************1*******************2*******************3*******************4*******************5*******************6*************
+[    1K..    2K):      1152 |       11 |*******************1*******************2*******************3******
+[    2K..    4K):         0 |        0 |
+[    4K..    8K):         0 |        0 |
+[    8K..   16K):         0 |        0 |
+[   16K..   32K):         0 |        0 |
+[   32K..   64K):         0 |        0 |
+[   64K..  128K):         0 |        0 |
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):         0 |        0 |
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
++----------------------------------------------------------------------------------+
+|  Contribution per size range to total size for CodeHeap 'non-profiled nmethods'  |
++----------------------------------------------------------------------------------+
+Note: The histogram indicates how much space (as a percentage of all
+      occupied space) is used by the blocks in the given size range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:      33
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):         0 |        0 |
+[  512 .. 1024 ):       733 |       22 |*******************1*******************2*******************3*******************4*******************5************
+[    1K..    2K):      1152 |       11 |*******************1*******************2*******************3*******************4********
+[    2K..    4K):         0 |        0 |
+[    4K..    8K):         0 |        0 |
+[    8K..   16K):         0 |        0 |
+[   16K..   32K):         0 |        0 |
+[   32K..   64K):         0 |        0 |
+[   64K..  128K):         0 |        0 |
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):         0 |        0 |
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
+==================================================================================
+=  U S E D   S P A C E   S T A T I S T I C S   for CodeHeap 'profiled nmethods'  =
+==================================================================================
+Note: The Top50 list of the largest used blocks associates method names
+      and other identifying information with the block size data.
+
+      Method names are dynamically retrieved from the code cache at print time.
+      Due to the living nature of the code cache and because the CodeCache_lock
+      is not continuously held, the displayed name might be wrong or no name
+      might be found at all. The likelihood for that to happen increases
+      over time passed between analysis and print step.
+
+
++-------------------------------------------------------+
+|  Largest Used Blocks in CodeHeap 'profiled nmethods'  |
++-------------------------------------------------------+
+
++---------------------------------------------------+
+|  Block types used in the following CodeHeap dump  |
++---------------------------------------------------+
+    - noType
+  C - nMethod (under construction)
+  N - nMethod (active)
+  I - nMethod (inactive)
+  X - nMethod (deopt)
+  Z - nMethod (zombie)
+  U - nMethod (unloaded)
+  R - runtime stub
+  ? - ricochet stub
+  D - deopt stub
+  T - uncommon trap stub
+  E - exception stub
+  S - safepoint stub
+  A - adapter blob
+  M - MH adapter blob
+  B - buffer blob
+  -----------------------------------------------------
+
+                                                   blob  compiler method
+Addr(module)              offset              size type  type lvl   temp Name
+0x00007f9090e4dd90 (+0x0002ad90) 0x00003cb0(  15K)   N     c1   3    480 java.lang.StringCoding.decodeUTF8_0([BIIZ)Ljava/lang/StringCoding$Result;
+0x00007f9090e2f610 (+0x0000c610) 0x00002c40(  11K)   N     c1   3    480 java.util.concurrent.ConcurrentHashMap.putVal(Ljava/lang/Object;Ljava/lang/Object;Z)Ljava/lang/Object;
+0x00007f9090e52b10 (+0x0002fb10) 0x00002ad0(  10K)   N     c1   3    480 java.lang.StringCoding.decode(Ljava/nio/charset/Charset;[BII)Ljava/lang/StringCoding$Result;
+0x00007f9090e3d490 (+0x0001a490) 0x00001998(   6K)   N     c1   3    480 java.util.HashMap.resize()[Ljava/util/HashMap$Node;
+0x00007f9090e36010 (+0x00013010) 0x000016e0(   5K)   N     c1   3    480 java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object;
+0x00007f9090e49410 (+0x00026410) 0x00000eb8(   3K)   N     c1   3    480 java.lang.String.checkBoundsOffCount(III)V
+0x00007f9090e32690 (+0x0000f690) 0x00000bf8(   2K)   N     c1   3    480 java.util.concurrent.ConcurrentHashMap.addCount(JI)V
+0x00007f9090e48290 (+0x00025290) 0x00000ba0(   2K)   N     c1   3    480 java.util.Random.<init>(J)V
+0x00007f9090e4b510 (+0x00028510) 0x00000c28(   3K)   N     c1   3    480 java.math.BigInteger.makePositive([BII)[I
+0x00007f9090e58710 (+0x00035710) 0x00000b90(   2K)   N     c1   3    480 java.math.BigInteger.<init>([BII)V
+0x00007f9090e38690 (+0x00015690) 0x00000ba8(   2K)   N     c1   3    480 java.util.HashMap.getNode(ILjava/lang/Object;)Ljava/util/HashMap$Node;
+0x00007f9090e29e90 (+0x00006e90) 0x00000a48(   2K)   N     c1   3    480 java.util.Set.of([Ljava/lang/Object;)Ljava/util/Set;
+0x00007f9090e57690 (+0x00034690) 0x00000a18(   2K)   N     c1   3    480 jdk.internal.util.Preconditions.checkFromIndexSize(IIILjava/util/function/BiFunction;)I
+0x00007f9090e45410 (+0x00022410) 0x000007d8(   1K)   N     c1   3    480 java.util.ArrayList.add(Ljava/lang/Object;)Z
+0x00007f9090e25690 (+0x00002690) 0x00000780(   1K)   N     c1   3    480 java.util.ImmutableCollections$SetN.probe(Ljava/lang/Object;)I
+0x00007f9090e26610 (+0x00003610) 0x00000768(   1K)   N     c1   3    480 java.lang.String.equals(Ljava/lang/Object;)Z
+0x00007f9090e2c590 (+0x00009590) 0x000007a0(   1K)   N     c1   3    480 java.util.ImmutableCollections$MapN.probe(Ljava/lang/Object;)I
+0x00007f9090e45e90 (+0x00022e90) 0x00000738(   1K)   N     c1   3    480 java.util.ArrayList.add(Ljava/lang/Object;[Ljava/lang/Object;I)V
+0x00007f9090e4a610 (+0x00027610) 0x000007d0(   1K)   N     c1   3    480 java.math.BigInteger.stripLeadingZeroBytes([BII)[I
+0x00007f9090e4d390 (+0x0002a390) 0x00000758(   1K)   N     c1   3    480 java.lang.StringCoding.decodeUTF8([BIIZ)Ljava/lang/StringCoding$Result;
+0x00007f9090e3cb10 (+0x00019b10) 0x00000728(   1K)   N     c1   3    480 java.util.Map.entry(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map$Entry;
+0x00007f9090e3f710 (+0x0001c710) 0x00000690(   1K)   N     c1   3    480 jdk.internal.module.ModuleBootstrap$2.next()Ljava/lang/Object;
+0x00007f9090e2d690 (+0x0000a690) 0x00000638(   1K)   N     c1   3    480 java.util.KeyValueHolder.<init>(Ljava/lang/Object;Ljava/lang/Object;)V
+0x00007f9090e33d90 (+0x00010d90) 0x00000620(   1K)   N     c1   3    480 java.util.Optional.ofNullable(Ljava/lang/Object;)Ljava/util/Optional;
+0x00007f9090e2df10 (+0x0000af10) 0x000005c0(   1K)   N     c1   3    480 jdk.internal.module.ModuleReferenceImpl.hashCode()I
+0x00007f9090e3aa90 (+0x00017a90) 0x00000570(   1K)   N     c1   3    480 java.util.HashSet.add(Ljava/lang/Object;)Z
+0x00007f9090e41e90 (+0x0001ee90) 0x000005a0(   1K)   N     c1   3    480 java.lang.AbstractStringBuilder.ensureCapacityInternal(I)V
+0x00007f9090e44810 (+0x00021810) 0x00000590(   1K)   X     c1   3    480 java.util.Random.nextBytes([B)V
+0x00007f9090e52310 (+0x0002f310) 0x00000590(   1K)   N     c1   3    480 java.nio.charset.Charset.lookup(Ljava/lang/String;)Ljava/nio/charset/Charset;
+0x00007f9090e2ab90 (+0x00007b90) 0x000004b8(   1K)   N     c1   3    480 java.lang.String.charAt(I)C
+0x00007f9090e2be90 (+0x00008e90) 0x000004d0(   1K)   N     c1   3    480 java.util.ImmutableCollections$SetN$SetNIterator.next()Ljava/lang/Object;
+0x00007f9090e2cf90 (+0x00009f90) 0x00000470(   1K)   N     c1   3    480 java.util.ImmutableCollections$MapN.get(Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e34610 (+0x00011610) 0x000004c8(   1K)   N     c1   3    480 java.util.Optional.of(Ljava/lang/Object;)Ljava/util/Optional;
+0x00007f9090e40a10 (+0x0001da10) 0x000004b8(   1K)   N     c1   3    480 java.util.ImmutableCollections$SetN$SetNIterator.<init>(Ljava/util/ImmutableCollections$SetN;)V
+0x00007f9090e42690 (+0x0001f690) 0x00000498(   1K)   N     c1   3    480 java.lang.StringLatin1.indexOf([BII)I
+0x00007f9090e55b10 (+0x00032b10) 0x000004c8(   1K)   N     c1   3    480 java.lang.String.<init>([BIILjava/nio/charset/Charset;)V
+0x00007f9090e56690 (+0x00033690) 0x00000490(   1K)   N     c1   3    480 java.lang.StringUTF16.inflate([BI[BII)V
+0x00007f9090e35210 (+0x00012210) 0x00000430(   1K)   N     c1   3    480 java.util.HashMap.get(Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e38010 (+0x00015010) 0x00000418(   1K)   N     c1   3    480 java.util.HashMap.newNode(ILjava/lang/Object;Ljava/lang/Object;Ljava/util/HashMap$Node;)Ljava/util/HashMap$Node;
+0x00007f9090e3bb90 (+0x00018b90) 0x00000410(   1K)   N     c1   3    480 java.util.ImmutableCollections$Set12.iterator()Ljava/util/Iterator;
+0x00007f9090e47690 (+0x00024690) 0x00000440(   1K)   N     c1   3    480 java.util.Random.<init>()V
+0x00007f9090e4c710 (+0x00029710) 0x00000420(   1K)   N     c1   3    480 java.lang.ThreadLocal.get()Ljava/lang/Object;
+0x00007f9090e24490 (+0x00001490) 0x000003a8(   0K)   X     c1   3    480 java.lang.String.hashCode()I
+0x00007f9090e27010 (+0x00004010) 0x000003d8(   0K)   N     c1   3    480 java.util.ImmutableCollections$SetN.hashCode()I
+0x00007f9090e28b10 (+0x00005b10) 0x000003f8(   0K)   N     c1   3    480 java.lang.module.ModuleDescriptor$Exports.hashCode()I
+0x00007f9090e37a10 (+0x00014a10) 0x000003e0(   0K)   N     c1   3    480 java.util.HashMap.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e3f110 (+0x0001c110) 0x000003e0(   0K)   N     c1   3    480 jdk.internal.module.ModuleBootstrap$2.hasNext()Z
+0x00007f9090e40010 (+0x0001d010) 0x000003e0(   0K)   N     c1   3    480 java.util.HashMap.putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e41110 (+0x0001e110) 0x000003a8(   0K)   N     c1   3    480 java.lang.String.hashCode()I
+0x00007f9090e43e90 (+0x00020e90) 0x00000390(   0K)   X     c1   3    480 java.util.Random.next(I)I
+
+
++----------------------------------------------------------+
+|  Block count histogram for CodeHeap 'profiled nmethods'  |
++----------------------------------------------------------+
+Note: The histogram indicates how many blocks (as a percentage
+      of all blocks) have a size in the given range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:     113
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):         0 |        0 |
+[  512 .. 1024 ):       870 |       20 |*******************1***************
+[    1K..    2K):      1340 |       64 |*******************1*******************2*******************3*******************4*******************5*************
+[    2K..    4K):      2710 |       23 |*******************1*******************2
+[    4K..    8K):      6186 |        3 |*****
+[    8K..   16K):     12352 |        2 |***
+[   16K..   32K):     16896 |        1 |*
+[   32K..   64K):         0 |        0 |
+[   64K..  128K):         0 |        0 |
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):         0 |        0 |
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
++------------------------------------------------------------------------------+
+|  Contribution per size range to total size for CodeHeap 'profiled nmethods'  |
++------------------------------------------------------------------------------+
+Note: The histogram indicates how much space (as a percentage of all
+      occupied space) is used by the blocks in the given size range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:     113
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):         0 |        0 |
+[  512 .. 1024 ):       870 |       20 |***************
+[    1K..    2K):      1340 |       64 |*******************1*******************2*******************3****************
+[    2K..    4K):      2710 |       23 |*******************1*******************2***************
+[    4K..    8K):      6186 |        3 |****************
+[    8K..   16K):     12352 |        2 |*******************1*
+[   16K..   32K):     16896 |        1 |**************
+[   32K..   64K):         0 |        0 |
+[   64K..  128K):         0 |        0 |
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):         0 |        0 |
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
+=============================================================================
+=  U S E D   S P A C E   S T A T I S T I C S   for CodeHeap 'non-nmethods'  =
+=============================================================================
+Note: The Top50 list of the largest used blocks associates method names
+      and other identifying information with the block size data.
+
+      Method names are dynamically retrieved from the code cache at print time.
+      Due to the living nature of the code cache and because the CodeCache_lock
+      is not continuously held, the displayed name might be wrong or no name
+      might be found at all. The likelihood for that to happen increases
+      over time passed between analysis and print step.
+
+
++--------------------------------------------------+
+|  Largest Used Blocks in CodeHeap 'non-nmethods'  |
++--------------------------------------------------+
+
++---------------------------------------------------+
+|  Block types used in the following CodeHeap dump  |
++---------------------------------------------------+
+    - noType
+  C - nMethod (under construction)
+  N - nMethod (active)
+  I - nMethod (inactive)
+  X - nMethod (deopt)
+  Z - nMethod (zombie)
+  U - nMethod (unloaded)
+  R - runtime stub
+  ? - ricochet stub
+  D - deopt stub
+  T - uncommon trap stub
+  E - exception stub
+  S - safepoint stub
+  A - adapter blob
+  M - MH adapter blob
+  B - buffer blob
+  -----------------------------------------------------
+
+                                                   blob  compiler method
+Addr(module)              offset              size type  type lvl   temp Name
+0x00007f90908ee410 (+0x0005c410) 0x0008cd80( 563K)                       C1 temporary CodeBuffer
+0x00007f909089a810 (+0x00008810) 0x0001be80( 111K)                       Interpreter
+0x00007f90908c5b10 (+0x00033b10) 0x0000b580(  45K)                       StubRoutines (2)
+0x00007f90908dae10 (+0x00048e10) 0x00008080(  32K)                       native signature handlers
+0x00007f90908d1a10 (+0x0003fa10) 0x00007d80(  31K)                       MethodHandles adapters
+0x00007f9090892a90 (+0x00000a90) 0x00007600(  29K)                       StubRoutines (1)
+0x00007f90908bb590 (+0x00029590) 0x00004080(  16K)                       adapters
+0x00007f90908b8d10 (+0x00026d10) 0x00002880(  10K)                       InlineCacheBuffer
+0x00007f9090984690 (+0x000f2690) 0x00000b00(   2K)                       vtable chunks
+0x00007f9090892210 (+0x00000210) 0x00000880(   2K)                       VM_Version stub
+0x00007f90908b6690 (+0x00024690) 0x00000580(   1K)                       SafepointBlob
+0x00007f90908e2e90 (+0x00050e90) 0x00000480(   1K)                       Signature Handler Temp Buffer
+0x00007f909097e690 (+0x000ec690) 0x00000480(   1K)                       access_field_patching Runtime1 stub
+0x00007f909097eb10 (+0x000ecb10) 0x00000480(   1K)                       load_klass_patching Runtime1 stub
+0x00007f909097ef90 (+0x000ecf90) 0x00000480(   1K)                       load_mirror_patching Runtime1 stub
+0x00007f909097f410 (+0x000ed410) 0x00000480(   1K)                       load_appendix_patching Runtime1 stub
+0x00007f9090980510 (+0x000ee510) 0x00000480(   1K)                       I2C/C2I adapters
+0x00007f90908b8710 (+0x00026710) 0x00000400(   1K)                       DeoptimizationBlob
+0x00007f9090981b10 (+0x000efb10) 0x00000400(   1K)                       I2C/C2I adapters
+0x00007f909089a090 (+0x00008090) 0x00000380(   0K)                       wrong_method_stub
+0x00007f90908b7890 (+0x00025890) 0x00000380(   0K)                       I2C/C2I adapters
+0x00007f90908d1090 (+0x0003f090) 0x00000380(   0K)                       getCPUIDBrandString_stub
+0x00007f90908e6490 (+0x00054490) 0x00000380(   0K)                       I2C/C2I adapters
+0x00007f90908e6810 (+0x00054810) 0x00000380(   0K)                       I2C/C2I adapters
+0x00007f90908ed890 (+0x0005b890) 0x00000380(   0K)                       throw_range_check_failed Runtime1 stub
+0x00007f90908e5710 (+0x00053710) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f90908e5e90 (+0x00053e90) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f90908e6190 (+0x00054190) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f90908e6b90 (+0x00054b90) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f909097b790 (+0x000e9790) 0x00000300(   0K)                       register_finalizer Runtime1 stub
+0x00007f909097ba90 (+0x000e9a90) 0x00000300(   0K)                       new_instance Runtime1 stub
+0x00007f909097bd90 (+0x000e9d90) 0x00000300(   0K)                       fast_new_instance Runtime1 stub
+0x00007f909097c090 (+0x000ea090) 0x00000300(   0K)                       fast_new_instance_init_check Runtime1 stub
+0x00007f909097c390 (+0x000ea390) 0x00000300(   0K)                       new_type_array Runtime1 stub
+0x00007f909097c690 (+0x000ea690) 0x00000300(   0K)                       new_object_array Runtime1 stub
+0x00007f909097c990 (+0x000ea990) 0x00000300(   0K)                       new_multi_array Runtime1 stub
+0x00007f9090980210 (+0x000ee210) 0x00000300(   0K)                       g1_post_barrier_slow
+0x00007f9090982e90 (+0x000f0e90) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f9090983990 (+0x000f1990) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f9090985390 (+0x000f3390) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f9090988490 (+0x000f6490) 0x00000300(   0K)                       I2C/C2I adapters
+0x00007f90908b6c10 (+0x00024c10) 0x00000280(   0K)                       wrong_method_abstract_stub
+0x00007f90908b6e90 (+0x00024e90) 0x00000280(   0K)                       ic_miss_stub
+0x00007f90908b7110 (+0x00025110) 0x00000280(   0K)                       resolve_opt_virtual_call
+0x00007f90908b7390 (+0x00025390) 0x00000280(   0K)                       resolve_virtual_call
+0x00007f90908b7610 (+0x00025610) 0x00000280(   0K)                       resolve_static_call
+0x00007f90908b8210 (+0x00026210) 0x00000280(   0K)                       SafepointBlob
+0x00007f90908b8490 (+0x00026490) 0x00000280(   0K)                       SafepointBlob
+0x00007f90908bf810 (+0x0002d810) 0x00000280(   0K)                       I2C/C2I adapters
+0x00007f90908bfe90 (+0x0002de90) 0x00000280(   0K)                       I2C/C2I adapters
+
+
++-----------------------------------------------------+
+|  Block count histogram for CodeHeap 'non-nmethods'  |
++-----------------------------------------------------+
+Note: The histogram indicates how many blocks (as a percentage
+      of all blocks) have a size in the given range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:     296
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):       279 |       11 |*******
+[  512 .. 1024 ):       607 |      266 |*******************1*******************2*******************3*******************4*******************5*******************6*******************7*******************8*******************
+[    1K..    2K):      1152 |        9 |******
+[    2K..    4K):      2496 |        2 |*
+[    4K..    8K):         0 |        0 |
+[    8K..   16K):     10368 |        1 |
+[   16K..   32K):     26282 |        3 |**
+[   32K..   64K):     39680 |        2 |*
+[   64K..  128K):    114304 |        1 |
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):    576896 |        1 |
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
++-------------------------------------------------------------------------+
+|  Contribution per size range to total size for CodeHeap 'non-nmethods'  |
++-------------------------------------------------------------------------+
+Note: The histogram indicates how much space (as a percentage of all
+      occupied space) is used by the blocks in the given size range.
+      2 characters are printed per percentage point.
+
+total size   of all blocks:       0M
+total number of all blocks:     296
+
+[Size Range)------avg.-size-+----count-+
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..    0 ):         0 |        0 |
+[    0 ..  128 ):         0 |        0 |
+[  128 ..  256 ):         0 |        0 |
+[  256 ..  512 ):       279 |       11 |
+[  512 .. 1024 ):       607 |      266 |*******************1***********
+[    1K..    2K):      1152 |        9 |*
+[    2K..    4K):      2496 |        2 |
+[    4K..    8K):         0 |        0 |
+[    8K..   16K):     10368 |        1 |*
+[   16K..   32K):     26282 |        3 |***************
+[   32K..   64K):     39680 |        2 |***************
+[   64K..  128K):    114304 |        1 |*******************1*
+[  128K..  256K):         0 |        0 |
+[  256K..  512K):         0 |        0 |
+[  512K.. 1024K):    576896 |        1 |*******************1*******************2*******************3*******************4*******************5**********
+[    1M..    2M):         0 |        0 |
+[    2M..    4M):         0 |        0 |
+[    4M..    8M):         0 |        0 |
+[    8M..   16M):         0 |        0 |
+[   16M..   32M):         0 |        0 |
+[   32M..   64M):         0 |        0 |
+[   64M..  128M):         0 |        0 |
+[  128M..  256M):         0 |        0 |
+[  256M..  512M):         0 |        0 |
+[  512M.. 1024M):         0 |        0 |
+[ 1024M.. 2048M):         0 |        0 |
+----------------------------+----------+
+
+
+
+=============================================================================
+=  F R E E   S P A C E   S T A T I S T I C S   for CodeHeap 'non-nmethods'  =
+=============================================================================
+Note: in this context, a gap is the occupied space between two free blocks.
+      Those gaps are of interest if there is a chance that they become
+      unoccupied, e.g. by class unloading. Then, the two adjacent free
+      blocks, together with the now unoccupied space, form a new, large
+      free block.
+
++------------------------------------------------------+
+|  List of all Free Blocks in CodeHeap 'non-nmethods'  |
++------------------------------------------------------+
+0x00007f909098fe00: Len[   0] = 0x4600
+
+
++--------------------------------------------------+
+|  Top Ten Free Blocks in CodeHeap 'non-nmethods'  |
++--------------------------------------------------+
+Pos   1: Block    0 - size 0x4600,     last free block in list.
+
+
++-----------------------------------------------------------------+
+|  Top Ten Free-Occupied-Free Triples in CodeHeap 'non-nmethods'  |
++-----------------------------------------------------------------+
+  Use this information to judge how likely it is that a large(r) free block
+  might get created by code cache sweeping.
+  If all the occupied blocks can be swept, the three free blocks will be
+  merged into one (much larger) free block. That would reduce free space
+  fragmentation.
+
+
+
+====================================================================
+=  B L O C K   C O U N T S   for CodeHeap 'non-profiled nmethods'  =
+====================================================================
+  Each granule contains an individual number of heap blocks. Large blocks
+  may span multiple granules and are counted for each granule they touch.
+
++--------------------------------------------------------------------------------------+
+|  Total (all tiers) count, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++--------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |55566551                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------+
+|  Tier1 nMethod count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++---------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |3555341                                                                                                                         |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------+
+|  Tier2 nMethod count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++---------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |2   3141                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++--------------------------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed nMethod count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++--------------------------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |   1                                                                                                                            |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
+No Stubs and Blobs found in CodeHeap.
+
+
+No dead nMethods found in CodeHeap.
+
+
++----------------------------------------------------------------------------------------------------+
+|  Count by tier (combined, no dead blocks): <#t1>:<#t2>:<#s>, 0x0..0xf. '*' indicates >= 16 blocks  |
++----------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |3:2:  5: :  5: :  5: :  3:3:  4:1:  1:4:   :1:   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098372000 (+0x00018000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909838a000 (+0x00030000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983a2000 (+0x00048000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983ba000 (+0x00060000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983d2000 (+0x00078000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983ea000 (+0x00090000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098402000 (+0x000a8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909841a000 (+0x000c0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098432000 (+0x000d8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909844a000 (+0x000f0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098462000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909847a000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098492000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984aa000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984c2000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984da000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984f2000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909850a000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098522000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909853a000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098552000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909856a000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098582000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909859a000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90985b2000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+================================================================
+=  B L O C K   C O U N T S   for CodeHeap 'profiled nmethods'  =
+================================================================
+  Each granule contains an individual number of heap blocks. Large blocks
+  may span multiple granules and are counted for each granule they touch.
+
++--------------------------------------------------------------------------------------+
+|  Total (all tiers) count, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++--------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |45334452533431124341224444213353533342322431112311243341                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------+
+|  Tier1 nMethod count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++---------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |23334452333431124341223443213353312342322431112311243341                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
++--------------------------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed nMethod count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++--------------------------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |22      2             1  1      221                                                                                             |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
+No Stubs and Blobs found in CodeHeap.
+
+
+No dead nMethods found in CodeHeap.
+
+
++----------------------------------------------------------------------------------------------------+
+|  Count by tier (combined, no dead blocks): <#t1>:<#t2>:<#s>, 0x0..0xf. '*' indicates >= 16 blocks  |
++----------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |2: :  3: :  3: :  3: :  4: :  4: :  5: :  2: :  3: :  3: :  3: :  4: :  3: :  1: :  1: :  2: :  4: :  3: :  4: :  1: :  2: :  2: :  3: :  4: :  |
+0x00007f9090e3b000 (+0x00018000): |4: :  3: :  2: :  1: :  3: :  3: :  5: :  3: :  3: :  1: :  2: :  3: :  4: :  2: :  3: :  2: :  2: :  4: :  3: :  1: :  1: :  1: :  2: :  3: :  |
+0x00007f9090e53000 (+0x00030000): |1: :  1: :  2: :  4: :  3: :  3: :  4: :  1: :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e6b000 (+0x00048000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e83000 (+0x00060000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e9b000 (+0x00078000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090eb3000 (+0x00090000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ecb000 (+0x000a8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ee3000 (+0x000c0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090efb000 (+0x000d8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f13000 (+0x000f0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f2b000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f43000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f5b000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f73000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f8b000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fa3000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fbb000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fd3000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090feb000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091003000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909101b000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091033000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909104b000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091063000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909107b000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+===========================================================
+=  B L O C K   C O U N T S   for CodeHeap 'non-nmethods'  =
+===========================================================
+  Each granule contains an individual number of heap blocks. Large blocks
+  may span multiple granules and are counted for each granule they touch.
+
++--------------------------------------------------------------------------------------+
+|  Total (all tiers) count, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++--------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): |31111111511111111111111111111111111147611211168877861111111111161111111581111111278768887889311111111111111111111111111111111111|
+0x00007f9090912000 (+0x00080000): |111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111779668998478877877886  |
+0x00007f9090992000 (+0x00100000): |                                                                                                                                |
+0x00007f9090a12000 (+0x00180000): |                                                                                                                                |
+0x00007f9090a92000 (+0x00200000): |                                                                                                                |
+
+
+No Tier1 nMethods found in CodeHeap.
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
+No not_used/not_entrant nMethods found in CodeHeap.
+
+
++-------------------------------------------------------------------------------------+
+|  Stub & Blob count only, 0x1..0xf. '*' indicates >= 16 blocks, ' ' indicates empty  |
++-------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): |31111111511111111111111111111111111147611211168877861111111111161111111581111111278768887889311111111111111111111111111111111111|
+0x00007f9090912000 (+0x00080000): |111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111779668998478877877886  |
+0x00007f9090992000 (+0x00100000): |                                                                                                                                |
+0x00007f9090a12000 (+0x00180000): |                                                                                                                                |
+0x00007f9090a92000 (+0x00200000): |                                                                                                                |
+
+
+No dead nMethods found in CodeHeap.
+
+
++----------------------------------------------------------------------------------------------------+
+|  Count by tier (combined, no dead blocks): <#t1>:<#t2>:<#s>, 0x0..0xf. '*' indicates >= 16 blocks  |
++----------------------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): | : :3  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :5  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f90908aa000 (+0x00018000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :4  : :7  : :6  : :1  : :1  : :2  : :1  : :1  : :1  : :6  : :8  : :8 |
+0x00007f90908c2000 (+0x00030000): | : :7  : :7  : :8  : :6  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :6  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :5 |
+0x00007f90908da000 (+0x00048000): | : :8  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :2  : :7  : :8  : :7  : :6  : :8  : :8  : :8  : :7  : :8  : :8  : :9  : :3  : :1  : :1  : :1 |
+0x00007f90908f2000 (+0x00060000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f909090a000 (+0x00078000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f9090922000 (+0x00090000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f909093a000 (+0x000a8000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f9090952000 (+0x000c0000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1 |
+0x00007f909096a000 (+0x000d8000): | : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :1  : :7  : :7  : :9  : :6  : :6  : :8  : :9 |
+0x00007f9090982000 (+0x000f0000): | : :9  : :8  : :4  : :7  : :8  : :8  : :7  : :7  : :8  : :7  : :7  : :8  : :8  : :6  : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909099a000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909b2000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909ca000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909e2000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909fa000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a12000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a2a000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a42000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a5a000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a72000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a8a000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aa2000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aba000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ad2000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aea000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+================================================================================================
+=  S P A C E   U S A G E  &  F R A G M E N T A T I O N   for CodeHeap 'non-profiled nmethods'  =
+================================================================================================
+  The heap space covered by one granule is occupied to a various extend.
+  The granule occupancy is displayed by one decimal digit per granule.
+
+  These digits represent a fill percentage range (see legend).
+
+
++--------------------------------------------+
+|  Space ranges, based on granule occupancy  |
++--------------------------------------------+
+    -   0% == occupancy
+  0 -   0% < occupancy <  10%
+  1 -  10% < occupancy <  20%
+  2 -  20% < occupancy <  30%
+  3 -  30% < occupancy <  40%
+  4 -  40% < occupancy <  50%
+  5 -  50% < occupancy <  60%
+  6 -  60% < occupancy <  70%
+  7 -  70% < occupancy <  80%
+  8 -  80% < occupancy <  90%
+  9 -  90% < occupancy < 100%
+  * - 100% == occupancy
+  ----------------------------------------------
+
++---------------------------------------------------------------------------------+
+|  Total (all types) space consumption. ' ' indicates empty, '*' indicates full.  |
++---------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |*******0                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++--------------------------------------------------------------------+
+|  Tier1 space consumption. ' ' indicates empty, '*' indicates full  |
++--------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |5**6581                                                                                                                         |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++--------------------------------------------------------------------+
+|  Tier2 space consumption. ' ' indicates empty, '*' indicates full  |
++--------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |4   5180                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++-------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed space consumption. ' ' indicates empty, '*' indicates full  |
++-------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |   3                                                                                                                            |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
+No Stubs and Blobs found in CodeHeap.
+
+
+No dead nMethods found in CodeHeap.
+
+
++---------------------------------------------------------------------------------------------------+
+|  Space consumption by tier (combined): <t1%>:<t2%>:<s%>. ' ' indicates empty, '*' indicates full  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |5:4:  *: :  *: :  6: :  5:5:  8:1:  1:8:   :0:   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098372000 (+0x00018000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909838a000 (+0x00030000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983a2000 (+0x00048000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983ba000 (+0x00060000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983d2000 (+0x00078000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90983ea000 (+0x00090000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098402000 (+0x000a8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909841a000 (+0x000c0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098432000 (+0x000d8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909844a000 (+0x000f0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098462000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909847a000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098492000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984aa000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984c2000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984da000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90984f2000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909850a000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098522000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909853a000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098552000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909856a000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9098582000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909859a000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90985b2000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+============================================================================================
+=  S P A C E   U S A G E  &  F R A G M E N T A T I O N   for CodeHeap 'profiled nmethods'  =
+============================================================================================
+  The heap space covered by one granule is occupied to a various extend.
+  The granule occupancy is displayed by one decimal digit per granule.
+
+  These digits represent a fill percentage range (see legend).
+
+
++--------------------------------------------+
+|  Space ranges, based on granule occupancy  |
++--------------------------------------------+
+    -   0% == occupancy
+  0 -   0% < occupancy <  10%
+  1 -  10% < occupancy <  20%
+  2 -  20% < occupancy <  30%
+  3 -  30% < occupancy <  40%
+  4 -  40% < occupancy <  50%
+  5 -  50% < occupancy <  60%
+  6 -  60% < occupancy <  70%
+  7 -  70% < occupancy <  80%
+  8 -  80% < occupancy <  90%
+  9 -  90% < occupancy < 100%
+  * - 100% == occupancy
+  ----------------------------------------------
+
++---------------------------------------------------------------------------------+
+|  Total (all types) space consumption. ' ' indicates empty, '*' indicates full.  |
++---------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |*******************************************************0                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
++--------------------------------------------------------------------+
+|  Tier1 space consumption. ' ' indicates empty, '*' indicates full  |
++--------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |55******5*************8**7******627********************0                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
++-------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed space consumption. ' ' indicates empty, '*' indicates full  |
++-------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |44      4             1  2      372                                                                                             |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
+No Stubs and Blobs found in CodeHeap.
+
+
+No dead nMethods found in CodeHeap.
+
+
++---------------------------------------------------------------------------------------------------+
+|  Space consumption by tier (combined): <t1%>:<t2%>:<s%>. ' ' indicates empty, '*' indicates full  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |5: :  5: :  *: :  *: :  *: :  *: :  *: :  *: :  5: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  8: :  *: :  |
+0x00007f9090e3b000 (+0x00018000): |*: :  7: :  *: :  *: :  *: :  *: :  *: :  *: :  6: :  2: :  7: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  *: :  |
+0x00007f9090e53000 (+0x00030000): |*: :  *: :  *: :  *: :  *: :  *: :  *: :  0: :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e6b000 (+0x00048000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e83000 (+0x00060000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090e9b000 (+0x00078000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090eb3000 (+0x00090000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ecb000 (+0x000a8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ee3000 (+0x000c0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090efb000 (+0x000d8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f13000 (+0x000f0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f2b000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f43000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f5b000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f73000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090f8b000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fa3000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fbb000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090fd3000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090feb000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091003000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909101b000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091033000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909104b000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9091063000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909107b000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+=======================================================================================
+=  S P A C E   U S A G E  &  F R A G M E N T A T I O N   for CodeHeap 'non-nmethods'  =
+=======================================================================================
+  The heap space covered by one granule is occupied to a various extend.
+  The granule occupancy is displayed by one decimal digit per granule.
+
+  These digits represent a fill percentage range (see legend).
+
+
++--------------------------------------------+
+|  Space ranges, based on granule occupancy  |
++--------------------------------------------+
+    -   0% == occupancy
+  0 -   0% < occupancy <  10%
+  1 -  10% < occupancy <  20%
+  2 -  20% < occupancy <  30%
+  3 -  30% < occupancy <  40%
+  4 -  40% < occupancy <  50%
+  5 -  50% < occupancy <  60%
+  6 -  60% < occupancy <  70%
+  7 -  70% < occupancy <  80%
+  8 -  80% < occupancy <  90%
+  9 -  90% < occupancy < 100%
+  * - 100% == occupancy
+  ----------------------------------------------
+
++---------------------------------------------------------------------------------+
+|  Total (all types) space consumption. ' ' indicates empty, '*' indicates full.  |
++---------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): |********************************************************************************************************************************|
+0x00007f9090912000 (+0x00080000): |*****************************************************************************************************************************8  |
+0x00007f9090992000 (+0x00100000): |                                                                                                                                |
+0x00007f9090a12000 (+0x00180000): |                                                                                                                                |
+0x00007f9090a92000 (+0x00200000): |                                                                                                                |
+
+
+No Tier1 nMethods found in CodeHeap.
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
++----------------------------------------------------------------------------+
+|  Stub and Blob space consumption. ' ' indicates empty, '*' indicates full  |
++----------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): |********************************************************************************************************************************|
+0x00007f9090912000 (+0x00080000): |*****************************************************************************************************************************8  |
+0x00007f9090992000 (+0x00100000): |                                                                                                                                |
+0x00007f9090a12000 (+0x00180000): |                                                                                                                                |
+0x00007f9090a92000 (+0x00200000): |                                                                                                                |
+
+
+No dead nMethods found in CodeHeap.
+
+
++---------------------------------------------------------------------------------------------------+
+|  Space consumption by tier (combined): <t1%>:<t2%>:<s%>. ' ' indicates empty, '*' indicates full  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f90908aa000 (+0x00018000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f90908c2000 (+0x00030000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f90908da000 (+0x00048000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f90908f2000 (+0x00060000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f909090a000 (+0x00078000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f9090922000 (+0x00090000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f909093a000 (+0x000a8000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f9090952000 (+0x000c0000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f909096a000 (+0x000d8000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :* |
+0x00007f9090982000 (+0x000f0000): | : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :*  : :8  : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f909099a000 (+0x00108000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909b2000 (+0x00120000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909ca000 (+0x00138000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909e2000 (+0x00150000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f90909fa000 (+0x00168000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a12000 (+0x00180000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a2a000 (+0x00198000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a42000 (+0x001b0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a5a000 (+0x001c8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a72000 (+0x001e0000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090a8a000 (+0x001f8000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aa2000 (+0x00210000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aba000 (+0x00228000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090ad2000 (+0x00240000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+0x00007f9090aea000 (+0x00258000): | : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :   : :  |
+
+
+=============================================================================
+=  M E T H O D   A G E   by CompileID for CodeHeap 'non-profiled nmethods'  =
+=============================================================================
+  The age of a compiled method in the CodeHeap is not available as a
+  time stamp. Instead, a relative age is deducted from the method's compilation ID.
+  Age information is available for tier1 and tier2 methods only. There is no
+  age information for stubs and blobs, because they have no compilation ID assigned.
+  Information for the youngest method (highest ID) in the granule is printed.
+  Refer to the legend to learn how method age is mapped to the displayed digit.
+
++---------------------------------------+
+|  Age ranges, based on compilation id  |
++---------------------------------------+
+  0 -    154 to    154
+  1 -    154 to    153
+  2 -    153 to    152
+  3 -    152 to    150
+  4 -    150 to    145
+  5 -    145 to    135
+  6 -    135 to    116
+  7 -    116 to     77
+  8 -     77 to      0
+  -----------------------------------------
+
++---------------------------------------------------------------------------------------------+
+|  Age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |88877644                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------------------+
+|  Tier1 age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |8887766                                                                                                                         |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------------------+
+|  Tier2 age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |8   7644                                                                                                                        |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++--------------------------------------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++--------------------------------------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |   7                                                                                                                            |
+0x00007f90983da000 (+0x00080000): |                                                                                                                                |
+0x00007f909845a000 (+0x00100000): |                                                                                                                                |
+0x00007f90984da000 (+0x00180000): |                                                                                                                                |
+0x00007f909855a000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------------------------------+
+|  age distribution by tier <a1>:<a2>. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------------------+
+
+0x00007f909835a000 (+0x00000000): |8:8 8:  8:  7:  7:7 6:6 6:4  :4  :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909837a000 (+0x00020000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909839a000 (+0x00040000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90983ba000 (+0x00060000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90983da000 (+0x00080000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90983fa000 (+0x000a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909841a000 (+0x000c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909843a000 (+0x000e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909845a000 (+0x00100000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909847a000 (+0x00120000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909849a000 (+0x00140000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90984ba000 (+0x00160000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90984da000 (+0x00180000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90984fa000 (+0x001a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909851a000 (+0x001c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909853a000 (+0x001e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909855a000 (+0x00200000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909857a000 (+0x00220000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f909859a000 (+0x00240000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90985ba000 (+0x00260000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+
+
+=========================================================================
+=  M E T H O D   A G E   by CompileID for CodeHeap 'profiled nmethods'  =
+=========================================================================
+  The age of a compiled method in the CodeHeap is not available as a
+  time stamp. Instead, a relative age is deducted from the method's compilation ID.
+  Age information is available for tier1 and tier2 methods only. There is no
+  age information for stubs and blobs, because they have no compilation ID assigned.
+  Information for the youngest method (highest ID) in the granule is printed.
+  Refer to the legend to learn how method age is mapped to the displayed digit.
+
++---------------------------------------+
+|  Age ranges, based on compilation id  |
++---------------------------------------+
+  0 -    154 to    154
+  1 -    154 to    153
+  2 -    153 to    152
+  3 -    152 to    150
+  4 -    150 to    145
+  5 -    145 to    135
+  6 -    135 to    116
+  7 -    116 to     77
+  8 -     77 to      0
+  -----------------------------------------
+
++---------------------------------------------------------------------------------------------+
+|  Age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |88888888888888888888888887777777777776666655555666605544                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------------------+
+|  Tier1 age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |88888888888888888888888887777777777776666655555666605544                                                                        |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
++--------------------------------------------------------------------------------------------------------------------------------+
+|  not_used/not_entrant/not_installed age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++--------------------------------------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |88      8             8  7      777                                                                                             |
+0x00007f9090ea3000 (+0x00080000): |                                                                                                                                |
+0x00007f9090f23000 (+0x00100000): |                                                                                                                                |
+0x00007f9090fa3000 (+0x00180000): |                                                                                                                                |
+0x00007f9091023000 (+0x00200000): |                                                                                                                |
+
+
++---------------------------------------------------------------------------------------------------------------+
+|  age distribution by tier <a1>:<a2>. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------------------+
+
+0x00007f9090e23000 (+0x00000000): |8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  8:  7:  7:  7:  7:  7:  7:  7:  |
+0x00007f9090e43000 (+0x00020000): |7:  7:  7:  7:  7:  6:  6:  6:  6:  6:  5:  5:  5:  5:  5:  6:  6:  6:  6:  0:  5:  5:  4:  4:   :   :   :   :   :   :   :   :  |
+0x00007f9090e63000 (+0x00040000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090e83000 (+0x00060000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090ea3000 (+0x00080000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090ec3000 (+0x000a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090ee3000 (+0x000c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090f03000 (+0x000e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090f23000 (+0x00100000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090f43000 (+0x00120000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090f63000 (+0x00140000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090f83000 (+0x00160000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090fa3000 (+0x00180000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090fc3000 (+0x001a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090fe3000 (+0x001c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9091003000 (+0x001e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9091023000 (+0x00200000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9091043000 (+0x00220000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9091063000 (+0x00240000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9091083000 (+0x00260000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+
+
+====================================================================
+=  M E T H O D   A G E   by CompileID for CodeHeap 'non-nmethods'  =
+====================================================================
+  The age of a compiled method in the CodeHeap is not available as a
+  time stamp. Instead, a relative age is deducted from the method's compilation ID.
+  Age information is available for tier1 and tier2 methods only. There is no
+  age information for stubs and blobs, because they have no compilation ID assigned.
+  Information for the youngest method (highest ID) in the granule is printed.
+  Refer to the legend to learn how method age is mapped to the displayed digit.
+
++---------------------------------------+
+|  Age ranges, based on compilation id  |
++---------------------------------------+
+  0 -    154 to    154
+  1 -    154 to    153
+  2 -    153 to    152
+  3 -    152 to    150
+  4 -    150 to    145
+  5 -    145 to    135
+  6 -    135 to    116
+  7 -    116 to     77
+  8 -     77 to      0
+  -----------------------------------------
+
++---------------------------------------------------------------------------------------------+
+|  Age distribution. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): |                                                                                                                                |
+0x00007f9090912000 (+0x00080000): |                                                                                                                                |
+0x00007f9090992000 (+0x00100000): |                                                                                                                                |
+0x00007f9090a12000 (+0x00180000): |                                                                                                                                |
+0x00007f9090a92000 (+0x00200000): |                                                                                                                |
+
+
+No Tier1 nMethods found in CodeHeap.
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
+No Tier2 nMethods found in CodeHeap.
+
+
++---------------------------------------------------------------------------------------------------------------+
+|  age distribution by tier <a1>:<a2>. '0' indicates youngest 1/256, '8': oldest half, ' ': no age information  |
++---------------------------------------------------------------------------------------------------------------+
+
+0x00007f9090892000 (+0x00000000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90908b2000 (+0x00020000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90908d2000 (+0x00040000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90908f2000 (+0x00060000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090912000 (+0x00080000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090932000 (+0x000a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090952000 (+0x000c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090972000 (+0x000e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090992000 (+0x00100000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90909b2000 (+0x00120000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90909d2000 (+0x00140000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f90909f2000 (+0x00160000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090a12000 (+0x00180000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090a32000 (+0x001a0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090a52000 (+0x001c0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090a72000 (+0x001e0000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090a92000 (+0x00200000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090ab2000 (+0x00220000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090ad2000 (+0x00240000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+0x00007f9090af2000 (+0x00260000): | :   :   :   :   :   :   :   :   :   :   :   :   :   :   :   :  |
+
+
+====================================================================
+=  M E T H O D   N A M E S   for CodeHeap 'non-profiled nmethods'  =
+====================================================================
+  Method names are dynamically retrieved from the code cache at print time.
+  Due to the living nature of the code heap and because the CodeCache_lock
+  is not continuously held, the displayed name might be wrong or no name
+  might be found at all. The likelihood for that to happen increases
+  over time passed between aggregtion and print steps.
+
+
+--------------------------------------------------------------------
+Address range [0x00007f909835a000,0x00007f90983da000), 512k
+--------------------------------------------------------------------
+                                                    compiler method
+Addr(module)              offset              size  type lvl   temp blobType            Name
+0x00007f909835a010 (+0x00000010) 0x00000280(   0K)    c1   1    480 nMethod (active)    hashCode([B)I
+0x00007f909835a490 (+0x00000490) 0x00000080(   0K)    c1   1    480 nMethod (active)    <init>()V
+0x00007f909835a710 (+0x00000710) 0x000000d8(   0K)    c1   1    480 nMethod (active)    name()Ljava/lang/String;
+0x00007f909835aa10 (+0x00000a10) 0x000000d8(   0K)    c1   1    480 nMethod (active)    descriptor()Ljava/lang/module/ModuleDescriptor;
+0x00007f909835ad10 (+0x00000d10) 0x000000d8(   0K)    c1   1    480 nMethod (active)    getKey()Ljava/lang/Object;
+0x00007f909835b010 (+0x00001010) 0x000000d8(   0K)  none   0    480 nMethod (active)    getValue()Ljava/lang/Object;
+0x00007f909835b310 (+0x00001310) 0x00000000(   0K)  none   0    480 nMethod (active)    compareAndSetObject(Ljava/lang/Object;JLjava/lang/Object;Ljava/lang/Object;)Z
+0x00007f909835b790 (+0x00001790) 0x00000000(   0K)  none   0    480 nMethod (active)    compareAndSetLong(Ljava/lang/Object;JJJ)Z
+0x00007f909835bc10 (+0x00001c10) 0x000000d8(   0K)  none   0    480 nMethod (active)    reference()Ljava/lang/module/ModuleReference;
+0x00007f909835bf10 (+0x00001f10) 0x00000000(   0K)  none   0    480 nMethod (active)    arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V
+0x00007f909835c390 (+0x00002390) 0x000000d8(   0K)    c1   1    480 nMethod (active)    size()I
+0x00007f909835c690 (+0x00002690) 0x00000000(   0K)    c1   1    480 nMethod (active)    hashCode()I
+0x00007f909835cb10 (+0x00002b10) 0x000000d8(   0K)    c1   1    480 nMethod (active)    isAutomatic()Z
+0x00007f909835ce10 (+0x00002e10) 0x000000d8(   0K)    c1   1    480 nMethod (active)    source()Ljava/lang/String;
+0x00007f909835d110 (+0x00003110) 0x000000d8(   0K)  none   0    480 nMethod (active)    configuration()Ljava/lang/module/Configuration;
+0x00007f909835d410 (+0x00003410) 0x000000d8(   0K)  none   0    480 nMethod (active)    targets()Ljava/util/Set;
+0x00007f909835d710 (+0x00003710) 0x000000d8(   0K)  none   0    480 nMethod (active)    isOpen()Z
+0x00007f909835da10 (+0x00003a10) 0x00000338(   0K)  none   0    480 nMethod (deopt)     nmethod
+0x00007f909835df10 (+0x00003f10) 0x00000000(   0K)  none   0    480 nMethod (active)    addExportsToAllUnnamed0(Ljava/lang/Module;Ljava/lang/String;)V
+0x00007f909835e310 (+0x00004310) 0x00000108(   0K)  none   0    480 nMethod (active)    nextIndex()I
+0x00007f909835e610 (+0x00004610) 0x000000a0(   0K)  none   0    480 nMethod (active)    hasNext()Z
+0x00007f909835e890 (+0x00004890) 0x000000d8(   0K)  none   0    480 nMethod (active)    getDescriptor()Ljava/lang/module/ModuleDescriptor;
+0x00007f909835eb90 (+0x00004b90) 0x00000080(   0K)  none   0    480 nMethod (active)    afterNodeInsertion(Z)V
+0x00007f909835ee10 (+0x00004e10) 0x00000000(   0K)  none   0    480 nMethod (active)    linkToStatic(Ljava/lang/Object;Ljava/lang/Object;IILjava/lang/invoke/MemberName;)I
+0x00007f909835f010 (+0x00005010) 0x000000d8(   0K)  none   0    480 nMethod (active)    get()J
+0x00007f909835f310 (+0x00005310) 0x00000000(   0K)  none   0    480 nMethod (active)    getClass()Ljava/lang/Class;
+0x00007f909835f790 (+0x00005790) 0x00000000(   0K)  none   0    480 nMethod (active)    nanoTime()J
+0x00007f909835fb90 (+0x00005b90) 0x00000080(   0K)  none   0    480 nMethod (active)    min(II)I
+0x00007f909835fe10 (+0x00005e10) 0x00000000(   0K)  none   0    480 nMethod (active)    currentThread()Ljava/lang/Thread;
+0x00007f9098360290 (+0x00006290) 0x00000160(   0K)    c2   4    480 nMethod (active)    next(I)I
+0x00007f9098360610 (+0x00006610) 0x000002f0(   0K)    c2   4    480 nMethod (active)    nextBytes([B)V
+0x00007f9098360b10 (+0x00006b10) 0x00000150(   0K)    c2   4    480 nMethod (active)    putChar([BII)V
+0x00007f9098360e10 (+0x00006e10) 0x00000080(   0K)    c2   4    480 nMethod (active)    <init>()V
+0x00007f9098361090 (+0x00007090) 0x000009e8(   2K)    c2   4    480 nMethod (active)    makePositive([BII)[I
+0x00007f9098361c90 (+0x00007c90) 0x00000720(   1K)    c2   4    480 nMethod (active)    stripLeadingZeroBytes([BII)[I
+
+--------------------------------------------------------------------
+Address range [0x00007f90983da000,0x00007f909845a000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f909845a000,0x00007f90984da000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f90984da000,0x00007f909855a000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f909855a000,0x00007f90985ca000), 448k
+--------------------------------------------------------------------
+
+
+================================================================
+=  M E T H O D   N A M E S   for CodeHeap 'profiled nmethods'  =
+================================================================
+  Method names are dynamically retrieved from the code cache at print time.
+  Due to the living nature of the code heap and because the CodeCache_lock
+  is not continuously held, the displayed name might be wrong or no name
+  might be found at all. The likelihood for that to happen increases
+  over time passed between aggregtion and print steps.
+
+
+--------------------------------------------------------------------
+Address range [0x00007f9090e23000,0x00007f9090ea3000), 512k
+--------------------------------------------------------------------
+                                                    compiler method
+Addr(module)              offset              size  type lvl   temp blobType            Name
+0x00007f9090e23010 (+0x00000010) 0x00000370(   0K)    c1   3    480 nMethod (active)    tabAt([Ljava/util/concurrent/ConcurrentHashMap$Node;I)Ljava/util/concurrent/ConcurrentHashMap$Node;
+0x00007f9090e23590 (+0x00000590) 0x00000198(   0K)    c1   3    480 nMethod (active)    getObjectAcquire(Ljava/lang/Object;J)Ljava/lang/Object;
+0x00007f9090e23910 (+0x00000910) 0x00000130(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e23c90 (+0x00000c90) 0x00000260(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e24110 (+0x00001110) 0x000001b0(   0K)    c1   3    480 nMethod (active)    isLatin1()Z
+0x00007f9090e24490 (+0x00001490) 0x000003a8(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e24a90 (+0x00001a90) 0x00000170(   0K)    c1   3    480 nMethod (active)    coder()B
+0x00007f9090e24e10 (+0x00001e10) 0x00000290(   0K)    c1   3    480 nMethod (active)    floorMod(II)I
+0x00007f9090e25290 (+0x00002290) 0x000001e0(   0K)    c1   3    480 nMethod (active)    floorDiv(II)I
+0x00007f9090e25690 (+0x00002690) 0x00000780(   1K)    c1   3    480 nMethod (active)    probe(Ljava/lang/Object;)I
+0x00007f9090e26090 (+0x00003090) 0x00000320(   0K)    c1   3    480 nMethod (active)    equals([B[B)Z
+0x00007f9090e26610 (+0x00003610) 0x00000768(   1K)    c1   3    480 nMethod (active)    equals(Ljava/lang/Object;)Z
+0x00007f9090e27010 (+0x00004010) 0x000003d8(   0K)    c1   3    480 nMethod (active)    hashCode()I
+0x00007f9090e27610 (+0x00004610) 0x000002f8(   0K)    c1   3    480 nMethod (active)    equals(Ljava/lang/Object;Ljava/lang/Object;)Z
+0x00007f9090e27b10 (+0x00004b10) 0x00000128(   0K)    c1   3    480 nMethod (active)    emptySet()Ljava/util/Set;
+0x00007f9090e27e10 (+0x00004e10) 0x00000188(   0K)    c1   3    480 nMethod (active)    of()Ljava/util/Set;
+0x00007f9090e28190 (+0x00005190) 0x00000308(   0K)    c1   3    480 nMethod (active)    <init>(Ljava/util/Set;Ljava/lang/String;Ljava/util/Set;Z)V
+0x00007f9090e28690 (+0x00005690) 0x00000260(   0K)    c1   3    480 nMethod (active)    requireNonNull(Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e28b10 (+0x00005b10) 0x000003f8(   0K)    c1   3    480 nMethod (active)    hashCode()I
+0x00007f9090e29110 (+0x00006110) 0x000001b0(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e29510 (+0x00006510) 0x00000228(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e29990 (+0x00006990) 0x000002a8(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e29e90 (+0x00006e90) 0x00000a48(   2K)    c1   3    480 nMethod (active)    of([Ljava/lang/Object;)Ljava/util/Set;
+0x00007f9090e2ab90 (+0x00007b90) 0x000004b8(   1K)    c1   3    480 nMethod (active)    charAt(I)C
+0x00007f9090e2b290 (+0x00008290) 0x00000290(   0K)    c1   3    480 nMethod (active)    charAt([BI)C
+0x00007f9090e2b710 (+0x00008710) 0x00000190(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e2ba90 (+0x00008a90) 0x000001f8(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e2be90 (+0x00008e90) 0x000004d0(   1K)    c1   3    480 nMethod (active)    next()Ljava/lang/Object;
+0x00007f9090e2c590 (+0x00009590) 0x000007a0(   1K)    c1   3    480 nMethod (active)    probe(Ljava/lang/Object;)I
+0x00007f9090e2cf90 (+0x00009f90) 0x00000470(   1K)    c1   3    480 nMethod (active)    get(Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e2d690 (+0x0000a690) 0x00000638(   1K)    c1   3    480 nMethod (active)    <init>(Ljava/lang/Object;Ljava/lang/Object;)V
+0x00007f9090e2df10 (+0x0000af10) 0x000005c0(   1K)    c1   3    480 nMethod (active)    hashCode()I
+0x00007f9090e2e710 (+0x0000b710) 0x00000278(   0K)    c1   3    480 nMethod (active)    hash(Ljava/lang/Object;)I
+0x00007f9090e2eb90 (+0x0000bb90) 0x000001b8(   0K)    c1   3    480 nMethod (active)    casTabAt([Ljava/util/concurrent/ConcurrentHashMap$Node;ILjava/util/concurrent/ConcurrentHashMap$Node;Ljava/util/concurrent/ConcurrentHashMap$Node;)Z
+0x00007f9090e2ef90 (+0x0000bf90) 0x00000130(   0K)    c1   3    480 nMethod (active)    spread(I)I
+0x00007f9090e2f290 (+0x0000c290) 0x00000180(   0K)    c1   3    480 nMethod (active)    putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e2f610 (+0x0000c610) 0x00002c40(  11K)    c1   3    480 nMethod (active)    putVal(Ljava/lang/Object;Ljava/lang/Object;Z)Ljava/lang/Object;
+0x00007f9090e32690 (+0x0000f690) 0x00000bf8(   2K)    c1   3    480 nMethod (active)    addCount(JI)V
+0x00007f9090e33510 (+0x00010510) 0x00000298(   0K)    c1   3    480 nMethod (active)    <init>(ILjava/lang/Object;Ljava/lang/Object;)V
+0x00007f9090e33990 (+0x00010990) 0x00000218(   0K)    c1   3    480 nMethod (active)    length()I
+0x00007f9090e33d90 (+0x00010d90) 0x00000620(   1K)    c1   3    480 nMethod (active)    ofNullable(Ljava/lang/Object;)Ljava/util/Optional;
+0x00007f9090e34610 (+0x00011610) 0x000004c8(   1K)    c1   3    480 nMethod (active)    of(Ljava/lang/Object;)Ljava/util/Optional;
+0x00007f9090e34d10 (+0x00011d10) 0x000002f8(   0K)    c1   3    480 nMethod (active)    <init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/util/HashMap$Node;)V
+0x00007f9090e35210 (+0x00012210) 0x00000430(   1K)    c1   3    480 nMethod (active)    get(Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e35890 (+0x00012890) 0x000001f8(   0K)    c1   3    480 nMethod (active)    name()Ljava/lang/String;
+0x00007f9090e35c90 (+0x00012c90) 0x00000190(   0K)    c1   3    480 nMethod (active)    hasNext()Z
+0x00007f9090e36010 (+0x00013010) 0x000016e0(   5K)    c1   3    480 nMethod (active)    putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object;
+0x00007f9090e37a10 (+0x00014a10) 0x000003e0(   0K)    c1   3    480 nMethod (active)    put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e38010 (+0x00015010) 0x00000418(   1K)    c1   3    480 nMethod (active)    newNode(ILjava/lang/Object;Ljava/lang/Object;Ljava/util/HashMap$Node;)Ljava/util/HashMap$Node;
+0x00007f9090e38690 (+0x00015690) 0x00000ba8(   2K)    c1   3    480 nMethod (active)    getNode(ILjava/lang/Object;)Ljava/util/HashMap$Node;
+0x00007f9090e39490 (+0x00016490) 0x00000130(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e39790 (+0x00016790) 0x000001b0(   0K)    c1   3    480 nMethod (active)    size()I
+0x00007f9090e39b10 (+0x00016b10) 0x00000368(   0K)    c1   3    480 nMethod (active)    hashCode()I
+0x00007f9090e3a090 (+0x00017090) 0x00000388(   0K)    c1   3    480 nMethod (active)    next()Ljava/lang/Object;
+0x00007f9090e3a610 (+0x00017610) 0x00000278(   0K)    c1   3    480 nMethod (active)    isEmpty()Z
+0x00007f9090e3aa90 (+0x00017a90) 0x00000570(   1K)    c1   3    480 nMethod (active)    add(Ljava/lang/Object;)Z
+0x00007f9090e3b290 (+0x00018290) 0x00000298(   0K)    c1   3    480 nMethod (active)    isQualified()Z
+0x00007f9090e3b790 (+0x00018790) 0x000001b0(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e3bb90 (+0x00018b90) 0x00000410(   1K)    c1   3    480 nMethod (active)    iterator()Ljava/util/Iterator;
+0x00007f9090e3c210 (+0x00019210) 0x00000340(   0K)    c1   3    480 nMethod (active)    <init>(Ljava/util/ImmutableCollections$Set12;)V
+0x00007f9090e3c790 (+0x00019790) 0x00000170(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e3cb10 (+0x00019b10) 0x00000728(   1K)    c1   3    480 nMethod (active)    entry(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map$Entry;
+0x00007f9090e3d490 (+0x0001a490) 0x00001998(   6K)    c1   3    480 nMethod (active)    resize()[Ljava/util/HashMap$Node;
+0x00007f9090e3f110 (+0x0001c110) 0x000003e0(   0K)    c1   3    480 nMethod (active)    hasNext()Z
+0x00007f9090e3f710 (+0x0001c710) 0x00000690(   1K)    c1   3    480 nMethod (active)    next()Ljava/lang/Object;
+0x00007f9090e40010 (+0x0001d010) 0x000003e0(   0K)    c1   3    480 nMethod (active)    putIfAbsent(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+0x00007f9090e40610 (+0x0001d610) 0x00000210(   0K)    c1   3    480 nMethod (active)    iterator()Ljava/util/Iterator;
+0x00007f9090e40a10 (+0x0001da10) 0x000004b8(   1K)    c1   3    480 nMethod (active)    <init>(Ljava/util/ImmutableCollections$SetN;)V
+0x00007f9090e41110 (+0x0001e110) 0x000003a8(   0K)    c1   3    480 nMethod (active)    hashCode()I
+0x00007f9090e41710 (+0x0001e710) 0x000001c8(   0K)    c1   3    480 nMethod (active)    getProperties(I)I
+0x00007f9090e41b10 (+0x0001eb10) 0x00000170(   0K)    c1   3    480 nMethod (active)    canEncode(I)Z
+0x00007f9090e41e90 (+0x0001ee90) 0x000005a0(   1K)    c1   3    480 nMethod (active)    ensureCapacityInternal(I)V
+0x00007f9090e42690 (+0x0001f690) 0x00000498(   1K)    c1   3    480 nMethod (active)    indexOf([BII)I
+0x00007f9090e42d90 (+0x0001fd90) 0x00000328(   0K)    c1   3    480 nMethod (active)    indexOf(II)I
+0x00007f9090e43310 (+0x00020310) 0x00000210(   0K)    c1   3    480 nMethod (active)    <init>([BB)V
+0x00007f9090e43710 (+0x00020710) 0x000001b0(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e43b10 (+0x00020b10) 0x00000158(   0K)    c1   3    480 nMethod (active)    compareAndSet(JJ)Z
+0x00007f9090e43e90 (+0x00020e90) 0x00000390(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e44490 (+0x00021490) 0x00000198(   0K)    c1   3    480 nMethod (active)    nextInt()I
+0x00007f9090e44810 (+0x00021810) 0x00000590(   1K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e45010 (+0x00022010) 0x000001e0(   0K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e45410 (+0x00022410) 0x000007d8(   1K)    c1   3    480 nMethod (active)    add(Ljava/lang/Object;)Z
+0x00007f9090e45e90 (+0x00022e90) 0x00000738(   1K)    c1   3    480 nMethod (active)    add(Ljava/lang/Object;[Ljava/lang/Object;I)V
+0x00007f9090e46890 (+0x00023890) 0x00000250(   0K)    c1   3    480 nMethod (active)    <init>(J)V
+0x00007f9090e46d10 (+0x00023d10) 0x000002c0(   0K)    c1   3    480 nMethod (active)    random()D
+0x00007f9090e47210 (+0x00024210) 0x00000248(   0K)    c1   3    480 nMethod (active)    nextDouble()D
+0x00007f9090e47690 (+0x00024690) 0x00000440(   1K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e47d10 (+0x00024d10) 0x00000318(   0K)    c1   3    480 nMethod (active)    seedUniquifier()J
+0x00007f9090e48290 (+0x00025290) 0x00000ba0(   2K)    c1   3    480 nMethod (active)    <init>(J)V
+0x00007f9090e49110 (+0x00026110) 0x00000130(   0K)    c1   3    480 nMethod (active)    initialScramble(J)J
+0x00007f9090e49410 (+0x00026410) 0x00000eb8(   3K)    c1   3    480 nMethod (active)    checkBoundsOffCount(III)V
+0x00007f9090e4a610 (+0x00027610) 0x000007d0(   1K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e4b010 (+0x00028010) 0x000002d8(   0K)    c1   3    480 nMethod (active)    hasNegatives([BII)Z
+0x00007f9090e4b510 (+0x00028510) 0x00000c28(   3K)    c1   3    480 nMethod (deopt)     nmethod
+0x00007f9090e4c390 (+0x00029390) 0x00000178(   0K)    c1   3    480 nMethod (active)    getMap(Ljava/lang/Thread;)Ljava/lang/ThreadLocal$ThreadLocalMap;
+0x00007f9090e4c710 (+0x00029710) 0x00000420(   1K)    c1   3    480 nMethod (active)    get()Ljava/lang/Object;
+0x00007f9090e4cd90 (+0x00029d90) 0x00000398(   0K)    c1   3    480 nMethod (active)    getEntry(Ljava/lang/ThreadLocal;)Ljava/lang/ThreadLocal$ThreadLocalMap$Entry;
+0x00007f9090e4d390 (+0x0002a390) 0x00000758(   1K)    c1   3    480 nMethod (active)    decodeUTF8([BIIZ)Ljava/lang/StringCoding$Result;
+0x00007f9090e4dd90 (+0x0002ad90) 0x00003cb0(  15K)    c1   3    480 nMethod (active)    decodeUTF8_0([BIIZ)Ljava/lang/StringCoding$Result;
+0x00007f9090e51f90 (+0x0002ef90) 0x00000190(   0K)    c1   3    480 nMethod (active)    with([BB)Ljava/lang/StringCoding$Result;
+0x00007f9090e52310 (+0x0002f310) 0x00000590(   1K)    c1   3    480 nMethod (active)    lookup(Ljava/lang/String;)Ljava/nio/charset/Charset;
+0x00007f9090e52b10 (+0x0002fb10) 0x00002ad0(  10K)    c1   3    480 nMethod (active)    decode(Ljava/nio/charset/Charset;[BII)Ljava/lang/StringCoding$Result;
+0x00007f9090e55b10 (+0x00032b10) 0x000004c8(   1K)    c1   3    480 nMethod (active)    <init>([BIILjava/nio/charset/Charset;)V
+0x00007f9090e56210 (+0x00033210) 0x00000270(   0K)    c1   3    480 nMethod (active)    forName(Ljava/lang/String;)Ljava/nio/charset/Charset;
+0x00007f9090e56690 (+0x00033690) 0x00000490(   1K)    c1   3    480 nMethod (active)    inflate([BI[BII)V
+0x00007f9090e56d90 (+0x00033d90) 0x000001c8(   0K)    c1   3    480 nMethod (active)    <init>([BLjava/nio/charset/Charset;)V
+0x00007f9090e57190 (+0x00034190) 0x000002b8(   0K)    c1   3    480 nMethod (active)    checkFromIndexSize(III)I
+0x00007f9090e57690 (+0x00034690) 0x00000a18(   2K)    c1   3    480 nMethod (active)    checkFromIndexSize(IIILjava/util/function/BiFunction;)I
+0x00007f9090e58310 (+0x00035310) 0x000001c0(   0K)    c1   3    480 nMethod (active)    <init>([B)V
+0x00007f9090e58710 (+0x00035710) 0x00000b90(   2K)    c1   3    480 nMethod (active)    <init>([BII)V
+0x00007f9090e59590 (+0x00036590) 0x000001f8(   0K)    c1   3    480 nMethod (active)    getChar([BI)C
+0x00007f9090e59990 (+0x00036990) 0x00000170(   0K)    c1   3    480 nMethod (active)    isNotContinuation(I)Z
+0x00007f9090e59d10 (+0x00036d10) 0x00000228(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e5a190 (+0x00037190) 0x00000328(   0K)    c1   3    480 nMethod (active)    <init>()V
+0x00007f9090e5a710 (+0x00037710) 0x00000858(   2K)    c1   3    480 nMethod (active)    copyOf([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;
+
+--------------------------------------------------------------------
+Address range [0x00007f9090ea3000,0x00007f9090f23000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f9090f23000,0x00007f9090fa3000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f9090fa3000,0x00007f9091023000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f9091023000,0x00007f9091093000), 448k
+--------------------------------------------------------------------
+
+
+===========================================================
+=  M E T H O D   N A M E S   for CodeHeap 'non-nmethods'  =
+===========================================================
+  Method names are dynamically retrieved from the code cache at print time.
+  Due to the living nature of the code heap and because the CodeCache_lock
+  is not continuously held, the displayed name might be wrong or no name
+  might be found at all. The likelihood for that to happen increases
+  over time passed between aggregtion and print steps.
+
+
+--------------------------------------------------------------------
+Address range [0x00007f9090892000,0x00007f9090912000), 512k
+--------------------------------------------------------------------
+                                                    compiler method
+Addr(module)              offset              size  type lvl   temp blobType            Name
+0x00007f9090892010 (+0x00000010)                                    buffer blob         flush_icache_stub
+0x00007f9090892210 (+0x00000210)                                    buffer blob         VM_Version stub
+0x00007f9090892a90 (+0x00000a90)                                    buffer blob         StubRoutines (1)
+0x00007f909089a090 (+0x00008090)                                    runtime stub        wrong_method_stub
+0x00007f909089a410 (+0x00008410)                                    runtime stub        StackOverflowError throw_exception
+0x00007f909089a610 (+0x00008610)                                    runtime stub        delayed StackOverflowError throw_exception
+0x00007f909089a810 (+0x00008810)                                    buffer blob         Interpreter
+0x00007f90908b6690 (+0x00024690)                                    safepoint stub      SafepointBlob
+0x00007f90908b6c10 (+0x00024c10)                                    runtime stub        wrong_method_abstract_stub
+0x00007f90908b6e90 (+0x00024e90)                                    runtime stub        ic_miss_stub
+0x00007f90908b7110 (+0x00025110)                                    runtime stub        resolve_opt_virtual_call
+0x00007f90908b7390 (+0x00025390)                                    runtime stub        resolve_virtual_call
+0x00007f90908b7610 (+0x00025610)                                    runtime stub        resolve_static_call
+0x00007f90908b7890 (+0x00025890)                                    adapter blob        I2C/C2I adapters
+0x00007f90908b7c10 (+0x00025c10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908b7e10 (+0x00025e10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908b8010 (+0x00026010)                                    adapter blob        I2C/C2I adapters
+0x00007f90908b8210 (+0x00026210)                                    safepoint stub      SafepointBlob
+0x00007f90908b8490 (+0x00026490)                                    safepoint stub      SafepointBlob
+0x00007f90908b8710 (+0x00026710)                                    deopt stub          DeoptimizationBlob
+0x00007f90908b8b10 (+0x00026b10)                                    uncommon trap stub  UncommonTrapBlob
+0x00007f90908b8d10 (+0x00026d10)                                    buffer blob         InlineCacheBuffer
+0x00007f90908bb590 (+0x00029590)                                    buffer blob         adapters
+0x00007f90908bf610 (+0x0002d610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908bf810 (+0x0002d810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908bfa90 (+0x0002da90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908bfc90 (+0x0002dc90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908bfe90 (+0x0002de90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0110 (+0x0002e110)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0310 (+0x0002e310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0590 (+0x0002e590)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0810 (+0x0002e810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0a90 (+0x0002ea90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0c90 (+0x0002ec90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c0e90 (+0x0002ee90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1090 (+0x0002f090)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1290 (+0x0002f290)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1510 (+0x0002f510)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1790 (+0x0002f790)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1a10 (+0x0002fa10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1c10 (+0x0002fc10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c1e90 (+0x0002fe90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2110 (+0x00030110)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2390 (+0x00030390)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2610 (+0x00030610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2890 (+0x00030890)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2b10 (+0x00030b10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c2d90 (+0x00030d90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3010 (+0x00031010)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3290 (+0x00031290)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3510 (+0x00031510)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3790 (+0x00031790)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3a10 (+0x00031a10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3c90 (+0x00031c90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c3e90 (+0x00031e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4090 (+0x00032090)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4310 (+0x00032310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4590 (+0x00032590)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4790 (+0x00032790)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4990 (+0x00032990)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4c10 (+0x00032c10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c4e90 (+0x00032e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c5110 (+0x00033110)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c5390 (+0x00033390)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c5610 (+0x00033610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c5890 (+0x00033890)                                    adapter blob        I2C/C2I adapters
+0x00007f90908c5b10 (+0x00033b10)                                    buffer blob         StubRoutines (2)
+0x00007f90908d1090 (+0x0003f090)                                    buffer blob         getCPUIDBrandString_stub
+0x00007f90908d1410 (+0x0003f410)                                    runtime stub        AbstractMethodError throw_exception
+0x00007f90908d1610 (+0x0003f610)                                    runtime stub        IncompatibleClassChangeError throw_exception
+0x00007f90908d1810 (+0x0003f810)                                    runtime stub        NullPointerException at call throw_exception
+0x00007f90908d1a10 (+0x0003fa10)                                    MH adapter blob     MethodHandles adapters
+0x00007f90908d9790 (+0x00047790)                                    adapter blob        I2C/C2I adapters
+0x00007f90908d9990 (+0x00047990)                                    adapter blob        I2C/C2I adapters
+0x00007f90908d9b90 (+0x00047b90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908d9e10 (+0x00047e10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908da090 (+0x00048090)                                    adapter blob        I2C/C2I adapters
+0x00007f90908da310 (+0x00048310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908da510 (+0x00048510)                                    adapter blob        I2C/C2I adapters
+0x00007f90908da710 (+0x00048710)                                    adapter blob        I2C/C2I adapters
+0x00007f90908da910 (+0x00048910)                                    adapter blob        I2C/C2I adapters
+0x00007f90908dab90 (+0x00048b90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908dae10 (+0x00048e10)                                    buffer blob         native signature handlers
+0x00007f90908e2e90 (+0x00050e90)                                    buffer blob         Signature Handler Temp Buffer
+0x00007f90908e3310 (+0x00051310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e3510 (+0x00051510)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e3790 (+0x00051790)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e3a10 (+0x00051a10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e3c90 (+0x00051c90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e3e90 (+0x00051e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4090 (+0x00052090)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4310 (+0x00052310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4590 (+0x00052590)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4810 (+0x00052810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4a90 (+0x00052a90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4d10 (+0x00052d10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e4f90 (+0x00052f90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5210 (+0x00053210)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5490 (+0x00053490)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5710 (+0x00053710)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5a10 (+0x00053a10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5c10 (+0x00053c10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e5e90 (+0x00053e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e6190 (+0x00054190)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e6490 (+0x00054490)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e6810 (+0x00054810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e6b90 (+0x00054b90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e6e90 (+0x00054e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7110 (+0x00055110)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7390 (+0x00055390)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7610 (+0x00055610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7890 (+0x00055890)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7a90 (+0x00055a90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7d10 (+0x00055d10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e7f10 (+0x00055f10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8190 (+0x00056190)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8390 (+0x00056390)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8610 (+0x00056610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8890 (+0x00056890)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8b10 (+0x00056b10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8d90 (+0x00056d90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e8f90 (+0x00056f90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9190 (+0x00057190)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9410 (+0x00057410)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9610 (+0x00057610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9810 (+0x00057810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9a10 (+0x00057a10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9c10 (+0x00057c10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908e9e10 (+0x00057e10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ea010 (+0x00058010)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ea290 (+0x00058290)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ea510 (+0x00058510)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ea710 (+0x00058710)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ea910 (+0x00058910)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eab90 (+0x00058b90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eae10 (+0x00058e10)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eb090 (+0x00059090)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eb310 (+0x00059310)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eb590 (+0x00059590)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eb810 (+0x00059810)                                    adapter blob        I2C/C2I adapters
+0x00007f90908eba90 (+0x00059a90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ebc90 (+0x00059c90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ebe90 (+0x00059e90)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ec110 (+0x0005a110)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ec390 (+0x0005a390)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ec610 (+0x0005a610)                                    adapter blob        I2C/C2I adapters
+0x00007f90908ec890 (+0x0005a890)                                    buffer blob         jni_fast_GetBooleanField
+0x00007f90908eca90 (+0x0005aa90)                                    buffer blob         jni_fast_GetByteField
+0x00007f90908ecc90 (+0x0005ac90)                                    buffer blob         jni_fast_GetCharField
+0x00007f90908ece90 (+0x0005ae90)                                    buffer blob         jni_fast_GetShortField
+0x00007f90908ed090 (+0x0005b090)                                    buffer blob         jni_fast_GetIntField
+0x00007f90908ed290 (+0x0005b290)                                    buffer blob         jni_fast_GetLongField
+0x00007f90908ed490 (+0x0005b490)                                    buffer blob         jni_fast_GetFloatField
+0x00007f90908ed690 (+0x0005b690)                                    buffer blob         jni_fast_GetDoubleField
+0x00007f90908ed890 (+0x0005b890)                                    runtime stub        throw_range_check_failed Runtime1 stub
+0x00007f90908edc10 (+0x0005bc10)                                    runtime stub        forward_exception Runtime1 stub
+0x00007f90908ede90 (+0x0005be90)                                    runtime stub        unwind_exception Runtime1 stub
+0x00007f90908edf90 (+0x0005bf90)                                    runtime stub        dtrace_object_alloc Runtime1 stub
+0x00007f90908ee210 (+0x0005c210)                                    exception stub      ExceptionBlob
+0x00007f90908ee410 (+0x0005c410)                                    buffer blob         C1 temporary CodeBuffer
+
+--------------------------------------------------------------------
+Address range [0x00007f9090912000,0x00007f9090992000), 512k
+--------------------------------------------------------------------
+                                                    compiler method
+Addr(module)              offset              size  type lvl   temp blobType            Name
+0x00007f909097b190 (+0x000e9190)                                    runtime stub        throw_index_exception Runtime1 stub
+0x00007f909097b390 (+0x000e9390)                                    runtime stub        throw_div0_exception Runtime1 stub
+0x00007f909097b590 (+0x000e9590)                                    runtime stub        throw_null_pointer_exception Runtime1 stub
+0x00007f909097b790 (+0x000e9790)                                    runtime stub        register_finalizer Runtime1 stub
+0x00007f909097ba90 (+0x000e9a90)                                    runtime stub        new_instance Runtime1 stub
+0x00007f909097bd90 (+0x000e9d90)                                    runtime stub        fast_new_instance Runtime1 stub
+0x00007f909097c090 (+0x000ea090)                                    runtime stub        fast_new_instance_init_check Runtime1 stub
+0x00007f909097c390 (+0x000ea390)                                    runtime stub        new_type_array Runtime1 stub
+0x00007f909097c690 (+0x000ea690)                                    runtime stub        new_object_array Runtime1 stub
+0x00007f909097c990 (+0x000ea990)                                    runtime stub        new_multi_array Runtime1 stub
+0x00007f909097cc90 (+0x000eac90)                                    runtime stub        handle_exception_nofpu Runtime1 stub
+0x00007f909097ce90 (+0x000eae90)                                    runtime stub        handle_exception Runtime1 stub
+0x00007f909097d110 (+0x000eb110)                                    runtime stub        handle_exception_from_callee Runtime1 stub
+0x00007f909097d310 (+0x000eb310)                                    runtime stub        throw_array_store_exception Runtime1 stub
+0x00007f909097d510 (+0x000eb510)                                    runtime stub        throw_class_cast_exception Runtime1 stub
+0x00007f909097d710 (+0x000eb710)                                    runtime stub        throw_incompatible_class_change_error Runtime1 stub
+0x00007f909097d910 (+0x000eb910)                                    runtime stub        slow_subtype_check Runtime1 stub
+0x00007f909097db10 (+0x000ebb10)                                    runtime stub        monitorenter Runtime1 stub
+0x00007f909097dd90 (+0x000ebd90)                                    runtime stub        monitorenter_nofpu Runtime1 stub
+0x00007f909097df90 (+0x000ebf90)                                    runtime stub        monitorexit Runtime1 stub
+0x00007f909097e210 (+0x000ec210)                                    runtime stub        monitorexit_nofpu Runtime1 stub
+0x00007f909097e410 (+0x000ec410)                                    runtime stub        deoptimize Runtime1 stub
+0x00007f909097e690 (+0x000ec690)                                    runtime stub        access_field_patching Runtime1 stub
+0x00007f909097eb10 (+0x000ecb10)                                    runtime stub        load_klass_patching Runtime1 stub
+0x00007f909097ef90 (+0x000ecf90)                                    runtime stub        load_mirror_patching Runtime1 stub
+0x00007f909097f410 (+0x000ed410)                                    runtime stub        load_appendix_patching Runtime1 stub
+0x00007f909097f890 (+0x000ed890)                                    runtime stub        fpu2long_stub Runtime1 stub
+0x00007f909097fa90 (+0x000eda90)                                    runtime stub        counter_overflow Runtime1 stub
+0x00007f909097fd10 (+0x000edd10)                                    runtime stub        predicate_failed_trap Runtime1 stub
+0x00007f909097ff90 (+0x000edf90)                                    runtime stub        g1_pre_barrier_slow
+0x00007f9090980210 (+0x000ee210)                                    runtime stub        g1_post_barrier_slow
+0x00007f9090980510 (+0x000ee510)                                    adapter blob        I2C/C2I adapters
+0x00007f9090980990 (+0x000ee990)                                    runtime stub        _monitor_notify_Java
+0x00007f9090980a90 (+0x000eea90)                                    runtime stub        _complete_monitor_locking_Java
+0x00007f9090980b90 (+0x000eeb90)                                    runtime stub        _multianewarrayN_Java
+0x00007f9090980c90 (+0x000eec90)                                    runtime stub        _multianewarray5_Java
+0x00007f9090980e10 (+0x000eee10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090981090 (+0x000ef090)                                    adapter blob        I2C/C2I adapters
+0x00007f9090981310 (+0x000ef310)                                    adapter blob        I2C/C2I adapters
+0x00007f9090981590 (+0x000ef590)                                    adapter blob        I2C/C2I adapters
+0x00007f9090981810 (+0x000ef810)                                    runtime stub        _multianewarray4_Java
+0x00007f9090981910 (+0x000ef910)                                    runtime stub        _multianewarray3_Java
+0x00007f9090981a10 (+0x000efa10)                                    runtime stub        _multianewarray2_Java
+0x00007f9090981b10 (+0x000efb10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090981f10 (+0x000eff10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090982190 (+0x000f0190)                                    adapter blob        I2C/C2I adapters
+0x00007f9090982410 (+0x000f0410)                                    adapter blob        I2C/C2I adapters
+0x00007f9090982690 (+0x000f0690)                                    adapter blob        I2C/C2I adapters
+0x00007f9090982910 (+0x000f0910)                                    adapter blob        I2C/C2I adapters
+0x00007f9090982b10 (+0x000f0b10)                                    runtime stub        _register_finalizer_Java
+0x00007f9090982c10 (+0x000f0c10)                                    runtime stub        _slow_arraycopy_Java
+0x00007f9090982d10 (+0x000f0d10)                                    runtime stub        _rethrow_Java
+0x00007f9090982e90 (+0x000f0e90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090983190 (+0x000f1190)                                    adapter blob        I2C/C2I adapters
+0x00007f9090983390 (+0x000f1390)                                    runtime stub        _new_instance_Java
+0x00007f9090983590 (+0x000f1590)                                    runtime stub        _new_array_Java
+0x00007f9090983790 (+0x000f1790)                                    runtime stub        _new_array_nozero_Java
+0x00007f9090983990 (+0x000f1990)                                    adapter blob        I2C/C2I adapters
+0x00007f9090983c90 (+0x000f1c90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090983f10 (+0x000f1f10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090984190 (+0x000f2190)                                    adapter blob        I2C/C2I adapters
+0x00007f9090984410 (+0x000f2410)                                    adapter blob        I2C/C2I adapters
+0x00007f9090984690 (+0x000f2690)                                    buffer blob         vtable chunks
+0x00007f9090985190 (+0x000f3190)                                    runtime stub        _monitor_notifyAll_Java
+0x00007f9090985390 (+0x000f3390)                                    adapter blob        I2C/C2I adapters
+0x00007f9090985690 (+0x000f3690)                                    adapter blob        I2C/C2I adapters
+0x00007f9090985910 (+0x000f3910)                                    adapter blob        I2C/C2I adapters
+0x00007f9090985b90 (+0x000f3b90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090985e10 (+0x000f3e10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986010 (+0x000f4010)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986210 (+0x000f4210)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986410 (+0x000f4410)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986610 (+0x000f4610)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986810 (+0x000f4810)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986a10 (+0x000f4a10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986c10 (+0x000f4c10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090986e10 (+0x000f4e10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987010 (+0x000f5010)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987290 (+0x000f5290)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987490 (+0x000f5490)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987710 (+0x000f5710)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987910 (+0x000f5910)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987b10 (+0x000f5b10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987d10 (+0x000f5d10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090987f90 (+0x000f5f90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988210 (+0x000f6210)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988490 (+0x000f6490)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988790 (+0x000f6790)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988a10 (+0x000f6a10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988c90 (+0x000f6c90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090988f10 (+0x000f6f10)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989190 (+0x000f7190)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989410 (+0x000f7410)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989690 (+0x000f7690)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989910 (+0x000f7910)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989b90 (+0x000f7b90)                                    adapter blob        I2C/C2I adapters
+0x00007f9090989e10 (+0x000f7e10)                                    adapter blob        I2C/C2I adapters
+0x00007f909098a090 (+0x000f8090)                                    adapter blob        I2C/C2I adapters
+0x00007f909098a310 (+0x000f8310)                                    adapter blob        I2C/C2I adapters
+0x00007f909098a590 (+0x000f8590)                                    adapter blob        I2C/C2I adapters
+0x00007f909098a810 (+0x000f8810)                                    adapter blob        I2C/C2I adapters
+0x00007f909098aa90 (+0x000f8a90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098ad10 (+0x000f8d10)                                    adapter blob        I2C/C2I adapters
+0x00007f909098af90 (+0x000f8f90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098b190 (+0x000f9190)                                    adapter blob        I2C/C2I adapters
+0x00007f909098b410 (+0x000f9410)                                    adapter blob        I2C/C2I adapters
+0x00007f909098b610 (+0x000f9610)                                    adapter blob        I2C/C2I adapters
+0x00007f909098b890 (+0x000f9890)                                    adapter blob        I2C/C2I adapters
+0x00007f909098bb10 (+0x000f9b10)                                    adapter blob        I2C/C2I adapters
+0x00007f909098bd90 (+0x000f9d90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098c010 (+0x000fa010)                                    adapter blob        I2C/C2I adapters
+0x00007f909098c210 (+0x000fa210)                                    adapter blob        I2C/C2I adapters
+0x00007f909098c490 (+0x000fa490)                                    adapter blob        I2C/C2I adapters
+0x00007f909098c710 (+0x000fa710)                                    adapter blob        I2C/C2I adapters
+0x00007f909098c990 (+0x000fa990)                                    adapter blob        I2C/C2I adapters
+0x00007f909098cc10 (+0x000fac10)                                    adapter blob        I2C/C2I adapters
+0x00007f909098ce90 (+0x000fae90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098d110 (+0x000fb110)                                    adapter blob        I2C/C2I adapters
+0x00007f909098d390 (+0x000fb390)                                    adapter blob        I2C/C2I adapters
+0x00007f909098d610 (+0x000fb610)                                    adapter blob        I2C/C2I adapters
+0x00007f909098d890 (+0x000fb890)                                    adapter blob        I2C/C2I adapters
+0x00007f909098db10 (+0x000fbb10)                                    adapter blob        I2C/C2I adapters
+0x00007f909098dd90 (+0x000fbd90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098df90 (+0x000fbf90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098e210 (+0x000fc210)                                    adapter blob        I2C/C2I adapters
+0x00007f909098e490 (+0x000fc490)                                    adapter blob        I2C/C2I adapters
+0x00007f909098e710 (+0x000fc710)                                    adapter blob        I2C/C2I adapters
+0x00007f909098e910 (+0x000fc910)                                    adapter blob        I2C/C2I adapters
+0x00007f909098eb90 (+0x000fcb90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098ed90 (+0x000fcd90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098ef90 (+0x000fcf90)                                    adapter blob        I2C/C2I adapters
+0x00007f909098f210 (+0x000fd210)                                    adapter blob        I2C/C2I adapters
+0x00007f909098f490 (+0x000fd490)                                    adapter blob        I2C/C2I adapters
+0x00007f909098f710 (+0x000fd710)                                    adapter blob        I2C/C2I adapters
+0x00007f909098f910 (+0x000fd910)                                    adapter blob        I2C/C2I adapters
+0x00007f909098fb90 (+0x000fdb90)                                    adapter blob        I2C/C2I adapters
+
+--------------------------------------------------------------------
+Address range [0x00007f9090992000,0x00007f9090a12000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f9090a12000,0x00007f9090a92000), 512k
+--------------------------------------------------------------------
+No methods, blobs, or stubs found in this address range
+
+--------------------------------------------------------------------
+Address range [0x00007f9090a92000,0x00007f9090b02000), 448k
+--------------------------------------------------------------------
+
+
+
+__ CodeHeapStateAnalytics total duration      0.010 seconds _________
+
