@@ -39,8 +39,15 @@ static void trace(jvmtiEnv *jvmti, const char *fmt, ...) {
   time_t now = time(0);
   tm *ltm = localtime(&now);
 
-  fprintf(out, "[%.5f] %s\n", (current_time - start_time) / 1000000000.0, buf);
-  fprintf(out,"%d-%d-%dT%d:%d:%d\n",1900+ltm->tm_year,1+ltm->tm_mon,ltm->tm_mday,ltm->tm_hour,ltm->tm_min,ltm->tm_sec);
+  fprintf(out, "[%.5f][%02d-%02d-%02dT%02d:%02d:%02d] %s\n",
+          (current_time - start_time) / 1000000000.0,
+          1900+ltm->tm_year,
+          1+ltm->tm_mon,
+          ltm->tm_mday,
+          ltm->tm_hour,
+          ltm->tm_min,
+          ltm->tm_sec,
+          buf);
 
   jvmti->RawMonitorExit(vmtrace_lock);
 }
@@ -108,6 +115,21 @@ public:
   ~ThreadName() { _jvmti->Deallocate((unsigned char *)_name); }
 
   char *name() { return _name; }
+};
+
+class TagName {
+  private:
+    jvmtiEnv *_jvmti;
+    jlong *_tag;
+
+  public:
+    TagName(jvmtiEnv *jvmti, jobject object): _jvmti(jvmti), _tag(NULL) {
+      _jvmti->GetTag(object, _tag);
+    }
+
+    ~TagName() { if(_tag) _jvmti->Deallocate((unsigned char*)_tag); }
+
+    jlong tag() { return _tag ? *_tag : 0; }
 };
 
 void JNICALL VMStart(jvmtiEnv *jvmti, JNIEnv *env) {
@@ -199,28 +221,12 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
                                 jthread thread, jobject object,
                                 jclass object_klass, jlong size) {
 
-  char *signature = NULL;
-  char *generic = NULL;
-
-  jvmti->GetClassSignature(object_klass, &signature, &generic);
+  ClassName cname = ClassName(jvmti, object_klass);
+  TagName tname = TagName(jvmti, object);
 
   trace(jvmti,
-        "Sampled Object allocated, very nice. Object signature: %s, Object "
-        "generic: %s",
-        signature, generic);
-
-  if (signature) {
-    jvmti->Deallocate((unsigned char *)signature);
-  }
-  if (generic) {
-    jvmti->Deallocate((unsigned char *)generic);
-  }
-  jlong* tag;
-  jvmti->GetTag(object, tag);
-  trace(jvmti, "Object tag is: %l", *tag);
-  if (tag) {
-    jvmti->Deallocate((unsigned char *)tag);
-  }
+        "Sampled Object allocated, very nice. Object signature: %s, Tag: %l",
+        cname.name(), tname.tag());
 }
 
 void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
@@ -236,7 +242,7 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
   }
 
   jvmtiEnv *jvmti;
-  vm->GetEnv((void **)&jvmti, JVMTI_VERSION_1_0);
+  vm->GetEnv((void **)&jvmti, JVMTI_VERSION_11);
 
   jvmti->CreateRawMonitor("vmtrace_lock", &vmtrace_lock);
   jvmti->GetTime(&start_time);
