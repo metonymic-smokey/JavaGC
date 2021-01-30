@@ -215,6 +215,12 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
   if (generic) {
     jvmti->Deallocate((unsigned char *)generic);
   }
+  jlong* tag;
+  jvmti->GetTag(object, tag);
+  trace(jvmti, "Object tag is: %l", *tag);
+  if (tag) {
+    jvmti->Deallocate((unsigned char *)tag);
+  }
 }
 
 void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
@@ -244,6 +250,7 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
   capabilities.can_generate_object_free_events = 1;
   capabilities.can_generate_vm_object_alloc_events = 1;
   capabilities.can_generate_sampled_object_alloc_events = 1;
+  capabilities.can_tag_objects = 1;
   jvmti->AddCapabilities(&capabilities);
 
   jvmtiCapabilities *capabilities_avail;
@@ -256,6 +263,10 @@ JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
   }
 
   jvmti->SetHeapSamplingInterval(100);
+
+  if (capabilities_avail->can_tag_objects != 1) {
+    trace(jvmti, "CANNOT GET OBJECT TAGS");
+  }
 
   jvmtiEventCallbacks callbacks = {0};
   callbacks.VMStart = VMStart;
