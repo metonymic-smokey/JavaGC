@@ -225,8 +225,8 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
   TagName tname = TagName(jvmti, object);
 
   trace(jvmti,
-        "Sampled Object allocated, very nice. Object signature: %s, Tag: %l",
-        cname.name(), tname.tag());
+        "Sampled Object allocated, very nice. Object signature: %s, Tag: %ld, Size: %ld",
+        cname.name(), tname.tag(), size);
 }
 
 void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
