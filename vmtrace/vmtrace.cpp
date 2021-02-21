@@ -23,6 +23,7 @@
 static FILE *out;
 static jrawMonitorID vmtrace_lock;
 static jlong start_time;
+static long start_tag = 0;
 
 static void trace(jvmtiEnv *jvmti, const char *fmt, ...) {
   jlong current_time;
@@ -222,15 +223,17 @@ void JNICALL SampledObjectAlloc(jvmtiEnv *jvmti, JNIEnv *jni_env,
                                 jclass object_klass, jlong size) {
 
   ClassName cname = ClassName(jvmti, object_klass);
+  jvmti->SetTag(object, start_tag);
+  start_tag++;
   TagName tname = TagName(jvmti, object);
 
   trace(jvmti,
-        "Sampled Object allocated, very nice. Object signature: %s, Tag: %ld, Size: %ld",
-        cname.name(), tname.tag(), size);
+        "Sampled Object allocated, very nice. Object signature: %s, Tag: %ld, Size: %ld, SetTag: %ld",
+        cname.name(), tname.tag(), size, start_tag-1);
 }
 
-void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong size) {
-  trace(jvmti, "Object is freed, i is sad :(");
+void JNICALL ObjectFree(jvmtiEnv *jvmti, jlong tag) {
+  trace(jvmti, "Object is freed, i is sad :( with tag: %ld", tag);
 }
 
 JNIEXPORT jint JNICALL Agent_OnLoad(JavaVM *vm, char *options, void *reserved) {
