@@ -2,4 +2,15 @@
 set -euxo pipefail
 
 mvn verify
-java -Xms4g -Xmx4g -XX:+AlwaysPreTouch -jar target/benchmarks.jar
+
+Type=("Serial" "ParallelOld" "ConcMarkSweep" "G1" "Shenandoah" "Z" "Epsilon")
+
+for t in ${Type[@]}; do
+  echo $t
+  GC="Use"$t"GC"
+  java -XX:+UnlockDiagnosticVMOptions -Xms4g -Xmx4g -XX:+AlwaysPreTouch -XX:+$GC -jar target/benchmarks.jar> Results/$t.log
+  
+
+done
+
+
