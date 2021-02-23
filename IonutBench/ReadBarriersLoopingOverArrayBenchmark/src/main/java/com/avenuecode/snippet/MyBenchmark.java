@@ -43,7 +43,7 @@ public class MyBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-         int size,sum=0;
+         int size=262144,sum=0;
          int[] array;
 
          void arrayPopulate() {
@@ -61,6 +61,7 @@ public class MyBenchmark {
     @Benchmark
     public int test(Blackhole blackhole, BenchmarkState state) {
  
+        state.arrayPopulate();
         int sum = 0;
         for (int i = 0; i < state.size; i++) {
             sum += state.array[i];
@@ -68,13 +69,5 @@ public class MyBenchmark {
  
         return sum;
     } 
-
-    public static void main(String[] args) {
-        BenchmarkState b = new BenchmarkState();
-
-        b.size = Integer.parseInt(args[0]);
-        b.arrayPopulate();
-    }
-
 
 }
