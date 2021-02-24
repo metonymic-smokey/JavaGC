@@ -1,6 +1,7 @@
 #!/bin/sh
 set -euxo pipefail
 
+mkdir Results
 mvn verify
 
 Type=("Serial" "ParallelOld" "ConcMarkSweep" "G1" "Shenandoah" "Z" "Epsilon")

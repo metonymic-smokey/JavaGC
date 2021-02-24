@@ -40,8 +40,8 @@ public class MyBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-        int size,lRefInteger;
-        int[] array;
+        int size=262144,lRefInteger=10;
+        int[] array = new int[262144];
 
     }
 
@@ -53,12 +53,5 @@ public class MyBenchmark {
 
     }
 
-    public static void main(String[] args) {
-       BenchmarkState b = new BenchmarkState();
-       b.size = Integer.parseInt(args[0]);
-       b.lRefInteger = Integer.parseInt(args[1]);
-       b.array = new int[b.size];
-       
-    }
-
+    
 }
