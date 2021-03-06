@@ -46,7 +46,7 @@ public class MyBenchmark {
          int size=262144,sum=0;
          int[] array;
 
-         void arrayPopulate() {
+         public BenchmarkState() {
             array = new int[size];
             Random random = new Random();
 
@@ -61,7 +61,6 @@ public class MyBenchmark {
     @Benchmark
     public int test(Blackhole blackhole, BenchmarkState state) {
  
-        state.arrayPopulate();
         int sum = 0;
         for (int i = 0; i < state.size; i++) {
             sum += state.array[i];

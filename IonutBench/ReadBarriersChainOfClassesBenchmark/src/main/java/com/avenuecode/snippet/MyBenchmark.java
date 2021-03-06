@@ -35,6 +35,7 @@ import java.util.List;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.Scope;
 
 class H1 {
@@ -301,7 +302,7 @@ public class MyBenchmark {
         
         H1 h1;
 
-        public void doSetup() {
+        public BenchmarkState() {
                 h1 = new H1(new H2(new H3(new H4(
                         new H5(new H6(new H7(new H8(new H9(new H10(new H11(new H12(new H13(new H14(new H15(new H16(
                                 new H17(new H18(new H19(new H20(new H21(new H22(new H23(new H24(new H25(new H26(new H27(
@@ -313,7 +314,6 @@ public class MyBenchmark {
 
     @Benchmark
     public int test(BenchmarkState state) {
-        state.doSetup(); 
 
         return state.h1.h2.h3.h4.h5.h6.h7.h8
            .h9.h10.h11.h12.h13.h14.h15.h16
