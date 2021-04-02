@@ -280,6 +280,7 @@ public abstract class TraceParser<W> {
         // 4. Data (Byte-Buffer)
         // All of this data is stored in a (size-limited) BlockingQueue<QueueEntry> queue, which is
         // processed by the processQueueEntries() method (run by the master).
+        logger.log(Level.WARNING, "helooooooo im in TraceParser.java");
 
         try {
             for (String thread = scanner.getThread(symbols.heapWordSize);
