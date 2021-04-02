@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id "org.jetbrains.kotlin.jvm" version "1.3.0"
+    id "org.jetbrains.kotlin.jvm" version "1.3.50"
 }
 
 mainClassName = 'at.jku.anttracks.parser.main.Main'
@@ -12,5 +12,5 @@ dependencies {
 
     // Project dependencies
     compile project(':CallContextAnalyzer')
-    testCompile project(':Examples')
+    // testCompile project(':Examples')
 }

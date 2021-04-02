@@ -25,7 +25,7 @@ allprojects {
 
     // Set main class in jar for every "Application" project
     plugins.withType(ApplicationPlugin) {
-        task setJarMainClass << {jar {manifest {attributes("Main-Class": mainClassName == null ? "" : mainClassName)}}}
+        task setJarMainClass { doLast {jar {manifest {attributes("Main-Class": mainClassName == null ? "" : mainClassName)}}} }
         jar.dependsOn(setJarMainClass)
     }
 
@@ -37,6 +37,7 @@ allprojects {
     plugins.withType(JavaPlugin) {
         ext {
             appVersion = project.hasProperty('appVersion') ? project.property('appVersion') : '0.0.0-unversioned'
+            kotlinVersion = '1.3.50'
         }
 
         sourceCompatibility = 1.8
@@ -51,10 +52,14 @@ allprojects {
 
         dependencies {
             // Kotlin
-            compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.3.0'
-            compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.3.0'
-            compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.3.0'
-            compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.0.1'
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.50'
+            implementation 'org.jetbrains.kotlin:kotlin-reflect:1.3.50'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.0.1'
 
             // Datastructures
             compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
@@ -146,14 +151,17 @@ allprojects {
             }
         }
 
-        task setClassPathInJar << {
+        task setClassPathInJar {
+            doLast {
             jar {
                 manifest {
                     attributes(
-                            'Class-Path': configurations.runtimeClasspath.files.collect {it.getName()}.join(' ')
+                            // 'Class-Path': configurations.runtimeClasspath.files.collect {it.getName()}.join(' ')
+                            'Class-Path': configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.join(' ')
                             //'Class-Path': configurations.compile.collect {it.getName()}.join(' ')
                     )
                 }
+            }
             }
         }
         jar.dependsOn(setClassPathInJar)
@@ -163,7 +171,36 @@ allprojects {
                         'Version': appVersion
                 )
             }
+            zip64 = true
+            from {
+              configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+            }
         }
+
+        // task fatJar(type: Jar) {
+        //     classifier = 'all'
+        //     manifest {
+        //         attributes(
+        //                 'Version': appVersion
+        //         )
+        //     }
+        //     zip64 = true
+        //     from {
+        //       configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        //     }
+        //     with jar
+        // }
+
+        // task uberJar(type: Jar) {
+        //     classifier = 'uber'
+
+        //     from sourceSets.main.output
+
+        //     dependsOn configurations.runtimeClasspath
+        //     from {
+        //         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        //     }
+        // }
 
         task myDistZip(type: Zip) {
             dependsOn('assemble')
