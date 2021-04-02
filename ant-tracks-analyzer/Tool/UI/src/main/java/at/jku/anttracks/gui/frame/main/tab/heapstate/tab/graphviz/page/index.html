@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 100%">
+<head>
+    <base href=./ >
+    <meta charset=utf-8>
+    <title>app</title>
+    <link href="styles.css" rel=stylesheet>
+    <script src="jslib/d3.v3.js"></script>
+    <script src="jslib/graphlib-dot.js"></script>
+    <script src="jslib/dagre-d3.js"></script>
+</head>
+<body style="width: 100%; height: 100%; overflow-x: hidden; overflow-y: hidden; margin: 0">
+<svg width="100%" height="100%" style="margin: 5px">
+    <g></g>
+</svg>
+<div class="zoom">
+    <button zoom-data="1" class="zoom">+</button>
+    <button zoom-data="-1" class="zoom">−</button>
+    <button class="center">⊙</button>
+</div>
+<script src="randomUUID.js"></script>
+<script src="radialMenu.js"></script>
+<script src="graph.js"></script>
+<script src="bridge.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

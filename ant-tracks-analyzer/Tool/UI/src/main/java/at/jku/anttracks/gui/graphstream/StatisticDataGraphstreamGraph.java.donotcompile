@@ -1,0 +1,34 @@
+
+package at.jku.anttracks.gui.graphstream;
+
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
+
+import at.jku.anttracks.gui.component.treetable.TreeNode;
+import at.jku.mevss.trace.parser.heap.classifier.Grouping;
+
+public class StatisticDataGraphstreamGraph extends GraphstreamGraph<Grouping> {
+
+	private static long c = 0;
+
+	public StatisticDataGraphstreamGraph(TreeNode<Grouping> node) {
+		super(node);
+	}
+
+	@Override
+	protected Node dataToNode(MultiGraph graph, TreeNode<Grouping> treeNode) {
+		Node graphStreamNode = graph.addNode(String.valueOf(c++));
+		graphStreamNode.setAttribute("Label", treeNode.getData().getKey());
+		graphStreamNode.setAttribute("ui.label", treeNode.getData().getKey());
+		graphStreamNode.setAttribute("Amount", treeNode.getData().getSummedObjects());
+		graphStreamNode.setAttribute("Byte", treeNode.getData().getSummedBytes());
+		return graphStreamNode;
+	}
+
+	@Override
+	protected void setEdgeAttributes(Edge edge, TreeNode<Grouping> to) {
+		edge.setAttribute("Amount", to.getData().getSummedObjects());
+		edge.setAttribute("Byte", to.getData().getSummedBytes());
+	}
+}

@@ -1,0 +1,15 @@
+package at.jku.anttracks.gui.classification.filter;
+
+import at.jku.anttracks.classification.Filter;
+import at.jku.anttracks.classification.enumerations.ClassifierSourceCollection;
+import at.jku.anttracks.heap.*;
+import at.jku.anttracks.heap.symbols.*;
+
+@at.jku.anttracks.classification.annotations.F(
+  name = "###NAME###",
+  desc = "###DESC###",
+  collection = ClassifierSourceCollection.###COLLECTIONTYPE###)
+public class UserDefinedFilter extends Filter {
+  @Override
+  ###METHOD###
+}

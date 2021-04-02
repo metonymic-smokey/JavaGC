@@ -1,0 +1,11 @@
+at.jku.anttracks.gui.classification.filter.NoDataStructureHeadsFilter
+at.jku.anttracks.gui.classification.filter.NoDataStructureInternalsFilter
+at.jku.anttracks.gui.classification.filter.NoJavaFilter
+at.jku.anttracks.gui.classification.filter.NoJavaLangFilter
+at.jku.anttracks.gui.classification.filter.NoOldSpaceFilter
+at.jku.anttracks.gui.classification.filter.NoPointersFilter
+at.jku.anttracks.gui.classification.filter.NoPrimitiveArrayFilter
+at.jku.anttracks.gui.classification.filter.OnlyDataStructureHeadsFilter
+at.jku.anttracks.gui.classification.filter.OnlyDataStructureLeavesFilter
+at.jku.anttracks.gui.classification.filter.OnlyOldSpaceFilter
+at.jku.anttracks.gui.classification.filter.OnlyDomainObjectFilter

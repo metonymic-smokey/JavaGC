@@ -1,0 +1,100 @@
+package java {
+    package util {
+        HashMap$Node {
+            HashMap$Node;
+            *;
+        }
+        DS HashMap {
+            HashMap$Node[];
+            *;
+        }
+
+        DS EnumMap {
+            *;
+        }
+
+        Hashtable$Entry {
+            Hashtable$Entry;
+            *;
+        }
+        DS Hashtable {
+            Hashtable$Entry[];
+            *;
+        }
+        DS Properties {
+            Hashtable$Entry[];
+            *;
+        }
+
+
+        LinkedHashMap$Entry {
+            LinkedHashMap$Entry;
+            *;
+        }
+        DS LinkedHashMap {
+            LinkedHashMap$Entry[];
+            LinkedHashMap$Entry;
+            *;
+        }
+
+
+        TreeMap$Entry {
+            TreeMap$Entry;
+            *;
+        }
+        DS TreeMap {
+            TreeMap$Entry;
+            *;
+        }
+
+
+        WeakHashMap$Entry {
+            WeakHashMap$Entry;
+            *;
+        }
+        DS WeakHashMap {
+            WeakHashMap$Entry[];
+            *;
+        }
+
+
+        DS IdentityHashMap {
+            java.lang.Object[];
+            *;
+        }
+
+
+        package concurrent {
+            ConcurrentHashMap$Node {
+                ConcurrentHashMap$Node;
+                *;
+            }
+            DS ConcurrentHashMap {
+                ConcurrentHashMap$Node[];
+                *;
+            }
+
+            ConcurrentSkipListMap$KeySet {
+                *;
+            }
+            ConcurrentSkipListMap$ValueSet {
+                *;
+            }
+            ConcurrentSkipListMap$Values {
+                *;
+            }
+            ConcurrentSkipListMap$Node {
+                *;
+            }
+            ConcurrentSkipListMap$HeadIndex {
+                *;
+            }
+            ConcurrentSkipListMap$Index {
+                *;
+            }
+            DS ConcurrentSkipListMap {
+                *;
+            }
+        }
+    }
+}

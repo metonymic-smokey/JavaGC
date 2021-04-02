@@ -1,0 +1,32 @@
+
+package at.jku.anttracks.heap.objects;
+
+import at.jku.anttracks.heap.objects.extended.ExtendedObjectInfo;
+import at.jku.anttracks.heap.objects.extended.ExtendedObjectInfoCache;
+import at.jku.anttracks.heap.symbols.Symbols;
+
+public class ObjectInfoAge extends ObjectInfo {
+
+	public final ObjectInfo obj;
+	public int age;
+
+	public ObjectInfoAge(ObjectInfo obj, int age) {
+		this.obj = obj;
+		this.age = age;
+	}
+
+	@Override
+	public boolean isArray() {
+		return obj.isArray();
+	}
+
+	@Override
+	public ExtendedObjectInfo asExtendedObjectInfo(Symbols symbols) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public ExtendedObjectInfo asExtendedObjectInfo(ExtendedObjectInfoCache cache) {
+		throw new UnsupportedOperationException();
+	}
+}

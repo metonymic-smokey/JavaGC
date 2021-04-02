@@ -1,0 +1,15 @@
+package at.jku.anttracks.util
+
+import org.neo4j.graphdb.GraphDatabaseService
+
+fun transactional(graphDb: GraphDatabaseService, body: GraphDatabaseService.() -> Unit) {
+    val tx = graphDb.beginTx()!!
+    try {
+        graphDb.body()
+        tx.success()
+    } catch (e: Exception) {
+        println(e.message)
+        tx.failure()
+    }
+    tx.close()
+}

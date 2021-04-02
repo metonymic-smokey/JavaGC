@@ -1,0 +1,76 @@
+
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.GarbageCollectionCause;
+import at.jku.anttracks.heap.GarbageCollectionType;
+import at.jku.anttracks.heap.HeapListener;
+import at.jku.anttracks.parser.ParsingInfo;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class PauseTimeLogListener implements HeapListener<DetailedHeap> {
+
+    private final File file_minor;
+    private final File file_major;
+
+    private long time;
+
+    public PauseTimeLogListener(String file) {
+        file_major = new File(file.replace("{0}", "major"));
+        file_minor = new File(file.replace("{0}", "minor"));
+        if (file_major.exists()) {
+            file_major.delete();
+        }
+        if (file_minor.exists()) {
+            file_minor.delete();
+        }
+    }
+
+    @Override
+    public void phaseChanging(GarbageCollectionType from,
+                              GarbageCollectionType to,
+                              GarbageCollectionCause cause,
+                              boolean concurrent,
+                              boolean failed,
+                              long time,
+                              long position,
+                              ParsingInfo parsingInfo,
+                              boolean withinSelectedTimeWindow) {}
+
+    @Override
+    public void phaseChanged(GarbageCollectionType from,
+                             GarbageCollectionType to,
+                             GarbageCollectionCause cause,
+                             boolean concurrent,
+                             boolean failed,
+                             long time,
+                             long position,
+                             ParsingInfo parsingInfo,
+                             boolean withinSelectedTimeWindow) {
+        if (from != GarbageCollectionType.MUTATOR && !(cause.name.equals("System.gc()")) && !(cause.name.equals("JvmtiEnv ForceGarbageCollection"))) {
+            double duration = (time - this.time) / 1000.0;
+            try (BufferedWriter out = new BufferedWriter(new FileWriter(from.full ? file_major : file_minor, true))) {
+                out.write(String.format("%.6f", duration));
+                out.write('\n');
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
+        }
+        this.time = time;
+    }
+
+    @Override
+            public void close() {}
+
+    public static void init(DetailedHeap heap) {
+        String log = System.getProperty("statistics.pausetime.log");
+        if (log != null) {
+            heap.addListener(new PauseTimeLogListener(log));
+        }
+    }
+
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. 
+	All rights reserved. This file is part of the AntTracks Tool. This code is 
+	free software; you can redistribute it and/or modify it under the terms of 
+	the GNU General Public License version 2 only, as published by the Free Software 
+	Foundation. This code is distributed in the hope that it will be useful, 
+	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License version 
+	2 for more details (a copy is included in the LICENSE file that accompanied 
+	this code). You should have received a copy of the GNU General Public License 
+	along with with this work. If not, see <http://www.gnu.org/licenses/>. -->
+
+<?import at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab?>
+<?import at.jku.anttracks.gui.frame.main.tab.application.tab.detail.component.newrootchartpane.NewRootChartPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.*?>
+<fx:root type="at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab"
+         xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <tabContent>
+        <center>
+            <VBox>
+                <HBox fx:id="extjfxChartHBox"/>
+                <HBox fx:id="extjfxChartHBox2"/>
+                <AnchorPane VBox.vgrow="ALWAYS">
+                    <!--<RootChartPane fx:id="rootChartPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0"-->
+                    <!--AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"-->
+                    <!--AnchorPane.topAnchor="0.0"/>-->
+                    <NewRootChartPane fx:id="rootChartPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                </AnchorPane>
+            </VBox>
+        </center>
+        <bottom>
+            <BorderPane>
+                <center>
+                    <TitledPane text="Metrics" collapsible="true" expanded="false">
+                        <VBox>
+                            <ScrollPane>
+                                <TextArea fx:id="metricText" editable="false"/>
+                            </ScrollPane>
+                        </VBox>
+                    </TitledPane>
+                </center>
+            </BorderPane>
+        </bottom>
+    </tabContent>
+</fx:root>

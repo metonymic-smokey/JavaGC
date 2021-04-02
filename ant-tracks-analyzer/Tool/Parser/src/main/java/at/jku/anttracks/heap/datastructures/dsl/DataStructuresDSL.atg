@@ -1,0 +1,132 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import java.util.stream.Collectors;
+
+COMPILER DataStructures
+
+  private final List<DataStructurePartDescription> descriptions = new ArrayList<>();
+
+  public List<DataStructurePartDescription> getAllDataStructurePartDescriptions() { return descriptions; }
+  public List<DataStructurePartDescription> getHeadDataStructurePartDescriptions() { return descriptions.stream().filter(dsp -> dsp.isHead()).collect(Collectors.toList()); }
+  public List<DataStructurePartDescription> getInternalDataStructurePartDescriptions() { return descriptions.stream().filter(dsp -> dsp.isInternal()).collect(Collectors.toList()); }
+
+CHARACTERS
+  digit		= "0123456789".
+  letter	= 'a' .. 'z' + 'A' .. 'Z'.
+  wildcard	= '*' + '%'.
+
+TOKENS
+  ident 	    = (letter | '_' | '$') {letter | digit | '_' | '$'}.
+  wildcardIdent = wildcard {letter | digit | '_' | '$' | wildcard} | (letter | '_' | '$') {letter | digit | '_' | '$' | wildcard} wildcard {letter | digit | '_' | '$' | wildcard}.
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO "\n"
+
+IGNORE "\r" + "\n" + "\t"
+
+PRODUCTIONS
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  DataStructures =
+  (
+    {
+      (
+        Namespace<null>
+        |
+        DataStructurePartDescription<out DataStructurePartDescription partDesc, null> (. descriptions.add(partDesc); .)
+      )
+    }
+  ).
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  Namespace<String outerNamespace> =
+  (
+    ("package" | "namespace" | "Package" | "Namespace" | "ns" | "NS")
+    Type<out String ns>                                                                    (. String namespace = (outerNamespace != null ? outerNamespace + "." : "") + ns; .)
+    "{"
+    {
+      (
+        Namespace<namespace>
+        |
+        DataStructurePartDescription<out DataStructurePartDescription partDesc, namespace> (. descriptions.add(partDesc); .)
+      )
+    }
+    "}"
+  ).
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  DataStructurePartDescription<out DataStructurePartDescription d, String namespace> =
+  (                                                         (. boolean isHead = false; .)
+    [
+      (
+        "DS" | "ds" |
+        "Datastructure" | "DataStructure" | "datastructure"
+        "head" | "Head"
+      )                                                     (. isHead = true; .)
+    ]
+    Type<out String type>                                   (. type = namespace != null ? namespace + "." + type : type;
+                                                               if(type.contains("<") && !type.startsWith("java.lang.Class")) {
+                                                                 SemErr("Generics may only be used for java.lang.Class");
+                                                               }
+                                                               d = new DataStructurePartDescription(type, isHead); .)
+    "{"
+    {
+                                                            (. boolean follow = true;
+                                                               String pointsTo = null;.)
+      (
+        PointsToDescription<out pointsTo>                   (. follow = true; .)
+        |
+        "(" PointsToDescription<out pointsTo> ")"           (. follow = false; .)
+      )                                                     (. d.addPointsToDescription(new PointsToDescription(pointsTo, follow));
+                                                               if(namespace != null && !pointsTo.startsWith("*")) {
+                                                                 d.addPointsToDescription(new PointsToDescription(namespace + "." + pointsTo, follow));
+                                                               }.)
+      ";"
+    }
+    "}"
+  ).
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  Type<out String name> =
+  (                            (. name = ""; .)
+    ident                      (. name += t.val; .)
+    {
+      "."                      (. name += "."; .)
+      ident                    (. name += t.val; .)
+    }
+    [
+      "<"
+      Type<out String generic> (. name += "<" + generic + ">"; .)
+      ">"
+    ]
+  ).
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  PointsToDescription<out String name> =
+  (                   (. name = ""; .)
+    (
+      wildcardIdent   (. name += t.val; .)
+      |
+      ident           (. name += t.val; .)
+    )
+    {
+      "."             (. name += "."; .)
+      (
+        wildcardIdent (. name += t.val; .)
+        |
+        ident         (. name += t.val; .)
+      )
+    }
+    {
+      "[" "]"       (. name += "[]"; .)
+    }
+  ).
+END DataStructures.
