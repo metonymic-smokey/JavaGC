@@ -152,6 +152,7 @@ public class Main {
 
                 MetaDataWriterConfig config = metaPath != null ? new MetaDataWriterConfig(sym.root + File.separator + metaPath, metaDumpCount, metaMajorGCsOnly) : null;
                 HeapTraceParser parser = new HeapTraceParser(sym);
+                System.out.println("helooooooooooooooooo im innnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
                 if (config != null) {
                     parser.addHeapListener(new MetaDataWriterListener(config, Statistics.Companion::collect));
                 }
