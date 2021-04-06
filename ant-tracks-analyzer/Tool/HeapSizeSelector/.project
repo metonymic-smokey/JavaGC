@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>CallContextAnalyzer</name>
-	<comment></comment>
+	<name>HeapSizeSelector</name>
+	<comment>Project HeapSizeSelector created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1617453314348</id>
+			<id>1617453314350</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
