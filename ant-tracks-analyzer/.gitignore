@@ -4,5 +4,6 @@ Tool/HeapSizeSelector/build/
 Tool/Parser/.idea/
 Tool/Parser/build/
 Tool/UI/build/
+Tool/CLI/build/
 .gradle/
 stats.txt

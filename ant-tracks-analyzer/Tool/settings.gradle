@@ -1,1 +1,1 @@
-include ":CallContextAnalyzer", ":HeapSizeSelector", ":Parser", ":UI"
+include ":CallContextAnalyzer", ":HeapSizeSelector", ":Parser", ":UI", ":CLI"
