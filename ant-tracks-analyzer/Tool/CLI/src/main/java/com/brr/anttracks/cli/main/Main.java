@@ -5,11 +5,18 @@ import at.jku.anttracks.heap.io.MetaDataWriterConfig;
 import at.jku.anttracks.heap.io.MetaDataWriterListener;
 import at.jku.anttracks.heap.statistics.Statistics;
 import at.jku.anttracks.heap.symbols.Symbols;
+import at.jku.anttracks.heap.MemoryMappedFastHeap;
 import at.jku.anttracks.classification.ClassifierChain;
+import at.jku.anttracks.classification.Filter;
 import at.jku.anttracks.classification.nodes.ListGroupingNode;
+import at.jku.anttracks.classification.trees.ListClassificationTree;
 import at.jku.anttracks.gui.classification.classifier.AllocationSiteClassifier;
 import at.jku.anttracks.gui.classification.classifier.TypeClassifier;
 import at.jku.anttracks.gui.classification.classifier.CallSitesClassifier;
+import at.jku.anttracks.gui.model.AppInfo;
+import at.jku.anttracks.gui.model.HeapStateClassificationInfo;
+import at.jku.anttracks.gui.model.FastHeapInfo;
+import at.jku.anttracks.gui.model.SelectedClassifierInfo;
 import at.jku.anttracks.heap.DetailedHeap;
 import at.jku.anttracks.parser.ParserGCInfo;
 import at.jku.anttracks.parser.ParsingInfo;
@@ -21,11 +28,15 @@ import at.jku.anttracks.parser.symbols.SymbolsFile;
 import at.jku.anttracks.parser.symbols.SymbolsParser;
 import at.jku.anttracks.util.ApplicationStatistics;
 import at.jku.anttracks.util.GCReporter;
+import at.jku.anttracks.util.Counter;
+import at.jku.anttracks.util.ProgressListener;
 import org.jetbrains.annotations.NotNull;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -35,7 +46,100 @@ import java.util.logging.Logger;
 
 import static at.jku.anttracks.util.Consts.ANT_META_DIRECTORY;
 
+
+
 public class Main {
+
+    private static ListClassificationTree groupHeapObjects(HeapStateClassificationInfo statisticsInfo) {
+        // updateTitle("Heap State: ");
+        // updateMessage(String.format("Classify heap objects for time %,.3fs using classifiers %s",
+                                    // statisticsInfo.getHeapStateInfo().getTime() / 1000.0f,
+                                    // statisticsInfo.getSelectedClassifierInfo().getSelectedClassifiers()));
+        long objectCount = statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get().getObjectCount();
+
+        ListClassificationTree grouping = null;
+        // Counter objectsProcessed = new Counter();
+        final long t = System.nanoTime();
+        // ObjectStream.IterationListener iterationListener = (oc) -> {
+            // objectsProcessed.add(oc);
+            // updateProgress(objectsProcessed.get(), objectCount);
+            // updateClassificationMetrics(objectsProcessed.get(), t);
+        // };
+
+        grouping = statisticsInfo.getHeapStateInfo()
+                                 .getFastHeapSupplier()
+                                 .get()
+                                 .groupListParallel(statisticsInfo.getSelectedClassifierInfo().getSelectedFilters().toArray(new Filter[0]),
+                                                    statisticsInfo.getSelectedClassifierInfo().getSelectedClassifiers(),
+                                                    true,
+                                                    true,
+                                                    null,
+                                                    new SimpleBooleanProperty(false));
+
+        // ClientInfo.meterRegistry.timer("classification." + statisticsInfo.getSelectedClassifierInfo().getSelectedClassifiers().toString() + ".per_object")
+                                // .record((long) ((1.0 * System.nanoTime() - t) / grouping.getRoot().getObjectCount() * 1_000_000), TimeUnit.NANOSECONDS);
+
+        //        break;
+        //}
+
+        // if (!isCancelled()) {
+            // updateClassificationMetrics(objectsProcessed.get(), t);
+
+            // updateMessage(String.format("Calculate object & byte counts and overall closure for time %,.3fs (This may take some seconds, please wait)",
+                                        // statisticsInfo.getHeapStateInfo().getTime() / 1000.0f));
+            long t2 = System.nanoTime();
+            grouping.init(statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get(), true, true, false, false);
+
+            // heapStateClassificationTab.getHeapMetricsTable().groupingInitTime.valueProperty.setValue((System.nanoTime() - t2) / 1_000_000_000.0);
+
+            LOGGER.log(Level.INFO, "Finished classification");
+        // }
+
+        if (grouping.getRoot().getObjectCount() != statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get().getObjectCount()) {
+            LOGGER.info(String.format("Classification Tree Overall Object Count (%,d) does not match Fast Heap Overall Object Count (%,d)",
+                                           grouping.getRoot().getObjectCount(),
+                                           statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get().getObjectCount()));
+        }
+
+        if (grouping.getRoot().getByteCount(statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get()) != statisticsInfo.getHeapStateInfo()
+                                                                                                                            .getFastHeapSupplier()
+                                                                                                                            .get()
+                                                                                                                            .getByteCount()) {
+            LOGGER.info(String.format("Classification Tree Overall Byte Count (%,d) does not match Fast Heap Overall Byte Count (%,d)",
+                                           grouping.getRoot().getByteCount(statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get()),
+                                           statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get().getByteCount()));
+        }
+
+        Optional<Statistics> stat = statisticsInfo.getHeapStateInfo()
+                                                  .getAppInfo()
+                                                  .getStatistics()
+                                                  .stream()
+                                                  .filter(statistics -> statistics.getInfo().getTime() == statisticsInfo.getHeapStateInfo().getTime())
+                                                  .findFirst();
+
+        // Stat is not present if HPROF file is used
+        if (stat.isPresent()) {
+            long statObjectCount = stat.get().getEden().memoryConsumption.getObjects() +
+                    stat.get().getSurvivor().memoryConsumption.getObjects() +
+                    stat.get().getOld().memoryConsumption.getObjects();
+            long statMemoryConsumption = stat.get().getEden().memoryConsumption.getBytes() +
+                    stat.get().getSurvivor().memoryConsumption.getBytes() +
+                    stat.get().getOld().memoryConsumption.getBytes();
+            if (grouping.getRoot().getObjectCount() != statObjectCount) {
+                LOGGER.info(String.format("Classification Tree Overall Object Count (%,d) does not match Statistics Object Count (%,d)",
+                                               grouping.getRoot().getObjectCount(),
+                                               statObjectCount));
+            }
+
+            if (grouping.getRoot().getByteCount(statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get()) != statMemoryConsumption) {
+                LOGGER.info(String.format("Classification Tree Overall Byte Count (%,d) does not match Statistics Byte Count (%,d)",
+                                               grouping.getRoot().getByteCount(statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get()),
+                                               statMemoryConsumption));
+            }
+        }
+
+        return grouping;
+    }
 
     private static final Logger LOGGER = Logger.getLogger(Main.class.getSimpleName());
 
@@ -222,26 +326,70 @@ public class Main {
                 System.out.println("Heap spaces: " + heap.getSpacesUncloned());
                 System.out.println("Number of objects: " + heap.getObjectCount());
 
-                HeapBuilder heapBuilder = new HeapBuilder(heap, sym, heap.getParsingInfo());
+                // HeapBuilder heapBuilder = new HeapBuilder(heap, sym, heap.getParsingInfo());
 
                 System.out.println("gcInfos: " + gcInfos);
                 System.out.println("Times: " + times);
                 // heapBuilder.doParseGCInfo(0, gcIds.get(3));
 
-                ClassifierChain chain = new ClassifierChain(new TypeClassifier(), new AllocationSiteClassifier(), new CallSitesClassifier());
-                ListGroupingNode gn = new ListGroupingNode();
+                // ListClassificationTree classTree = new ListClassificationTree(heap, true, true, true, true);
+                // // ListGroupingNode gn = new ListGroupingNode();
                 Long[] timesArr = new Long[ times.size() ];
                 timesArr = times.toArray( timesArr );
                 System.out.println("TimesArr: " + timesArr);
 
-                for(int i = 0; i < times.size(); ++i) {
-                    gn.exportAsJSON(heap, chain, timesArr[i], new File("antracks_" + someCountIGuess.size() + ".json"), new File("default_" + someCountIGuess.size() + ".json"));
-                    someCountIGuess.add(someCountIGuess.size() + 1);
-                }
+                // for(int i = 0; i < times.size(); ++i) {
+                //     classTree.getRoot().exportAsJSON(heap, chain, timesArr[i], new File("antracks_" + someCountIGuess.size() + ".json"), new File("default_" + someCountIGuess.size() + ".json"));
+                //     someCountIGuess.add(someCountIGuess.size() + 1);
+                // }
                 
                 System.out.println("Heap: " + heap);
                 System.out.println("Heap spaces: " + heap.getSpacesUncloned());
                 System.out.println("Number of objects: " + heap.getObjectCount());
+
+                // try AppInfo
+                AppInfo appInfo = new AppInfo("something", sym, file, null);
+                // MemoryMappedFastHeap idxBasedHeap = new MemoryMappedFastHeap(heap, true, new ProgressListener() {
+                //     @Override void fire(double progress, String newMessage) {
+                //         System.out.println("AAAAAAAAAAAAAAAAAAAa progress: " + progress + " message: " + newMessage);
+                //     }
+                // });
+                MemoryMappedFastHeap idxBasedHeap = new MemoryMappedFastHeap(heap);
+                
+
+                System.out.println("AppInfo.statistics: " + appInfo.getStatistics());
+                System.out.println("MemoryMappedFastHeap.getObjectCount: " + idxBasedHeap.getObjectCount());
+
+                for(int i = 0; i < times.size(); ++i) {
+                    FastHeapInfo fastHeapInfo = new FastHeapInfo(appInfo, timesArr[i]);
+                    fastHeapInfo.setHeap(idxBasedHeap);
+
+                    TypeClassifier classifier1 = new TypeClassifier();
+                    AllocationSiteClassifier classifier2 = new AllocationSiteClassifier();
+                    CallSitesClassifier classifier3 = new CallSitesClassifier();
+                    classifier1.setup(fastHeapInfo.getSymbolsSupplier(), fastHeapInfo.getFastHeapSupplier());
+                    classifier2.setup(fastHeapInfo.getSymbolsSupplier(), fastHeapInfo.getFastHeapSupplier());
+                    classifier3.setup(fastHeapInfo.getSymbolsSupplier(), fastHeapInfo.getFastHeapSupplier());
+    
+                    ClassifierChain chain = new ClassifierChain(classifier1, classifier2, classifier3);
+                    SelectedClassifierInfo selectedClassifiers = new SelectedClassifierInfo(chain, new ArrayList<Filter>());
+                    HeapStateClassificationInfo classificationInfo = new HeapStateClassificationInfo(fastHeapInfo, selectedClassifiers);
+
+                    Thread.sleep(5000);
+                    
+                    ListClassificationTree classTree = groupHeapObjects(classificationInfo);
+                    classTree.getRoot().exportAsJSON(classificationInfo.getHeapStateInfo().getFastHeapSupplier().get(),
+                                                                  chain,
+                                                                  timesArr[i],
+                                                                  new File("outputs/antracks_" + someCountIGuess.size() + ".json"),
+                                                                  new File("outputs/default_" + someCountIGuess.size() + ".json"));
+
+                    // classificationInfo.getGrouping().getRoot().exportAsJSON(classificationInfo.getHeapStateInfo().getFastHeapSupplier().get(),
+                    //                                               chain,
+                    //                                               timesArr[i],
+                    //                                               new File("outputs/antracks_" + someCountIGuess.size() + ".json"),
+                    //                                               new File("outputs/default_" + someCountIGuess.size() + ".json"));
+                }
                 
             } catch (Throwable e) {
                 e.printStackTrace(System.err);

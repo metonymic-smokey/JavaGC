@@ -50,6 +50,7 @@ public class MemoryMappedFastHeap extends IndexBasedHeap {
 
     public MemoryMappedFastHeap(DetailedHeap heap) {
         super(heap);
+        System.out.println("IM IN MEMORY MAPPED FAST HEAP HAHAHAHAHH");
     }
 
     @Override

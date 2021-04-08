@@ -6,11 +6,17 @@ import at.jku.anttracks.heap.io.MetaDataWriterConfig;
 import at.jku.anttracks.heap.io.MetaDataWriterListener;
 import at.jku.anttracks.heap.statistics.Statistics;
 import at.jku.anttracks.heap.symbols.Symbols;
+import at.jku.anttracks.classification.ClassifierChain;
+// import at.jku.anttracks.gui.classification.classifier.AllocationSiteClassifier;
+// import at.jku.anttracks.gui.classification.classifier.TypeClassifier;
+// import at.jku.anttracks.gui.classification.classifier.CallSitesClassifier;
+import at.jku.anttracks.heap.DetailedHeap;
 import at.jku.anttracks.parser.ParserGCInfo;
 import at.jku.anttracks.parser.ParsingInfo;
 import at.jku.anttracks.parser.TraceParser;
 import at.jku.anttracks.parser.classdefinitions.ClassDefinitionsFile;
 import at.jku.anttracks.parser.heap.HeapTraceParser;
+import at.jku.anttracks.parser.heap.HeapBuilder;
 import at.jku.anttracks.parser.symbols.SymbolsFile;
 import at.jku.anttracks.parser.symbols.SymbolsParser;
 import at.jku.anttracks.util.ApplicationStatistics;
@@ -22,6 +28,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -156,6 +163,10 @@ public class Main {
                 if (config != null) {
                     parser.addHeapListener(new MetaDataWriterListener(config, Statistics.Companion::collect));
                 }
+
+                // List<Short> gcIds = new ArrayList<Short>();
+                LinkedHashSet<ParserGCInfo> gcInfos = new LinkedHashSet<ParserGCInfo>();
+
                 parser.addHeapListener(new HeapAdapter() {
 
                     @Override
@@ -172,11 +183,45 @@ public class Main {
                                     ParsingInfo parsingInfo,
                             boolean inParserTimeWindow) {
                         double progress = 1.0 * (position - parsingInfo.getFromByte()) / parsingInfo.getTraceLength();
+                        // System.out.println(sender, from, to, parsingInfo);
+                        System.out.println("Sender:" + sender);
+                        System.out.println("from:" + from);
+                        gcInfos.add(from);
+                        // gcIds.add(from.getId());
+                        // System.out.println("from ID:" + from.id);
+                        System.out.println("to:" + to);
+                        gcInfos.add(to);
+                        // gcIds.add(to.getId());
+                        System.out.println("failed:" + failed);
+                        System.out.println("position:" + position);
+
+                        // build heap ig
+                        // DetailedHeap heap = HeapBuilder.constructHeap(sym, parsingInfo);
+                        // System.out.println("Heap: " + heap);
+                        // System.out.println("GC: " + heap.getGC());
+                        // nvm, heap is already built in "sender"
+
+                        // ClassifierChain chain = new ClassifierChain(TypeClassifier(), AllocationSiteClassifier(), CallSitesClassifier());
+                        
+                        // System.out.println("parsingInfo: " + parsingInfo + ", parsingStartTime: " + parsingInfo.parsingStartTime + ", fromTime: " + parsingInfo.fromTime + ", toTime: " + parsingInfo.toTime + ", fromByte: " + parsingInfo.fromByte + ", toByte: " + parsingInfo.toByte + ", traceLength: " + parsingInfo.traceLength);
                         LOGGER.log(Level.INFO, () -> String.format("parsed %.2f%%", progress * 100));
                     }
                 });
 
-                parser.parse();
+                DetailedHeap heap = parser.parse();
+                System.out.println("Heap: " + heap);
+                System.out.println("Heap spaces: " + heap.getSpacesUncloned());
+                System.out.println("Number of objects: " + heap.getObjectCount());
+
+                HeapBuilder heapBuilder = new HeapBuilder(heap, sym, heap.getParsingInfo());
+
+                System.out.println("gcInfos: " + gcInfos);
+                // heapBuilder.doParseGCInfo(0, gcIds.get(3));
+                
+                System.out.println("Heap: " + heap);
+                System.out.println("Heap spaces: " + heap.getSpacesUncloned());
+                System.out.println("Number of objects: " + heap.getObjectCount());
+                
             } catch (Throwable e) {
                 e.printStackTrace(System.err);
                 errors++;

@@ -80,6 +80,8 @@ public class HeapStateClassificationTask extends AntTask<ListClassificationTree>
                                     statisticsInfo.getHeapStateInfo().getTime() / 1000.0f,
                                     statisticsInfo.getSelectedClassifierInfo().getSelectedClassifiers()));
         long objectCount = statisticsInfo.getHeapStateInfo().getFastHeapSupplier().get().getObjectCount();
+        System.out.println("Hellllllllllllllo im in HeapStateClassificationTask");
+        System.out.println("SelectedClassfierInfo: " + statisticsInfo.getSelectedClassifierInfo().getSelectedClassifiers());
 
         ListClassificationTree grouping = null;
         Counter objectsProcessed = new Counter();
