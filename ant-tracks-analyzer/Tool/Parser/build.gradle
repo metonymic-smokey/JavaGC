@@ -12,5 +12,6 @@ dependencies {
 
     // Project dependencies
     compile project(':CallContextAnalyzer')
+    // compile project(':UI')
     // testCompile project(':Examples')
 }

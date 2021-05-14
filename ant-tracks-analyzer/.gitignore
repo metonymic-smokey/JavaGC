@@ -7,3 +7,5 @@ Tool/UI/build/
 Tool/CLI/build/
 .gradle/
 stats.txt
+antracks_*.json
+default_*.json
