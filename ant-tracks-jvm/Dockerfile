@@ -4,16 +4,11 @@ WORKDIR /anttracks
 
 RUN apt-get update && apt-get install -y unzip wget mercurial && rm -rf /var/lib/apt/lists/*
 
-# ADD ./jdk8u.zip /opt
 RUN hg clone https://hg.openjdk.java.net/jdk8u/jdk8u /anttracks/jdk8u && cd /anttracks/jdk8u && bash get_source.sh
-
-ADD ./anttracks-vm-source-3.1.0.0.zip /opt
 
 RUN rm -rf /anttracks/jdk8u/hotspot && mkdir /anttracks/jdk8u/hotspot
 
-RUN unzip /opt/anttracks-vm-source-3.1.0.0.zip -d /anttracks/jdk8u/hotspot/
-
-RUN sh -c "cp -r /anttracks/jdk8u/hotspot/AntTracksVM_Source_3.1.0.0/* /anttracks/jdk8u/hotspot/ && rm -rf /anttracks/jdk8u/hotspot/AntTracksVM_Source_3.1.0.0/"
+ADD ./src /anttracks/jdk8u/hotspot/
 
 RUN sh -c "cp /anttracks/jdk8u/hotspot/build-scripts/build_AntTracksVM* /anttracks/jdk8u/"
 
