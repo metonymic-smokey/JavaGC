@@ -1,0 +1,5 @@
+for executable in /usr/lib/anttracks/jre/bin/*
+do
+	executable=$(basename $executable)
+	update-alternatives --remove $executable /usr/lib/anttracks/jre/bin/$executable || exit 1
+done
