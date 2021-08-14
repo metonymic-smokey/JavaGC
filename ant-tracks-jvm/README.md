@@ -18,7 +18,7 @@ docker run -it ant-tracks-jvm
 ```
 
 After building, find the built JVM at the following locations:
- - TODO: somewhere in `./dist`
+ - `dist/slowdebug-64/j2sdk-image/bin/java`
 
 ### Incremental build/caching
 
