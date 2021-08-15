@@ -9,3 +9,5 @@ Tool/CLI/build/
 stats.txt
 antracks_*.json
 default_*.json
+outputs/
+gc.log

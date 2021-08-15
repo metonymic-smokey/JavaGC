@@ -22,6 +22,8 @@ import at.jku.anttracks.util.TraceException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.brr.anttracks.cli.main.JsonExportMain;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -71,10 +73,10 @@ public class Main {
             // parser.addHeapListener(new MetaDataWriterListener(new MetaDataWriterConfig(appInfo.getMetaDataPath()), Statistics.Companion::collect));
 
             // TODO: Modify the method customHeapListener if you want to perform tasks at the start and at the end of GCs (see the TODOs in this method)
-            parser.addHeapListener(customHeapListener());
+            parser.addHeapListener(JsonExportMain.customHeapListener());
             // TODO Modify the method customEventHandler if you want to inspect each event read from the trace file.
             // For example, this could be used to count the number of allocation events, move events, etc.
-            parser.addEventHandler(Main::customEventHandler);
+            parser.addEventHandler(JsonExportMain::customEventHandler);
             DetailedHeap detailedHeap = parser.parse();
             // Once the whole trace has been parsed, if meta-data has been written, we can read statistics information.
             // Some analyses then be performed based on the statistics stored in appInfo.getStatistics()

@@ -99,7 +99,7 @@ public class JsonExportMain {
 
     // TODO Modify this method if you want to perform tasks at the beginning or the end of GCs
     // Otherwise, just ignore
-    private static HeapListener customHeapListener() {
+    public static HeapListener customHeapListener() {
         return new HeapListener() {
 
             @Override
@@ -181,7 +181,7 @@ public class JsonExportMain {
 
     // TODO Modify this method if you want to inspect the events read from the trace file (e.g., counting ObjAlloc events)
     // Otherwise, just ignore
-    private static TraceParsingEventHandler customEventHandler(DetailedHeap workspace, ParsingInfo parsingInfo) {
+    public static TraceParsingEventHandler customEventHandler(DetailedHeap workspace, ParsingInfo parsingInfo) {
         return new TraceParsingEventHandler() {
             @Override
             public void doKeepAlive(@NotNull EventType eventType, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
