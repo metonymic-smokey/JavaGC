@@ -57,10 +57,15 @@ public class Main {
             // The MetaDataPath is where statistics, etc. are going to be stored while the trace is parsed
             appInfo.setMetaDataPath((BaseFile.isPlainFile(SymbolsFile.SYMBOL_FILE_ID, appInfo.getSymbolsFile()) ? appInfo.getSymbolsFile().getParent() : appInfo.getSymbolsFile()).toString() + File.separator + Consts.ANT_META_DIRECTORY);
 
+            File symbolsFile = SymbolsFile.findSymbolsFileToTrace(traceFile);
+            File classDefsFile = ClassDefinitionsFile.findClassDefinitionsFileToTrace(traceFile);
+            System.out.println("Symbols file found   : " + symbolsFile);
+            System.out.println("Class defs file found: " + classDefsFile);
+
             // Before parsing the trace, first parse the symbols file
             // This file contains information about types, allocation sites, etc.
-            symbols = new SymbolsParser(SymbolsFile.findSymbolsFileToTrace(traceFile),
-                    ClassDefinitionsFile.findClassDefinitionsFileToTrace(traceFile),
+            symbols = new SymbolsParser(symbolsFile,
+                    classDefsFile,
                     null,
                     Symbols.CALLCONTEXT_NONE).parse();
             appInfo.setSymbols(symbols);
