@@ -1,5 +1,9 @@
 package com.brr.anttracks.cli.main;
 
+import at.jku.anttracks.heap.ObjectVisitor;
+import at.jku.anttracks.heap.labs.AddressHO;
+import at.jku.anttracks.heap.space.SpaceInfo;
+
 import at.jku.anttracks.gui.model.AppInfo;
 import at.jku.anttracks.gui.utils.Consts;
 import at.jku.anttracks.heap.DetailedHeap;
@@ -82,6 +86,7 @@ public class Main {
             // TODO Modify the method customEventHandler if you want to inspect each event read from the trace file.
             // For example, this could be used to count the number of allocation events, move events, etc.
             parser.addEventHandler(JsonExportMain::customEventHandler);
+            parser.addEventHandler(Main::customEventHandler);
             DetailedHeap detailedHeap = parser.parse();
             // Once the whole trace has been parsed, if meta-data has been written, we can read statistics information.
             // Some analyses then be performed based on the statistics stored in appInfo.getStatistics()
@@ -169,6 +174,7 @@ public class Main {
             @NotNull
             @Override
             public ObjectInfo doParseObjAllocSlow(@NotNull EventType eventType, @NotNull AllocationSite allocationSite, long addr, boolean isArray, int arrayLength, int size, boolean mayBeFiller, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+                // System.out.println(eventType + "\t" + allocationSite + "\t" + addr + "\t" + isArray + "\t" + arrayLength + "\t" + size);
                 return null;
             }
 
@@ -293,7 +299,11 @@ public class Main {
 
             @Override
             public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-
+                workspace.toObjectStream(false).forEach(new ObjectVisitor() {
+                    @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                        System.out.println("address: " + address + ", obj: " + obj);
+                    }
+                }, new ObjectVisitor.Settings(true));
             }
 
             @Override
