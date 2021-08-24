@@ -16,6 +16,7 @@ import at.jku.anttracks.heap.space.SpaceType;
 import at.jku.anttracks.heap.symbols.AllocatedType;
 import at.jku.anttracks.heap.symbols.AllocationSite;
 import at.jku.anttracks.heap.symbols.Symbols;
+import at.jku.anttracks.heap.IndexBasedHeap;
 import at.jku.anttracks.parser.*;
 import at.jku.anttracks.parser.classdefinitions.ClassDefinitionsFile;
 import at.jku.anttracks.parser.heap.HeapTraceParser;
@@ -82,7 +83,10 @@ public class Main {
             // parser.addHeapListener(new MetaDataWriterListener(new MetaDataWriterConfig(appInfo.getMetaDataPath()), Statistics.Companion::collect));
 
             // TODO: Modify the method customHeapListener if you want to perform tasks at the start and at the end of GCs (see the TODOs in this method)
-            parser.addHeapListener(JsonExportMain.customHeapListener());
+            
+            // uncomment this for JSON export
+            // parser.addHeapListener(JsonExportMain.customHeapListener());
+            parser.addHeapListener(customHeapListener());
             // TODO Modify the method customEventHandler if you want to inspect each event read from the trace file.
             // For example, this could be used to count the number of allocation events, move events, etc.
             parser.addEventHandler(JsonExportMain::customEventHandler);
@@ -118,6 +122,14 @@ public class Main {
                     // Switching into GC phase
                     // TODO: Do something before the GC phase starts
                     // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null) for faster object access
+                    // IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null);
+
+                    heap.toObjectStream().forEach(new ObjectVisitor() {
+                        @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                            System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+                        }
+                    }, new ObjectVisitor.Settings(true));
+
                     System.out.printf("GC %d starts (mutator phase was running from %,dms to %,dms)%n", to.getId(), from.getTime(), to.getTime());
                 }
             }
@@ -299,11 +311,6 @@ public class Main {
 
             @Override
             public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-                workspace.toObjectStream(false).forEach(new ObjectVisitor() {
-                    @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                        System.out.println("address: " + address + ", obj: " + obj);
-                    }
-                }, new ObjectVisitor.Settings(true));
             }
 
             @Override
