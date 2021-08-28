@@ -120,15 +120,14 @@ public class Main {
                 DetailedHeap heap = (DetailedHeap) sender;
                 if (to.getEventType() == EventType.GC_START) {
                     // Switching into GC phase
-                    // TODO: Do something before the GC phase starts
                     // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null) for faster object access
                     // IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null);
 
-                    heap.toObjectStream().forEach(new ObjectVisitor() {
-                        @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                            System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
-                        }
-                    }, new ObjectVisitor.Settings(true));
+                    // heap.toObjectStream().forEach(new ObjectVisitor() {
+                    //     @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                    //         System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+                    //     }
+                    // }, new ObjectVisitor.Settings(true));
 
                     System.out.printf("GC %d starts (mutator phase was running from %,dms to %,dms)%n", to.getId(), from.getTime(), to.getTime());
                 }
@@ -141,7 +140,7 @@ public class Main {
                 DetailedHeap heap = (DetailedHeap) sender;
                 if (to.getEventType() == EventType.GC_END) {
                     // Switching into mutator phase
-                    // TODO: Do something after the GC phase is over
+
                     // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null) for faster object access
                     System.out.printf("GC %d ends (GC phase was running from %,dms to %,dms)%n", to.getId(), from.getTime(), to.getTime());
                 }
@@ -151,7 +150,7 @@ public class Main {
 
     // TODO Modify this method if you want to inspect the events read from the trace file (e.g., counting ObjAlloc events)
     // Otherwise, just ignore
-    private static TraceParsingEventHandler customEventHandler(DetailedHeap workspace, ParsingInfo parsingInfo) {
+    private static TraceParsingEventHandler customEventHandler(DetailedHeap heap, ParsingInfo parsingInfo) {
         return new TraceParsingEventHandler() {
             @Override
             public void doKeepAlive(@NotNull EventType eventType, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
@@ -309,13 +308,45 @@ public class Main {
 
             }
 
+            long lastTag = 1;
+
             @Override
             public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+                heap.toObjectStream(false).forEach(new ObjectVisitor() {
+                    @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                        // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+
+                        // this does not work for some reason
+                        // if (gcInfo.getId() == obj.getBornAt()) {
+                        //     obj.setTag(lastTag++);
+                        //     System.out.println("OBJECT BORN: " + obj);
+                        // }
+                        if (gcInfo.getId() == obj.getLastMovedAt()) {
+                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime());
+                        }
+                        if (space.isBeingCollected() && obj.getLastMovedAt() != gcInfo.getId()) {
+                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime());
+                        }
+                    }
+                }, new ObjectVisitor.Settings(true));
             }
 
             @Override
             public void doParseGCStart(@NotNull ParserGCInfo gcInfo, long start, long end, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-
+                // heap.toObjectStream(false).forEach(new ObjectVisitor() {
+                //     @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                //         // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+                //         if (heap.latestGCId()+1 == obj.getBornAt()) {
+                //             System.out.println("[START] OBJECT BORN: " + obj);
+                //         }
+                //         if (heap.latestGCId() == obj.getLastMovedAt()) {
+                //             System.out.println("[START] OBJECT MOVED: " + obj);
+                //         }
+                //         if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
+                //             System.out.println("[START] OBJECT YEETED: " + obj);
+                //         }
+                //     }
+                // }, new ObjectVisitor.Settings(true));
             }
 
             @Override
