@@ -57,10 +57,14 @@ public class Main {
         File traceFile = new File(args[0]);
         try {
             // AppInfo represents information about the currently analyzed application
-            // This would not be ultimately necessary but make working with classification a bit easier
+            // This would not be ultimately necessary but make working with classification a
+            // bit easier
             appInfo = new AppInfo(traceFile.getAbsolutePath(), traceFile, null);
-            // The MetaDataPath is where statistics, etc. are going to be stored while the trace is parsed
-            appInfo.setMetaDataPath((BaseFile.isPlainFile(SymbolsFile.SYMBOL_FILE_ID, appInfo.getSymbolsFile()) ? appInfo.getSymbolsFile().getParent() : appInfo.getSymbolsFile()).toString() + File.separator + Consts.ANT_META_DIRECTORY);
+            // The MetaDataPath is where statistics, etc. are going to be stored while the
+            // trace is parsed
+            appInfo.setMetaDataPath((BaseFile.isPlainFile(SymbolsFile.SYMBOL_FILE_ID, appInfo.getSymbolsFile())
+                    ? appInfo.getSymbolsFile().getParent()
+                    : appInfo.getSymbolsFile()).toString() + File.separator + Consts.ANT_META_DIRECTORY);
 
             File symbolsFile = SymbolsFile.findSymbolsFileToTrace(traceFile);
             File classDefsFile = ClassDefinitionsFile.findClassDefinitionsFileToTrace(traceFile);
@@ -69,38 +73,46 @@ public class Main {
 
             // Before parsing the trace, first parse the symbols file
             // This file contains information about types, allocation sites, etc.
-            symbols = new SymbolsParser(symbolsFile,
-                    classDefsFile,
-                    null,
-                    Symbols.CALLCONTEXT_NONE).parse();
+            symbols = new SymbolsParser(symbolsFile, classDefsFile, null, Symbols.CALLCONTEXT_NONE).parse();
             appInfo.setSymbols(symbols);
 
             // Then, create a trace parser that uses this symbols information
             parser = new HeapTraceParser(appInfo.getSymbols());
-            // If we want, we can add a meta data writer to store statistics (e.g., heap size, etc.) to disk
-            // This also writes certain heap states to disk to make subsequent analyses of the same trace file faster
+            // If we want, we can add a meta data writer to store statistics (e.g., heap
+            // size, etc.) to disk
+            // This also writes certain heap states to disk to make subsequent analyses of
+            // the same trace file faster
             // Since this is not needed, we disable it at the moment
-            // parser.addHeapListener(new MetaDataWriterListener(new MetaDataWriterConfig(appInfo.getMetaDataPath()), Statistics.Companion::collect));
+            // parser.addHeapListener(new MetaDataWriterListener(new
+            // MetaDataWriterConfig(appInfo.getMetaDataPath()),
+            // Statistics.Companion::collect));
 
-            // TODO: Modify the method customHeapListener if you want to perform tasks at the start and at the end of GCs (see the TODOs in this method)
-            
+            // TODO: Modify the method customHeapListener if you want to perform tasks at
+            // the start and at the end of GCs (see the TODOs in this method)
+
             // uncomment this for JSON export
             // parser.addHeapListener(JsonExportMain.customHeapListener());
             parser.addHeapListener(customHeapListener());
-            // TODO Modify the method customEventHandler if you want to inspect each event read from the trace file.
-            // For example, this could be used to count the number of allocation events, move events, etc.
+            // TODO Modify the method customEventHandler if you want to inspect each event
+            // read from the trace file.
+            // For example, this could be used to count the number of allocation events,
+            // move events, etc.
             parser.addEventHandler(JsonExportMain::customEventHandler);
             parser.addEventHandler(Main::customEventHandler);
             DetailedHeap detailedHeap = parser.parse();
-            // Once the whole trace has been parsed, if meta-data has been written, we can read statistics information.
-            // Some analyses then be performed based on the statistics stored in appInfo.getStatistics()
-            // appInfo.getStatistics().addAll(Statistics.Companion.readStatisticsFromMetadata(appInfo.getMetaDataPath(), appInfo.getSymbols()));
+            // Once the whole trace has been parsed, if meta-data has been written, we can
+            // read statistics information.
+            // Some analyses then be performed based on the statistics stored in
+            // appInfo.getStatistics()
+            // appInfo.getStatistics().addAll(Statistics.Companion.readStatisticsFromMetadata(appInfo.getMetaDataPath(),
+            // appInfo.getSymbols()));
         } catch (Throwable e) {
             e.printStackTrace(System.err);
         }
     }
 
-    // TODO Modify this method if you want to perform tasks at the beginning or the end of GCs
+    // TODO Modify this method if you want to perform tasks at the beginning or the
+    // end of GCs
     // Otherwise, just ignore
     private static HeapListener customHeapListener() {
         return new HeapListener() {
@@ -114,46 +126,59 @@ public class Main {
             }
 
             @Override
-            public void phaseChanging(@NotNull Object sender, @NotNull ParserGCInfo from, @NotNull ParserGCInfo to, boolean failed, long position, @NotNull ParsingInfo parsingInfo, boolean inParserTimeWindow) {
-                // This method is called before the parser changes from mutator phase (i.e., running application) to GC phase or from GC phase to mutator phase
+            public void phaseChanging(@NotNull Object sender, @NotNull ParserGCInfo from, @NotNull ParserGCInfo to,
+                    boolean failed, long position, @NotNull ParsingInfo parsingInfo, boolean inParserTimeWindow) {
+                // This method is called before the parser changes from mutator phase (i.e.,
+                // running application) to GC phase or from GC phase to mutator phase
                 // Use this method to perform steps at the start of a GC
                 DetailedHeap heap = (DetailedHeap) sender;
                 if (to.getEventType() == EventType.GC_START) {
                     // Switching into GC phase
-                    // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null) for faster object access
+                    // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap =
+                    // heap.toIndexBasedHeap(false, null) for faster object access
                     // IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null);
 
                     // heap.toObjectStream().forEach(new ObjectVisitor() {
-                    //     @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                    //         System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
-                    //     }
+                    // @Override public void visit(long address, AddressHO obj, SpaceInfo space,
+                    // List<? extends RootPtr> rootPtrs) {
+                    // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
+                    // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
+                    // obj.getTag());
+                    // }
                     // }, new ObjectVisitor.Settings(true));
 
-                    System.out.printf("GC %d starts (mutator phase was running from %,dms to %,dms)%n", to.getId(), from.getTime(), to.getTime());
+                    System.out.printf("GC %d starts (mutator phase was running from %,dms to %,dms)%n", to.getId(),
+                            from.getTime(), to.getTime());
                 }
             }
 
             @Override
-            public void phaseChanged(@NotNull Object sender, @NotNull ParserGCInfo from, @NotNull ParserGCInfo to, boolean failed, long position, @NotNull ParsingInfo parsingInfo, boolean inParserTimeWindow) {
-                // This method is called after the parser changes from mutator phase (i.e., running application) to GC phase or from GC phase to mutator phase
+            public void phaseChanged(@NotNull Object sender, @NotNull ParserGCInfo from, @NotNull ParserGCInfo to,
+                    boolean failed, long position, @NotNull ParsingInfo parsingInfo, boolean inParserTimeWindow) {
+                // This method is called after the parser changes from mutator phase (i.e.,
+                // running application) to GC phase or from GC phase to mutator phase
                 // Use this method to perform steps at the end of a GC
                 DetailedHeap heap = (DetailedHeap) sender;
                 if (to.getEventType() == EventType.GC_END) {
                     // Switching into mutator phase
 
-                    // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap = heap.toIndexBasedHeap(false, null) for faster object access
-                    System.out.printf("GC %d ends (GC phase was running from %,dms to %,dms)%n", to.getId(), from.getTime(), to.getTime());
+                    // If you want to inspect the heap, we suggest to use IndexBasedHeap idxHeap =
+                    // heap.toIndexBasedHeap(false, null) for faster object access
+                    System.out.printf("GC %d ends (GC phase was running from %,dms to %,dms)%n", to.getId(),
+                            from.getTime(), to.getTime());
                 }
             }
         };
     }
 
-    // TODO Modify this method if you want to inspect the events read from the trace file (e.g., counting ObjAlloc events)
+    // TODO Modify this method if you want to inspect the events read from the trace
+    // file (e.g., counting ObjAlloc events)
     // Otherwise, just ignore
     private static TraceParsingEventHandler customEventHandler(DetailedHeap heap, ParsingInfo parsingInfo) {
         return new TraceParsingEventHandler() {
             @Override
-            public void doKeepAlive(@NotNull EventType eventType, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doKeepAlive(@NotNull EventType eventType, long addr, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
@@ -163,67 +188,88 @@ public class Main {
             }
 
             @Override
-            public void doPtrEvent(@NotNull EventType eventType, long fromAddr, long toAddr, @NotNull long[] ptrs, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doPtrEvent(@NotNull EventType eventType, long fromAddr, long toAddr, @NotNull long[] ptrs,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public long getMoveTarget(long fromAddr, long toAddr, @NotNull SpaceType toSpaceType, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public long getMoveTarget(long fromAddr, long toAddr, @NotNull SpaceType toSpaceType,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return 0;
             }
 
             @Override
-            public void doParsePlabAlloc(int size, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParsePlabAlloc(int size, long addr, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseTlabAlloc(int size, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseTlabAlloc(int size, long addr, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @NotNull
             @Override
-            public ObjectInfo doParseObjAllocSlow(@NotNull EventType eventType, @NotNull AllocationSite allocationSite, long addr, boolean isArray, int arrayLength, int size, boolean mayBeFiller, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-                // System.out.println(eventType + "\t" + allocationSite + "\t" + addr + "\t" + isArray + "\t" + arrayLength + "\t" + size);
+            public ObjectInfo doParseObjAllocSlow(@NotNull EventType eventType, @NotNull AllocationSite allocationSite,
+                    long addr, boolean isArray, int arrayLength, int size, boolean mayBeFiller,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+                // System.out.println(eventType + "\t" + allocationSite + "\t" + addr + "\t" +
+                // isArray + "\t" + arrayLength + "\t" + size);
                 return null;
             }
 
             @NotNull
             @Override
-            public ObjectInfo doParseObjAllocSlowCiIr_Deviant(@NotNull EventType eventType, @NotNull AllocatedType allocatedType, @NotNull AllocationSite allocationSite, long addr, boolean isArray, int arrayLength, int realAllocatedTypeId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public ObjectInfo doParseObjAllocSlowCiIr_Deviant(@NotNull EventType eventType,
+                    @NotNull AllocatedType allocatedType, @NotNull AllocationSite allocationSite, long addr,
+                    boolean isArray, int arrayLength, int realAllocatedTypeId, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
                 return null;
             }
 
             @NotNull
             @Override
-            public ObjectInfo doParseObjAllocNormalIr(@NotNull EventType eventType, int allocationSiteId, @NotNull AllocationSite allocationSite, long addr, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public ObjectInfo doParseObjAllocNormalIr(@NotNull EventType eventType, int allocationSiteId,
+                    @NotNull AllocationSite allocationSite, long addr, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
                 return null;
             }
 
             @NotNull
             @Override
-            public ObjectInfo doParseObjAllocNormalCi(@NotNull EventType eventType, @NotNull AllocationSite allocationSite, @NotNull AllocatedType allocatedType, long addr, boolean isArray, int arrayLength, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public ObjectInfo doParseObjAllocNormalCi(@NotNull EventType eventType,
+                    @NotNull AllocationSite allocationSite, @NotNull AllocatedType allocatedType, long addr,
+                    boolean isArray, int arrayLength, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return null;
             }
 
             @Override
-            public long doParseObjAllocFastIr(@NotNull EventType eventType, @NotNull AllocationSite allocationSite, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public long doParseObjAllocFastIr(@NotNull EventType eventType, @NotNull AllocationSite allocationSite,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return 0;
             }
 
             @Override
-            public long doParseObjAllocFastC2DeviantType(@NotNull EventType eventType, int header, int allocationSiteId, @NotNull AllocatedType allocatedType, boolean isArray, int arrayLength, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public long doParseObjAllocFastC2DeviantType(@NotNull EventType eventType, int header, int allocationSiteId,
+                    @NotNull AllocatedType allocatedType, boolean isArray, int arrayLength,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return 0;
             }
 
             @Override
-            public long doParseObjAllocFastCi(@NotNull EventType eventType, @NotNull AllocationSite allocationSite, @NotNull AllocatedType allocatedType, boolean isArray, int arrayLength, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public long doParseObjAllocFastCi(@NotNull EventType eventType, @NotNull AllocationSite allocationSite,
+                    @NotNull AllocatedType allocatedType, boolean isArray, int arrayLength,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return 0;
             }
 
             @Override
-            public void doParseSyncObj(@NotNull EventType eventType, int allocationSiteId, @NotNull AllocatedType allocatedType, long fromAddr, long toAddr, int length, int size, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseSyncObj(@NotNull EventType eventType, int allocationSiteId,
+                    @NotNull AllocatedType allocatedType, long fromAddr, long toAddr, int length, int size,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
@@ -233,93 +279,112 @@ public class Main {
             }
 
             @Override
-            public void doParseThreadAlive(int header, long id, @NotNull String name, @NotNull ThreadLocalHeap threadLocalHeap) {
+            public void doParseThreadAlive(int header, long id, @NotNull String name,
+                    @NotNull ThreadLocalHeap threadLocalHeap) {
 
             }
 
             @NotNull
             @Override
-            public List<ObjectInfo> doParseGCMoveRegion(@NotNull EventType eventType, long fromAddr, long toAddr, int numOfObjects, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public List<ObjectInfo> doParseGCMoveRegion(@NotNull EventType eventType, long fromAddr, long toAddr,
+                    int numOfObjects, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return null;
             }
 
             @Override
-            public void doParseGCDebugRootPtr(long ptr, @NotNull String vmCall, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCDebugRootPtr(long ptr, @NotNull String vmCall,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCOtherRootPtr(long ptr, @NotNull RootPtr.RootType rootType, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCOtherRootPtr(long ptr, @NotNull RootPtr.RootType rootType,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCJNIGlobalRootPtr(long ptr, boolean weak, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCJNIGlobalRootPtr(long ptr, boolean weak, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseGCCodeBlobRootPtr(long ptr, int classId, int methodId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCCodeBlobRootPtr(long ptr, int classId, int methodId,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCVMInternalThreadDataRootPtr(long ptr, long threadId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCVMInternalThreadDataRootPtr(long ptr, long threadId,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCLocalVariableRootPtr(long ptr, long threadId, int classId, int methodId, int slot, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCLocalVariableRootPtr(long ptr, long threadId, int classId, int methodId, int slot,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCJNILocalRootPtr(long ptr, long threadId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCJNILocalRootPtr(long ptr, long threadId, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseGCStaticFieldRootPtr(long ptr, int classId, int offset, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCStaticFieldRootPtr(long ptr, int classId, int offset,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseGCClassRootPtr(long ptr, int classId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCClassRootPtr(long ptr, int classId, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseGCClassLoaderRootPtr(long ptr, @NotNull String loaderName, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCClassLoaderRootPtr(long ptr, @NotNull String loaderName,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public long doGCMove(@NotNull EventType eventType, long fromAddr, long toAddr, @Nullable SpaceType toSpaceType, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public long doGCMove(@NotNull EventType eventType, long fromAddr, long toAddr,
+                    @Nullable SpaceType toSpaceType, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 return 0;
             }
 
             @Override
-            public void doParseGCContinue(int id, long address, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCContinue(int id, long address, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseGCInterrupt(int id, long address, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCInterrupt(int id, long address, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             long lastTag = 1;
 
             @Override
-            public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 heap.toObjectStream(false).forEach(new ObjectVisitor() {
-                    @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                        // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+                    @Override
+                    public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                        // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
+                        // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
+                        // obj.getTag());
 
                         // this does not work for some reason
                         // if (gcInfo.getId() == obj.getBornAt()) {
-                        //     obj.setTag(lastTag++);
-                        //     System.out.println("OBJECT BORN: " + obj);
+                        // obj.setTag(lastTag++);
+                        // System.out.println("OBJECT BORN: " + obj);
                         // }
                         if (gcInfo.getId() == obj.getLastMovedAt()) {
                             System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime());
@@ -332,20 +397,24 @@ public class Main {
             }
 
             @Override
-            public void doParseGCStart(@NotNull ParserGCInfo gcInfo, long start, long end, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCStart(@NotNull ParserGCInfo gcInfo, long start, long end,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
                 // heap.toObjectStream(false).forEach(new ObjectVisitor() {
-                //     @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                //         // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
-                //         if (heap.latestGCId()+1 == obj.getBornAt()) {
-                //             System.out.println("[START] OBJECT BORN: " + obj);
-                //         }
-                //         if (heap.latestGCId() == obj.getLastMovedAt()) {
-                //             System.out.println("[START] OBJECT MOVED: " + obj);
-                //         }
-                //         if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
-                //             System.out.println("[START] OBJECT YEETED: " + obj);
-                //         }
-                //     }
+                // @Override public void visit(long address, AddressHO obj, SpaceInfo space,
+                // List<? extends RootPtr> rootPtrs) {
+                // // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
+                // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
+                // obj.getTag());
+                // if (heap.latestGCId()+1 == obj.getBornAt()) {
+                // System.out.println("[START] OBJECT BORN: " + obj);
+                // }
+                // if (heap.latestGCId() == obj.getLastMovedAt()) {
+                // System.out.println("[START] OBJECT MOVED: " + obj);
+                // }
+                // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
+                // System.out.println("[START] OBJECT YEETED: " + obj);
+                // }
+                // }
                 // }, new ObjectVisitor.Settings(true));
             }
 
@@ -355,17 +424,20 @@ public class Main {
             }
 
             @Override
-            public void doParseGCInfo(int index, int gcId, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseGCInfo(int index, int gcId, @NotNull ThreadLocalHeap threadLocalHeap)
+                    throws TraceException {
 
             }
 
             @Override
-            public void doParseSpaceCreate(int index, long startAddr, long size, @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
+            public void doParseSpaceCreate(int index, long startAddr, long size,
+                    @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
 
             }
 
             @Override
-            public void doParseSpaceAlloc(int index, @NotNull SpaceMode spaceMode, @NotNull SpaceType spaceType, @NotNull ThreadLocalHeap threadLocalHeap) {
+            public void doParseSpaceAlloc(int index, @NotNull SpaceMode spaceMode, @NotNull SpaceType spaceType,
+                    @NotNull ThreadLocalHeap threadLocalHeap) {
 
             }
 
@@ -380,7 +452,8 @@ public class Main {
             }
 
             @Override
-            public void doParseSpaceRedefine(int index, long addr, long size, @NotNull ThreadLocalHeap threadLocalHeap) {
+            public void doParseSpaceRedefine(int index, long addr, long size,
+                    @NotNull ThreadLocalHeap threadLocalHeap) {
 
             }
 
