@@ -388,10 +388,11 @@ public class Main {
                         // System.out.println("OBJECT BORN: " + obj);
                         // }
                         if (gcInfo.getId() == obj.getLastMovedAt()) {
-                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                            // TODO: show all call sites instead of getCallSites()[0]
+                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
                         }
                         if (space.isBeingCollected() && obj.getLastMovedAt() != gcInfo.getId()) {
-                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
                         }
                     }
                 }, new ObjectVisitor.Settings(true));
@@ -406,10 +407,10 @@ public class Main {
                                 // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
                                 if (heap.latestGCId() == obj.getBornAt()) {
                                     obj.setTag(lastTag.getAndIncrement());
-                                    System.out.println("[START] OBJECT BORN: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                                    System.out.println("[START] OBJECT BORN: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
                                 }
                                 if (heap.latestGCId() == obj.getLastMovedAt()) {
-                                    System.out.println("[START] OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                                    System.out.println("[START] OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
                                 }
                                 // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
                                 //     System.out.println("[START] OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address);
