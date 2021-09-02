@@ -26,6 +26,8 @@
 #include <time.h>
 #include "AllocationTracingSynchronization.hpp"
 
+#include <cstdio>
+
 #ifdef _WINDOWS
 #define snprintf _snprintf
 #endif
@@ -62,29 +64,30 @@ AllocationTracingIO::~AllocationTracingIO() {
     close();
 }
 
+
 void AllocationTracingIO::create_file(){
-    bool file_exists;
-    
+    /* bool file_exists; */
+    /* char* file_name = get_file_name(_cur_file_index % _max_files); */
+    /* FILE *file = fopen(file_name, "r"); */
+    /* if (file == NULL) file_exists = false; */
+    /* else { */
+    /*     file_exists = true; */ 
+    /*     fclose(file); */
+    /* } */
+    /* if(file_exists){ */
+    /*     _file = fopen(file_name, "wb"); */
+    /* } else { */
+    /*     _file = fopen(file_name, "w+b"); */
+    /* } */
+    /* free(file_name); */
     char* file_name = get_file_name(_cur_file_index % _max_files);
-        
-    FILE *file = fopen(file_name, "r");
-    if (file == NULL) file_exists = false;
-    else {
-        file_exists = true; 
-        fclose(file);
-    }
-    
-    if(file_exists){
-        _file = fopen(file_name, "wb");
-    } else {
-        _file = fopen(file_name, "w+b");
-    }
-    
+    char fileName [1000];
+    sprintf(fileName, "%s_%ld", file_name, time(NULL));
+    _file = fopen(fileName, "w+b");
     free(file_name);
-    
     guarantee(_file != NULL, "Could not open file!");
     _total_bytes_written = 0;
-    
+
     write_global_header();
 }
 
