@@ -5,7 +5,7 @@ import itertools
 import pandas as pd
 
 move_matcher = re.compile(
-    r"OBJECT (BORN|YEETED|MOVED): .*type: (.*), size: (-?\d+), isMirror: (true|false), isArray: (true|false), arrLen: (-?\d+)], bornAt=(-?\d+), lastMovedAt=(-?\d+), tag=(-?\d+)\) at: (\d+) address: (\d+) gcId: (\d+)"
+    r"OBJECT (BORN|YEETED|MOVED): .*type: (.*), size: (-?\d+), isMirror: (true|false), isArray: (true|false), arrLen: (-?\d+)], bornAt=(-?\d+), lastMovedAt=(-?\d+), tag=(-?\d+)\) at: (\d+) address: (\d+) gcId: (\d+) allocationSites: (.*)"
 )
 
 data = []
@@ -18,7 +18,7 @@ with open(filename) as f:
         for match in move_matcher.finditer(line):
             groups = match.groups()
 
-            event_type, type, size, isMirror, isArray, arrLen, bornAt, lastMovedAt, tag, at, address, gcId = groups
+            event_type, type, size, isMirror, isArray, arrLen, bornAt, lastMovedAt, tag, at, address, gcId, allocationSites = groups
 
             row = {
                 "event": event_type,
@@ -33,10 +33,11 @@ with open(filename) as f:
                 "at": int(at),
                 "address": int(address),
                 "gcId": int(gcId),
+                "allocationSites": allocationSites
             }
 
             data.append(row)
 
 df = pd.DataFrame(data)
 print(df)
-df.to_csv(f"./preprocessed_outputs/{filename.split(os.path.sep)[-1]}.csv")
+df.to_csv(f"./preprocessed_outputs/{filename.split(os.path.sep)[-1]}.csv", index=False)
