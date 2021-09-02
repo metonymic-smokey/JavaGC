@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogManager;
+import java.util.concurrent.atomic.AtomicLong;
 
 // Provided by Markus Weninger, SSW, JKU, Austria
 public class Main {
@@ -369,7 +370,7 @@ public class Main {
 
             }
 
-            long lastTag = 1;
+            final AtomicLong lastTag = new AtomicLong(1);
 
             @Override
             public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed,
@@ -387,10 +388,10 @@ public class Main {
                         // System.out.println("OBJECT BORN: " + obj);
                         // }
                         if (gcInfo.getId() == obj.getLastMovedAt()) {
-                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime());
+                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
                         }
                         if (space.isBeingCollected() && obj.getLastMovedAt() != gcInfo.getId()) {
-                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime());
+                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
                         }
                     }
                 }, new ObjectVisitor.Settings(true));
@@ -399,23 +400,22 @@ public class Main {
             @Override
             public void doParseGCStart(@NotNull ParserGCInfo gcInfo, long start, long end,
                     @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-                // heap.toObjectStream(false).forEach(new ObjectVisitor() {
-                // @Override public void visit(long address, AddressHO obj, SpaceInfo space,
-                // List<? extends RootPtr> rootPtrs) {
-                // // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
-                // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
-                // obj.getTag());
-                // if (heap.latestGCId()+1 == obj.getBornAt()) {
-                // System.out.println("[START] OBJECT BORN: " + obj);
-                // }
-                // if (heap.latestGCId() == obj.getLastMovedAt()) {
-                // System.out.println("[START] OBJECT MOVED: " + obj);
-                // }
-                // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
-                // System.out.println("[START] OBJECT YEETED: " + obj);
-                // }
-                // }
-                // }, new ObjectVisitor.Settings(true));
+                        // System.out.println("doParseGCStart");
+                        heap.toObjectStream(true).forEach(new ObjectVisitor() {
+                            @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                                // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
+                                if (heap.latestGCId() == obj.getBornAt()) {
+                                    obj.setTag(lastTag.getAndIncrement());
+                                    System.out.println("[START] OBJECT BORN: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                                }
+                                if (heap.latestGCId() == obj.getLastMovedAt()) {
+                                    System.out.println("[START] OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId());
+                                }
+                                // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
+                                //     System.out.println("[START] OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address);
+                                // }
+                            }
+                        }, new ObjectVisitor.Settings(true));
             }
 
             @Override
