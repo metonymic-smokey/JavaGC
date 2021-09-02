@@ -5,7 +5,7 @@ import itertools
 import pandas as pd
 
 move_matcher = re.compile(
-    r"OBJECT (YEETED|MOVED): .*type: (.*), size: (-?\d+), isMirror: (true|false), isArray: (true|false), arrLen: (-?\d+)], bornAt=(-?\d+), lastMovedAt=(-?\d+), tag=(-?\d+)\) at: (\d+)"
+    r"OBJECT (BORN|YEETED|MOVED): .*type: (.*), size: (-?\d+), isMirror: (true|false), isArray: (true|false), arrLen: (-?\d+)], bornAt=(-?\d+), lastMovedAt=(-?\d+), tag=(-?\d+)\) at: (\d+) address: (\d+) gcId: (\d+)"
 )
 
 data = []
@@ -13,11 +13,12 @@ data = []
 filename = sys.argv[1]
 with open(filename) as f:
     LIMIT = itertools.repeat(None)
+    # LIMIT = range(100)
     for _, line in zip(LIMIT, f):
         for match in move_matcher.finditer(line):
             groups = match.groups()
 
-            event_type, type, size, isMirror, isArray, arrLen, bornAt, lastMovedAt, tag, at = groups
+            event_type, type, size, isMirror, isArray, arrLen, bornAt, lastMovedAt, tag, at, address, gcId = groups
 
             row = {
                 "event": event_type,
@@ -30,6 +31,8 @@ with open(filename) as f:
                 "lastMovedAt": int(lastMovedAt),
                 "tag": int(tag),
                 "at": int(at),
+                "address": int(address),
+                "gcId": int(gcId),
             }
 
             data.append(row)
