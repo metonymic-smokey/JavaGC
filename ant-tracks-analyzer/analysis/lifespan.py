@@ -19,15 +19,14 @@ for type in types:
         #print(row['event'])
         if row['event'] == "BORN":
             stack.append(row['at'])
+            c+=1
 
         if row['event'] == "YEETED":
-            #died = max(died,row['at'])
             if len(stack) > 0:
                 born = stack.pop()
                 diff = row['at'] - born
                 total+=diff
-
-        c+=1
+                c+=1
 
     print(type,total/c)
 
