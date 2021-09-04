@@ -1,57 +1,43 @@
 import time
+from typing import cast
 
 import pandas as pd
 
 df = pd.read_csv("preprocessed_outputs/objects_14.txt.csv")
 
-df = df[:1000]
+df = df[:100000]
+
+# print(df)
 
 types = df["type"].unique()
 
 print(types)
 
-df_objs = dict()
-
 start = time.time()
 
 for type in types:
-    df_objs[type] = df[df["type"] == type]
+    df_objs = df[df["type"] == type]
+    df_objs = cast(pd.DataFrame, df_objs)
 
-    stack = []
     c = 0
     total = 0
 
-    tags = df_objs[type]["tag"].unique()
-    print(tags)
+    tag_groups = df_objs.groupby("tag")
 
-    temp = df_objs[type]
+    for tag, group in tag_groups:
+        # print(group)
+        stack = []
+        for row in group.itertuples():
+            if row.event == "BORN":
+                stack.append(row.at)
 
-    for tag in tags:
-        tag_objs = dict()
-        if tag not in tag_objs:
-            tag_objs[tag] = []
-
-        for index, row in df_objs[type].iterrows():
-            if row["tag"] == tag:
-                tag_objs[tag].append(row)
-
-        for k in tag_objs.keys():
-            tag_objs[k] = pd.DataFrame(tag_objs[k])
-
-        for index, row in tag_objs[tag].iterrows():
-
-            if row["event"] == "BORN":
-                stack.append(row["at"])
+            elif row.event == "YEETED" and stack:
+                born = stack.pop()
+                diff = row.at - born
+                total += diff
                 c += 1
 
-            if row["event"] == "YEETED":
-                if len(stack) > 0:
-                    born = stack.pop()
-                    diff = row["at"] - born
-                    total += diff
-                    c += 1
-
-    print(type, total / c)
+    print(type, total / c if c > 0 else 0)
 
 
 print("Time taken: ", time.time() - start)
