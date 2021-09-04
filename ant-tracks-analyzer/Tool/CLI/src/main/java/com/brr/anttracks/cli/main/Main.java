@@ -449,7 +449,7 @@ public class Main {
 
                 Long tag = new Long(obj.getTag());
                 if (tagBornMap.containsKey(tag)) {
-                    Long bornTime = tagBornMap.get(tag);
+                    Long bornTime = tagBornMap.remove(tag);
                     Long curTime = gcInfo.getTime();
                     Long lifetime = curTime - bornTime;
                     System.out.println("OBJECT LIFETIME: " + obj + " at: " + gcInfo.getTime() + " address: " + address
