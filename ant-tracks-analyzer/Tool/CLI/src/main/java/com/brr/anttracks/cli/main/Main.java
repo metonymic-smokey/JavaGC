@@ -42,6 +42,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.IOException;
 import java.util.List;
+import java.util.HashMap;
 import java.util.logging.LogManager;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -65,18 +66,18 @@ public class Main {
         props.put("user", "postgres");
         props.put("password", "password");
         props.put("ssl", "false");
-    
+
         try {
-          Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
-          System.out.println("Success");
-          System.out.println(c.getClientInfo());
-          String createSensorTableQuery = "CREATE TABLE test_data (id SERIAL PRIMARY KEY, type TEXT NOT NULL, location TEXT NOT NULL)";
-        try (Statement stmt = c.createStatement()) {
-            stmt.execute(createSensorTableQuery);
-        }
-        //   c.close();
+            Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
+            System.out.println("Success");
+            System.out.println(c.getClientInfo());
+            String createSensorTableQuery = "CREATE TABLE test_data (id SERIAL PRIMARY KEY, type TEXT NOT NULL, location TEXT NOT NULL)";
+            try (Statement stmt = c.createStatement()) {
+                stmt.execute(createSensorTableQuery);
+            }
+            // c.close();
         } catch (Exception e) {
-          e.printStackTrace();
+            e.printStackTrace();
         }
         // Turn off other logging (e.g., AdditionalPrintingEventHandler)
         LogManager.getLogManager().reset();
@@ -406,13 +407,24 @@ public class Main {
             }
 
             final AtomicLong lastTag = new AtomicLong(1);
+            HashMap<Long, Long> tagBornMap = new HashMap<Long, Long>();
+
             private void logObject(String event, long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
                 // TODO: show all call sites instead of getCallSites()[0]
-                System.out.println("OBJECT " + event + ": " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+                System.out.println("OBJECT " + event + ": " + obj + " at: " + gcInfo.getTime() + " address: " + address
+                        + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
             }
 
             private void objectBorn(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                obj.setTag(lastTag.getAndIncrement());
+                // increment and set tag
+                long tag = lastTag.getAndIncrement();
+                obj.setTag(tag);
+
+                // add tag -> time to map
+                Long tagL = new Long(tag);
+                Long timeL = new Long(gcInfo.getTime());
+                tagBornMap.put(tagL, timeL);
+
                 logObject("BORN", address, obj, gcInfo);
             }
 
@@ -421,15 +433,29 @@ public class Main {
             }
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-             	String str = "OBJECT DELETED,"+Short.toString(obj.getBornAt())+","+Short.toString(obj.getLastMovedAt())+","+Long.toString(obj.getTag())+","+Integer.toString(obj.getSize())+","+Integer.toString(obj.getArrayLength())+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
-		Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
-		
-		try {
-		    Files.write(path, str.getBytes(),StandardOpenOption.APPEND);
+                String str = "OBJECT DELETED," + Short.toString(obj.getBornAt()) + ","
+                        + Short.toString(obj.getLastMovedAt()) + "," + Long.toString(obj.getTag()) + ","
+                        + Integer.toString(obj.getSize()) + "," + Integer.toString(obj.getArrayLength()) + ","
+                        + Long.toString(address) + "," + Long.toString(gcInfo.getTime()) + ","
+                        + Integer.toString(gcInfo.getId()) + "\n";
+                Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
+
+                try {
+                    Files.write(path, str.getBytes(), StandardOpenOption.APPEND);
                 } catch (IOException x) {
                     System.err.println(x);
                 }
                 logObject("DELETED", address, obj, gcInfo);
+
+                Long tag = new Long(obj.getTag());
+                if (tagBornMap.containsKey(tag)) {
+                    Long bornTime = tagBornMap.get(tag);
+                    Long curTime = gcInfo.getTime();
+                    Long lifetime = curTime - bornTime;
+                    System.out.println("OBJECT LIFETIME: " + obj + " at: " + gcInfo.getTime() + " address: " + address
+                            + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]
+                            + " lifetime: " + lifetime);
+                }
             }
 
             @Override
@@ -451,21 +477,25 @@ public class Main {
             @Override
             public void doParseGCStart(@NotNull ParserGCInfo gcInfo, long start, long end,
                     @NotNull ThreadLocalHeap threadLocalHeap) throws TraceException {
-                        // System.out.println("doParseGCStart");
-                        heap.toObjectStream(true).forEach(new ObjectVisitor() {
-                            @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                                // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
-                                if (heap.latestGCId() == obj.getBornAt()) {
-                                    objectBorn(address, obj, gcInfo);
-                                }
-                                if (heap.latestGCId() == obj.getLastMovedAt()) {
-                                    objectMoved(address, obj, gcInfo);
-                                }
-                                // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
-                                //     System.out.println("[START] OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address);
-                                // }
-                            }
-                        }, new ObjectVisitor.Settings(true));
+                // System.out.println("doParseGCStart");
+                heap.toObjectStream(true).forEach(new ObjectVisitor() {
+                    @Override
+                    public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
+                        // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
+                        // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
+                        // obj.getTag());
+                        if (heap.latestGCId() == obj.getBornAt()) {
+                            objectBorn(address, obj, gcInfo);
+                        }
+                        if (heap.latestGCId() == obj.getLastMovedAt()) {
+                            objectMoved(address, obj, gcInfo);
+                        }
+                        // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
+                        // System.out.println("[START] OBJECT YEETED: " + obj + " at: " +
+                        // gcInfo.getTime() + " address: " + address);
+                        // }
+                    }
+                }, new ObjectVisitor.Settings(true));
             }
 
             @Override
