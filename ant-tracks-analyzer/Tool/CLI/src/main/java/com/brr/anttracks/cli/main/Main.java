@@ -371,6 +371,23 @@ public class Main {
             }
 
             final AtomicLong lastTag = new AtomicLong(1);
+            private void logObject(String event, long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
+                // TODO: show all call sites instead of getCallSites()[0]
+                System.out.println("OBJECT " + event + ": " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+            }
+
+            private void objectBorn(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
+                obj.setTag(lastTag.getAndIncrement());
+                logObject("BORN", address, obj, gcInfo);
+            }
+
+            private void objectMoved(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
+                logObject("MOVED", address, obj, gcInfo);
+            }
+
+            private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
+                logObject("YEETED", address, obj, gcInfo);
+            }
 
             @Override
             public void doParseGCEnd(@NotNull ParserGCInfo gcInfo, long start, long end, boolean failed,
@@ -378,21 +395,11 @@ public class Main {
                 heap.toObjectStream(false).forEach(new ObjectVisitor() {
                     @Override
                     public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
-                        // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d,
-                        // tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(),
-                        // obj.getTag());
-
-                        // this does not work for some reason
-                        // if (gcInfo.getId() == obj.getBornAt()) {
-                        // obj.setTag(lastTag++);
-                        // System.out.println("OBJECT BORN: " + obj);
-                        // }
                         if (gcInfo.getId() == obj.getLastMovedAt()) {
-                            // TODO: show all call sites instead of getCallSites()[0]
-                            System.out.println("OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+                            objectMoved(address, obj, gcInfo);
                         }
                         if (space.isBeingCollected() && obj.getLastMovedAt() != gcInfo.getId()) {
-                            System.out.println("OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+                            objectYeeted(address, obj, gcInfo);
                         }
                     }
                 }, new ObjectVisitor.Settings(true));
@@ -406,11 +413,10 @@ public class Main {
                             @Override public void visit(long address, AddressHO obj, SpaceInfo space, List<? extends RootPtr> rootPtrs) {
                                 // System.out.format("Address: %d, obj info: %s, bornAt: %d, lastMovedAt: %d, tag: %d %n", address, obj.getInfo(), obj.getBornAt(), obj.getLastMovedAt(), obj.getTag());
                                 if (heap.latestGCId() == obj.getBornAt()) {
-                                    obj.setTag(lastTag.getAndIncrement());
-                                    System.out.println("[START] OBJECT BORN: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+                                    objectBorn(address, obj, gcInfo);
                                 }
                                 if (heap.latestGCId() == obj.getLastMovedAt()) {
-                                    System.out.println("[START] OBJECT MOVED: " + obj + " at: " + gcInfo.getTime() + " address: " + address + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]);
+                                    objectMoved(address, obj, gcInfo);
                                 }
                                 // if (space.isBeingCollected() && obj.getLastMovedAt() != heap.latestGCId()) {
                                 //     System.out.println("[START] OBJECT YEETED: " + obj + " at: " + gcInfo.getTime() + " address: " + address);
