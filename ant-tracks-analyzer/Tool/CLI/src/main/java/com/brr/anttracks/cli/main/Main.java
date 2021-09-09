@@ -32,6 +32,8 @@ import com.brr.anttracks.cli.main.JsonExportMain;
 import java.nio.file.Files.*;
 import java.lang.Long;
 import java.lang.Integer;
+import java.lang.Short;
+import java.lang.Boolean;
 import java.nio.file.StandardOpenOption;
 
 import java.io.File;
@@ -419,7 +421,7 @@ public class Main {
             }
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                String str = "DELETED,"+obj+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
+                String str = "OBJECT DELETED,"+","+Short.toString(obj.getBornAt())+","+Short.toString(obj.getLastMovedAt())+","+Long.toString(obj.getTag())+","+Integer.toString(obj.getSize())+","+Integer.toString(obj.getArrayLength())+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
 		Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
 		
 		try {
