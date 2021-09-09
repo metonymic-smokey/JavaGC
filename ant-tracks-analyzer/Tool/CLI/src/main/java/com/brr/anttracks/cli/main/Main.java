@@ -438,7 +438,7 @@ public class Main {
                         + Integer.toString(obj.getSize()) + "," + Integer.toString(obj.getArrayLength()) + ","
                         + Long.toString(address) + "," + Long.toString(gcInfo.getTime()) + ","
                         + Integer.toString(gcInfo.getId()) + "\n";
-                Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
+                Path path = Paths.get("outputs/test.txt");
 
                 try {
                     Files.write(path, str.getBytes(), StandardOpenOption.APPEND);
