@@ -425,36 +425,36 @@ public class Main {
                 Long timeL = new Long(gcInfo.getTime());
                 tagBornMap.put(tagL, timeL);
 
-                logObject("BORN", address, obj, gcInfo);
+                // logObject("BORN", address, obj, gcInfo);
             }
 
             private void objectMoved(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                logObject("MOVED", address, obj, gcInfo);
+                // logObject("MOVED", address, obj, gcInfo);
             }
 
-            private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                String str = "OBJECT DELETED," + Short.toString(obj.getBornAt()) + ","
-                        + Short.toString(obj.getLastMovedAt()) + "," + Long.toString(obj.getTag()) + ","
-                        + Integer.toString(obj.getSize()) + "," + Integer.toString(obj.getArrayLength()) + ","
-                        + Long.toString(address) + "," + Long.toString(gcInfo.getTime()) + ","
-                        + Integer.toString(gcInfo.getId()) + "\n";
-                Path path = Paths.get("outputs/test.txt");
+            Path outputPath = Paths.get("outputs/lifetimes.csv");
 
-                try {
-                    Files.write(path, str.getBytes(), StandardOpenOption.APPEND);
-                } catch (IOException x) {
-                    System.err.println(x);
-                }
-                logObject("DELETED", address, obj, gcInfo);
+            private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
+                // logObject("DELETED", address, obj, gcInfo);
 
                 Long tag = new Long(obj.getTag());
                 if (tagBornMap.containsKey(tag)) {
                     Long bornTime = tagBornMap.remove(tag);
                     Long curTime = gcInfo.getTime();
                     Long lifetime = curTime - bornTime;
-                    System.out.println("OBJECT LIFETIME: " + obj + " at: " + gcInfo.getTime() + " address: " + address
-                            + " gcId: " + gcInfo.getId() + " allocationSites: " + obj.getSite().getCallSites()[0]
-                            + " lifetime: " + lifetime);
+                    String str = Short.toString(obj.getBornAt()) + ","
+                        + obj.getLastMovedAt() + "," + obj.getTag() + ","
+                        + obj.getSize() + "," + obj.getArrayLength() + ","
+                        + address + "," + gcInfo.getTime() + ","
+                        + gcInfo.getId() + ","
+                        + obj.getSite().getCallSites()[0] + ","
+                        + lifetime + "\n";
+
+                    try {
+                        Files.write(outputPath, str.getBytes(), StandardOpenOption.APPEND);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
                 }
             }
 
