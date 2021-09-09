@@ -29,11 +29,22 @@ import org.jetbrains.annotations.Nullable;
 
 import com.brr.anttracks.cli.main.JsonExportMain;
 
+import java.nio.file.Files.*;
+
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogManager;
 import java.util.concurrent.atomic.AtomicLong;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 
 // Provided by Markus Weninger, SSW, JKU, Austria
 public class Main {
@@ -43,6 +54,25 @@ public class Main {
     private static HeapTraceParser parser;
 
     public static void main(String[] args) {
+        // Class.forName("org.postgresql.Driver");
+        // Properties props = new Properties();
+        // props.put("jdbc.url", "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=postgres");
+        // props.put("user", "postgres");
+        // props.put("password", "postgres");
+        // props.put("ssl", "false");
+    
+        // try {
+        //   Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
+        //   System.out.println("Success");
+        //   System.out.println(c.getClientInfo());
+        //   String createSensorTableQuery = "CREATE TABLE sensors (id SERIAL PRIMARY KEY,type TEXT NOT NULL,location TEXT NOT NULL)";
+        // try (Statement stmt = c.createStatement()) {
+        //     stmt.execute(createSensorTableQuery);
+        // }
+        // //   c.close();
+        // } catch (Exception e) {
+        //   e.printStackTrace();
+        // }
         // Turn off other logging (e.g., AdditionalPrintingEventHandler)
         LogManager.getLogManager().reset();
 
@@ -386,7 +416,15 @@ public class Main {
             }
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                logObject("YEETED", address, obj, gcInfo);
+                String str = "Hello";
+                Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
+		//System.out.println("print supposed to happen\n");
+		try {
+			Files.write(path, str.getBytes());
+                } catch (IOException x) {
+                    System.err.println(x);
+                }
+                logObject("DELETED", address, obj, gcInfo);
             }
 
             @Override
