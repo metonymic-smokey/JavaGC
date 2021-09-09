@@ -60,24 +60,24 @@ public class Main {
 
     public static void main(String[] args) {
         // Class.forName("org.postgresql.Driver");
-        // Properties props = new Properties();
-        // props.put("jdbc.url", "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=postgres");
-        // props.put("user", "postgres");
-        // props.put("password", "postgres");
-        // props.put("ssl", "false");
+        Properties props = new Properties();
+        props.put("jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
+        props.put("user", "postgres");
+        props.put("password", "password");
+        props.put("ssl", "false");
     
-        // try {
-        //   Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
-        //   System.out.println("Success");
-        //   System.out.println(c.getClientInfo());
-        //   String createSensorTableQuery = "CREATE TABLE sensors (id SERIAL PRIMARY KEY,type TEXT NOT NULL,location TEXT NOT NULL)";
-        // try (Statement stmt = c.createStatement()) {
-        //     stmt.execute(createSensorTableQuery);
-        // }
-        // //   c.close();
-        // } catch (Exception e) {
-        //   e.printStackTrace();
-        // }
+        try {
+          Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
+          System.out.println("Success");
+          System.out.println(c.getClientInfo());
+          String createSensorTableQuery = "CREATE TABLE test_data (id SERIAL PRIMARY KEY, type TEXT NOT NULL, location TEXT NOT NULL)";
+        try (Statement stmt = c.createStatement()) {
+            stmt.execute(createSensorTableQuery);
+        }
+        //   c.close();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
         // Turn off other logging (e.g., AdditionalPrintingEventHandler)
         LogManager.getLogManager().reset();
 
@@ -421,7 +421,7 @@ public class Main {
             }
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                String str = "OBJECT DELETED,"+","+Short.toString(obj.getBornAt())+","+Short.toString(obj.getLastMovedAt())+","+Long.toString(obj.getTag())+","+Integer.toString(obj.getSize())+","+Integer.toString(obj.getArrayLength())+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
+             	String str = "OBJECT DELETED,"+Short.toString(obj.getBornAt())+","+Short.toString(obj.getLastMovedAt())+","+Long.toString(obj.getTag())+","+Integer.toString(obj.getSize())+","+Integer.toString(obj.getArrayLength())+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
 		Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
 		
 		try {
