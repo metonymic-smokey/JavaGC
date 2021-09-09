@@ -14,5 +14,6 @@ dependencies {
     // compile project(':CallContextAnalyzer')
     compile project(':UI')
     compile project(':Parser')
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
     // testCompile project(':Examples')
 }
