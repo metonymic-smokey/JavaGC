@@ -30,6 +30,9 @@ import org.jetbrains.annotations.Nullable;
 import com.brr.anttracks.cli.main.JsonExportMain;
 
 import java.nio.file.Files.*;
+import java.lang.Long;
+import java.lang.Integer;
+import java.nio.file.StandardOpenOption;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -416,11 +419,11 @@ public class Main {
             }
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
-                String str = "Hello";
-                Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
-		//System.out.println("print supposed to happen\n");
+                String str = "DELETED,"+obj+","+Long.toString(address)+","+Long.toString(gcInfo.getTime())+","+Integer.toString(gcInfo.getId())+"\n";
+		Path path = Paths.get("/home/aayushnaik/Capstone/AntTracks/Tool/ant-tracks-analyzer/Tool/CLI/test.txt");
+		
 		try {
-			Files.write(path, str.getBytes());
+		    Files.write(path, str.getBytes(),StandardOpenOption.APPEND);
                 } catch (IOException x) {
                     System.err.println(x);
                 }
