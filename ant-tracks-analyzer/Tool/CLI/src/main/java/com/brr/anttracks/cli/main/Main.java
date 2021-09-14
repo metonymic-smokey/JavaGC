@@ -448,7 +448,11 @@ public class Main {
                         + address + "," + gcInfo.getTime() + ","
                         + gcInfo.getId() + ","
                         + obj.getSite().getCallSites()[0] + ","
-                        + lifetime + "\n";
+                        + lifetime + ","
+                        + obj.getType().internalName + ","
+                        + obj.isArray() + ","
+                        + obj.getArrayLength() + ","
+                        + bornTime + "\n";
 
                     try {
                         Files.write(outputPath, str.getBytes(), StandardOpenOption.APPEND);
