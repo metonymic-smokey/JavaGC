@@ -41,10 +41,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.List;
 import java.util.HashMap;
 import java.util.logging.LogManager;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.ConcurrentHashMap;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -58,6 +61,23 @@ public class Main {
     private static AppInfo appInfo;
     private static Symbols symbols;
     private static HeapTraceParser parser;
+    private static FileWriter file;
+    private static BufferedWriter bf;
+    private static AtomicLong numObjects;
+    private static final AtomicLong lastTag;
+    private static ConcurrentHashMap<Long, Long> tagBornMap;
+
+    static {
+        try {
+            file = new FileWriter("outputs/lifetimes.csv");
+            bf = new BufferedWriter(file);
+            numObjects = new AtomicLong(1);
+            lastTag = new AtomicLong(1);
+            tagBornMap = new ConcurrentHashMap<Long, Long>();
+        } catch (IOException e) {
+            throw new ExceptionInInitializerError(e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         // Class.forName("org.postgresql.Driver");
@@ -134,7 +154,7 @@ public class Main {
             // read from the trace file.
             // For example, this could be used to count the number of allocation events,
             // move events, etc.
-            parser.addEventHandler(JsonExportMain::customEventHandler);
+            // parser.addEventHandler(JsonExportMain::customEventHandler);
             parser.addEventHandler(Main::customEventHandler);
             DetailedHeap detailedHeap = parser.parse();
             // Once the whole trace has been parsed, if meta-data has been written, we can
@@ -143,6 +163,8 @@ public class Main {
             // appInfo.getStatistics()
             // appInfo.getStatistics().addAll(Statistics.Companion.readStatisticsFromMetadata(appInfo.getMetaDataPath(),
             // appInfo.getSymbols()));
+
+            System.out.println("Number of objects processed: " + numObjects.get());
         } catch (Throwable e) {
             e.printStackTrace(System.err);
         }
@@ -406,8 +428,6 @@ public class Main {
 
             }
 
-            final AtomicLong lastTag = new AtomicLong(1);
-            HashMap<Long, Long> tagBornMap = new HashMap<Long, Long>();
 
             private void logObject(String event, long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
                 // TODO: show all call sites instead of getCallSites()[0]
@@ -419,6 +439,7 @@ public class Main {
                 // increment and set tag
                 long tag = lastTag.getAndIncrement();
                 obj.setTag(tag);
+                numObjects.getAndIncrement();
 
                 // add tag -> time to map
                 Long tagL = new Long(tag);
@@ -438,8 +459,8 @@ public class Main {
                 // logObject("DELETED", address, obj, gcInfo);
 
                 Long tag = new Long(obj.getTag());
-                if (tagBornMap.containsKey(tag)) {
-                    Long bornTime = tagBornMap.remove(tag);
+                Long bornTime = tagBornMap.remove(tag);
+                if (bornTime != null) {
                     Long curTime = gcInfo.getTime();
                     Long lifetime = curTime - bornTime;
                     String str = Short.toString(obj.getBornAt()) + ","
@@ -455,10 +476,11 @@ public class Main {
                         + bornTime + "\n";
 
                     try {
-                        Files.write(outputPath, str.getBytes(), StandardOpenOption.APPEND);
+                        bf.write(str);
                     } catch (IOException x) {
                         System.err.println(x);
                     }
+
                 }
             }
 
