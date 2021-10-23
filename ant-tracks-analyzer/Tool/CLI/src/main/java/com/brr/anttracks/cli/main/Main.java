@@ -165,6 +165,8 @@ public class Main {
             // appInfo.getSymbols()));
 
             System.out.println("Number of objects processed: " + numObjects.get());
+
+            bf.close();
         } catch (Throwable e) {
             e.printStackTrace(System.err);
         }
