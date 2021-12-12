@@ -3,6 +3,8 @@ package com.brr.benchmark.array;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.lang.Byte;
+
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -33,11 +35,31 @@ public class ArrayBenchmark {
     @Param({"1000"})
     public int numberOfObjects;
 
+    @Param({"true"})
+    public boolean boxed;
+
     @Benchmark
     public void testMethod(Blackhole blackhole) {
         int sizeInBytes = 4096;
 
-        for (int iter = 0; iter < 4; iter++) {
+        if (boxed) {
+            for (int iter = 0; iter < 4; iter++) {
+            // this is essentially pre-allocating space for "numberOfObjects"?
+            List<java.lang.Byte[]> junk;
+            if (prealloc) {
+                junk = new ArrayList<>(numberOfObjects);
+            } else {
+                junk = new ArrayList<>();
+            }
+            for (int j = 0; j < numberOfObjects; j++) {
+                // will "add" allocate more space?
+                //  A: the constructor only allocates capacity, there are no elements in the list initially (https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html#ArrayList-int-)
+                junk.add(new java.lang.Byte[sizeInBytes]);
+            }
+            blackhole.consume(junk);
+            }
+        } else {
+            for (int iter = 0; iter < 4; iter++) {
             // this is essentially pre-allocating space for "numberOfObjects"?
             List<byte[]> junk;
             if (prealloc) {
@@ -51,6 +73,7 @@ public class ArrayBenchmark {
                 junk.add(new byte[sizeInBytes]);
             }
             blackhole.consume(junk);
+            }
         }
     }
 }
