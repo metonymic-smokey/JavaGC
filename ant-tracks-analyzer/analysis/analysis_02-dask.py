@@ -25,6 +25,7 @@ from tqdm import tqdm
 from tqdm.dask import TqdmCallback
 
 import os
+import sys
 
 
 # In[4]:
@@ -69,7 +70,7 @@ dtype = {
 
 
 # change params here
-filename = "/media/aayushnaik/capstone/jet-gc-benchmark/outputs/smol_01.parquet"
+filename = sys.argv[1]
 # classes with less than these many objects will be ignored
 num_objects_threshold = 1000
 
@@ -80,13 +81,6 @@ num_objects_threshold = 1000
 # directory to store graphs, etc.
 output_dir_name = filename.replace(os.path.sep, "___").replace(".", "_._")
 os.makedirs(output_dir_name, exist_ok=True)
-
-
-# pbar = ProgressBar()
-# pbar.register()
-# cb = TqdmCallback(desc="dask")
-# cb.register()
-
 
 # In[7]:
 
@@ -125,21 +119,8 @@ def get_groups(group_by_cols, N=num_objects_threshold):
         # bornAt is used here, but all cols have same value at this point
         res = res[res["bornAt"] >= N]
         res = res.compute()
-    
-    print(res)
-    types = list(res.index.tolist())
-#     print(len(types))
-#     assert False
-    
-#     with TqdmCallback(desc="get unique"):
-#         uniqs = df[group_by_cols].unique().compute()
 
-#     with TqdmCallback(desc="get group"):
-#         types = []
-#         for name in tqdm(uniqs, position=2, desc="get all groups"):
-#             # skip classes which have <N objects
-#             if len(groups.get_group(name)) >= N:
-#                 types.append(name)
+    types = list(res.index.tolist())
     
     return types, groups
 
@@ -149,6 +130,8 @@ def get_groups(group_by_cols, N=num_objects_threshold):
 
 types, groups = get_groups("type", N=num_objects_threshold)
 num_types = len(types)
+
+print("Number of type groups:", num_types)
 
 
 # ## Distribution of lifetimes for each type
@@ -176,15 +159,17 @@ num_types = len(types)
 # In[ ]:
 
 
-def plot_agg(which_agg: str):
+def plot_agg(which_agg: str, N=num_objects_threshold):
     means = []
     print(f"getting {which_agg} of all types...")
 
     with TqdmCallback(desc=f"{which_agg}"):
-        for name in tqdm(types, position=2, desc=f"{which_agg} total"):
-            group = groups.get_group(name)
+        res = groups.agg({"lifetime": ["mean", "count"]})
+        res = res[res.lifetime["count"] >= N]
+        res = res.compute()
 
-            means.append(getattr(group.lifetime, which_agg)().compute())
+        types = res.index.tolist()
+        means = res.lifetime["mean"].tolist()
 
     plt.gcf().set_size_inches(15, num_types // 2)
     plt.barh([i for i in range(num_types)], means, tick_label=types)
@@ -231,21 +216,23 @@ num_names = len(alloc_site_group_names)
 # In[ ]:
 
 
-print("Allocation site groups:", alloc_site_group_names)
+print("Number of allocation site groups:", num_names)
 
 
 # In[ ]:
 
 
-def plot_aggs_alloc_site(which_agg: str):
+def plot_aggs_alloc_site(which_agg: str, N=num_objects_threshold):
     means = []
     print(f"getting {which_agg} of all types...")
 
     with TqdmCallback(desc=f"{which_agg} alloc site"):
-        for name in tqdm(alloc_site_group_names, position=2, desc=f"{which_agg} total"):
-            group = alloc_site_groups.get_group(name)
+        res = alloc_site_groups.agg({"lifetime": ["mean", "count"]})
+        res = res[res.lifetime["count"] >= N]
+        res = res.compute()
 
-            means.append(getattr(group.lifetime, which_agg)().compute())
+        alloc_site_group_names = res.index.tolist()
+        means = res.lifetime["mean"].tolist()
 
     plt.gcf().set_size_inches(15, num_names // 2)
     plt.barh([i for i in range(num_names)], means, tick_label=["-".join(i) for i in alloc_site_group_names])
