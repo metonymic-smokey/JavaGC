@@ -69,7 +69,7 @@ dtype = {
 
 
 # change params here
-filename = "/media/aayushnaik/capstone/jet-gc-benchmark/outputs/smol_01.csv"
+filename = "/media/aayushnaik/capstone/jet-gc-benchmark/outputs/smol_01.parquet"
 # classes with less than these many objects will be ignored
 num_objects_threshold = 1000
 
@@ -91,7 +91,9 @@ os.makedirs(output_dir_name, exist_ok=True)
 # In[7]:
 
 
-df = dd.read_csv(filename, names=columns, dtype=dtype)
+df = dd.read_parquet(filename)
+# df = dd.read_csv(filename, names=columns, dtype=dtype, blocksize=None)
+# df = dd.read_csv(filename, names=columns, dtype=dtype, blocksize="100MB")
 
 
 # density plots
@@ -154,19 +156,19 @@ num_types = len(types)
 # In[ ]:
 
 
-fig, axs = plt.subplots(num_types, 1, tight_layout=True, figsize=(10, 5 * num_types))
+# fig, axs = plt.subplots(num_types, 1, tight_layout=True, figsize=(10, 5 * num_types))
 
 # with TqdmCallback(desc="lifetime distribution"):
-for name, ax in tqdm(zip(types, axs), position=2, desc="lifetime distribution total"):
-    group = groups.get_group(name)
-    # display(group)
-    # print(name)
+#     for name, ax in tqdm(zip(types, axs), position=2, desc="lifetime distribution total"):
+#         group = groups.get_group(name)
+#         # display(group)
+#         # print(name)
 
-    ax.hist(group.lifetime)
-    ax.set_xlabel(name)
+#         ax.hist(group.lifetime)
+#         ax.set_xlabel(name)
 
-plt.savefig(os.path.join(output_dir_name, "lifetime_distribution.png"), bbox_inches='tight')
-plt.close(fig)
+# plt.savefig(os.path.join(output_dir_name, "lifetime_distribution.png"), bbox_inches='tight')
+# plt.close(fig)
 
 
 # ## Average lifetime of each class
@@ -182,7 +184,7 @@ def plot_agg(which_agg: str):
         for name in tqdm(types, position=2, desc=f"{which_agg} total"):
             group = groups.get_group(name)
 
-            means.append(getattr(group.lifetime.compute(), which_agg)())
+            means.append(getattr(group.lifetime, which_agg)().compute())
 
     plt.gcf().set_size_inches(15, num_types // 2)
     plt.barh([i for i in range(num_types)], means, tick_label=types)
@@ -243,7 +245,7 @@ def plot_aggs_alloc_site(which_agg: str):
         for name in tqdm(alloc_site_group_names, position=2, desc=f"{which_agg} total"):
             group = alloc_site_groups.get_group(name)
 
-            means.append(getattr(group.lifetime.compute(), which_agg)())
+            means.append(getattr(group.lifetime, which_agg)().compute())
 
     plt.gcf().set_size_inches(15, num_names // 2)
     plt.barh([i for i in range(num_names)], means, tick_label=["-".join(i) for i in alloc_site_group_names])
