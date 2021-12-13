@@ -18,6 +18,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 
 // TODO: fully understand these parameters
@@ -29,8 +31,9 @@ import org.openjdk.jmh.infra.Blackhole;
 @State(Scope.Benchmark)
 public class StringBenchmark {
 
+    // should be changed to whether to do implicit concat or string builder 
     @Param({"true"})
-    public boolean implicitAdd;
+    public boolean prealloc;
 
     @Param({"1000"})
     public int stringSize;
@@ -38,43 +41,43 @@ public class StringBenchmark {
     @Param({"5"})
     public int numberOfParts;
 
-    public String randomString() {
-	byte[] array = new byte[256];
+    public String[] randStrs;
+
+    // creates an array of random strings for use in the benchmarked method. Created separately and hence, is not included in the benchmark time. 
+    @Setup(Level.Trial)
+    public void randomString() {
+	    byte[] array = new byte[stringSize];
         new Random().nextBytes(array);
   
         String randomString = new String(array, Charset.forName("UTF-8"));
  
         int n = stringSize/numberOfParts;	
-        StringBuffer r = new StringBuffer();
-    	for (int k = 0; k < randomString.length(); k++) {
-            char ch = randomString.charAt(k);
+        for(int i = 0;i<numberOfParts;i++) {
+            StringBuffer r = new StringBuffer();
+    	    for (int k = 0; k < randomString.length(); k++) {
+                char ch = randomString.charAt(k);
   
-            if (((ch >= 'a' && ch <= 'z')
-                 || (ch >= 'A' && ch <= 'Z')
-                 || (ch >= '0' && ch <= '9'))
-                && (n > 0)) {
-  
-                r.append(ch);
-                n--;
+                if (((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) && (n > 0)) {
+                    r.append(ch);
+                    n--;
+                }
             }
+	        randStrs[i] = r.toString();
         }
-
-	    return r.toString();
     }
 
     @Benchmark
     public void testMethod(Blackhole blackhole) {
 	String res = "";
 	StringBuilder stringBuilder = new StringBuilder(stringSize);
-    	for(int i = 0;i<numberOfParts;i++) {
-        	String rand = randomString();
-        	if(implicitAdd) {
-		   res = res + rand; 
-        	} else {
-		   stringBuilder.append(rand); 
-		}
+    for(int i = 0;i<numberOfParts;i++) {
+        if(prealloc) {
+           stringBuilder.append(randStrs[i]); 
+        } else {
+		   	res = res + randStrs[i]; 
+        }
 	}
 	blackhole.consume(res);
-    	blackhole.consume(stringBuilder);
+    blackhole.consume(stringBuilder);
     }
 }
