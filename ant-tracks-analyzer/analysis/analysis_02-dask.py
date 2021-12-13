@@ -85,53 +85,54 @@ os.makedirs(output_dir_name, exist_ok=True)
 # In[7]:
 
 
-df = dd.read_parquet(filename)
+df = dd.read_parquet(filename, engine="pyarrow")
 # df = dd.read_csv(filename, names=columns, dtype=dtype, blocksize=None)
 # df = dd.read_csv(filename, names=columns, dtype=dtype, blocksize="100MB")
 
 
 # density plots
 
-with TqdmCallback(desc="lifetime density plot"):
-    sns.kdeplot(df["lifetime"])
-plt.savefig(os.path.join(output_dir_name, "overall_lifetime_density_plot.png"), bbox_inches='tight')
-plt.clf()
+# with TqdmCallback(desc="lifetime density plot"):
+#     sns.kdeplot(df["lifetime"])
+# plt.savefig(os.path.join(output_dir_name, "overall_lifetime_density_plot.png"), bbox_inches='tight')
+# plt.clf()
 
-with TqdmCallback(desc="lifetime density plot - log"):
-    sns.kdeplot(df["lifetime"], log_scale=True)
-plt.savefig(os.path.join(output_dir_name, "overall_lifetime_density_plot_log.png"), bbox_inches='tight')
-plt.clf()
+# with TqdmCallback(desc="lifetime density plot - log"):
+#     sns.kdeplot(df["lifetime"], log_scale=True)
+# plt.savefig(os.path.join(output_dir_name, "overall_lifetime_density_plot_log.png"), bbox_inches='tight')
+# plt.clf()
 
 # In[9]:
 
 
-def get_groups(group_by_cols, N=num_objects_threshold):
-    groups = df.groupby(group_by_cols)
+# def get_groups(group_by_cols, N=num_objects_threshold):
+#     groups = df.groupby(group_by_cols)
     
-    def _process_group(group):
-        if len(group) >= N:
-            types.append(name)
+#     def _process_group(group):
+#         if len(group) >= N:
+#             types.append(name)
             
-        return group
+#         return group
         
-    with TqdmCallback(desc="get groups"):
-        res = groups.count()
-        # bornAt is used here, but all cols have same value at this point
-        res = res[res["bornAt"] >= N]
-        res = res.compute()
+#     with TqdmCallback(desc="get groups"):
+#         res = groups.count()
+#         # bornAt is used here, but all cols have same value at this point
+#         res = res[res["bornAt"] >= N]
+#         res = res
 
-    types = list(res.index.tolist())
+#         types = list(res.index.compute().tolist())
     
-    return types, groups
+#     return types, groups
 
 
 # In[ ]:
 
 
-types, groups = get_groups("type", N=num_objects_threshold)
-num_types = len(types)
+groups = df.groupby("type")
+# types, groups = get_groups("type", N=num_objects_threshold)
+# num_types = len(types)
 
-print("Number of type groups:", num_types)
+# print("Number of type groups:", num_types)
 
 
 # ## Distribution of lifetimes for each type
@@ -164,13 +165,14 @@ def plot_agg(which_agg: str, N=num_objects_threshold):
     print(f"getting {which_agg} of all types...")
 
     with TqdmCallback(desc=f"{which_agg}"):
-        res = groups.agg({"lifetime": ["mean", "count"]})
+        res = groups.agg({"lifetime": [which_agg, "count"]})
         res = res[res.lifetime["count"] >= N]
         res = res.compute()
 
         types = res.index.tolist()
-        means = res.lifetime["mean"].tolist()
+        means = res.lifetime[which_agg].tolist()
 
+    num_types = len(means)
     plt.gcf().set_size_inches(15, num_types // 2)
     plt.barh([i for i in range(num_types)], means, tick_label=types)
 
@@ -209,14 +211,10 @@ plot_agg("max")
 # In[ ]:
 
 
-alloc_site_group_names, alloc_site_groups = get_groups(["type", "allocationSite"], num_objects_threshold)
-num_names = len(alloc_site_group_names)
-
-
-# In[ ]:
-
-
-print("Number of allocation site groups:", num_names)
+alloc_site_groups = df.groupby(["type", "allocationSite"])
+# alloc_site_group_names, alloc_site_groups = get_groups(["type", "allocationSite"], num_objects_threshold)
+# num_names = len(alloc_site_group_names)
+# print("Number of allocation site groups:", num_names)
 
 
 # In[ ]:
@@ -227,13 +225,14 @@ def plot_aggs_alloc_site(which_agg: str, N=num_objects_threshold):
     print(f"getting {which_agg} of all types...")
 
     with TqdmCallback(desc=f"{which_agg} alloc site"):
-        res = alloc_site_groups.agg({"lifetime": ["mean", "count"]})
+        res = alloc_site_groups.agg({"lifetime": [which_agg, "count"]})
         res = res[res.lifetime["count"] >= N]
         res = res.compute()
 
         alloc_site_group_names = res.index.tolist()
-        means = res.lifetime["mean"].tolist()
+        means = res.lifetime[which_agg].tolist()
 
+    num_names = len(means)
     plt.gcf().set_size_inches(15, num_names // 2)
     plt.barh([i for i in range(num_names)], means, tick_label=["-".join(i) for i in alloc_site_group_names])
     # scale x-axis between min and max lifetime
