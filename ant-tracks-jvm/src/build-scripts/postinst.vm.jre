@@ -1,0 +1,20 @@
+openjfx_dir=/usr/share/java/openjfx/
+openjdk_dir=/usr/lib/jvm/java-8-openjdk-amd64/
+
+cd "$openjfx_dir" &&
+find . -iname "*.jar" -exec ln --symbolic "$openjfx_dir"/{} /usr/lib/anttracks/jre/{} \; &&
+find . -iname "*.properties" -exec ln --symbolic "$openjfx_dir"/{} /usr/lib/anttracks/jre/{} \;
+
+count=$(echo "$openjdk_dir" | wc -c)
+for file in $(dpkg-query -L libopenjfx-jni | grep .so)
+do
+	file=$(bash -c "file=$file && echo "'${'"file"':$(('"$count"'-2))}') &&
+	rm -f /usr/lib/anttracks/jdk/"$file" &&
+	ln --symbolic "$openjdk_dir"/"$file" /usr/lib/anttracks/jdk/"$file"
+done
+
+for executable in /usr/lib/anttracks/jre/bin/*
+do
+	executable=$(basename $executable)
+	update-alternatives --install /usr/bin/$executable $executable /usr/lib/anttracks/jre/bin/$executable 9998 || exit 1
+done
