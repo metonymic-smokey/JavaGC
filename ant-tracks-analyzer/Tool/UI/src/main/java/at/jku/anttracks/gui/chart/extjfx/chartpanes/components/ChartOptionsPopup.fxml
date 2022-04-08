@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Popup?>
+<fx:root type="Popup" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" autoHide="true">
+    <content>
+        <AnchorPane styleClass="chart-options-root-pane, popup-root">
+            <Button fx:id="closeButton" text="X" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" prefHeight="16" prefWidth="16">
+                <padding>
+                    <Insets topRightBottomLeft="0"/>
+                </padding>
+            </Button>
+            <VBox fx:id="chartOptionsPane" spacing="5" alignment="CENTER_RIGHT"
+                  AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                <CheckBox fx:id="synchronizedCheckBox" text="Synchronize chart" visible="false" managed="false"/>
+                <ComboBox fx:id="yUnitComboBox"/>
+            </VBox>
+        </AnchorPane>
+    </content>
+</fx:root>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. 
+	All rights reserved. This file is part of the AntTracks Tool. This code is 
+	free software; you can redistribute it and/or modify it under the terms of 
+	the GNU General Public License version 2 only, as published by the Free Software 
+	Foundation. This code is distributed in the hope that it will be useful, 
+	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License version 
+	2 for more details (a copy is included in the LICENSE file that accompanied 
+	this code). You should have received a copy of the GNU General Public License 
+	along with with this work. If not, see <http://www.gnu.org/licenses/>. -->
+
+<?import at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab?>
+<?import at.jku.anttracks.gui.frame.main.tab.timelapse.components.TimelapseConfigurationPane?>
+<?import javafx.embed.swing.SwingNode?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab"
+         xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <tabContent>
+        <center>
+            <BorderPane>
+                <top>
+                    <TimelapseConfigurationPane fx:id="configurationPanel"></TimelapseConfigurationPane>
+                </top>
+                <center>
+                    <SwingNode fx:id="swingCenter"></SwingNode>
+                </center>
+                <bottom>
+                    <VBox>
+                        <Slider fx:id="slider"></Slider>
+                        <HBox alignment="CENTER" spacing="5.0">
+                            <Label fx:id="timeLabel"></Label>
+                            <Button fx:id="play" onAction="#play"></Button>
+                            <Spinner fx:id="clusterSizeSpinner">
+                                <valueFactory>
+                                    <SpinnerValueFactory.IntegerSpinnerValueFactory
+                                            min="1" max="1024" amountToStepBy="1"/>
+                                </valueFactory>
+                            </Spinner>
+
+                            <ComboBox fx:id="unitBox"></ComboBox>
+
+                            <ComboBox fx:id="clusterLevelBox"></ComboBox>
+
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                            </padding>
+                        </HBox>
+                    </VBox>
+                </bottom>
+            </BorderPane>
+        </center>
+    </tabContent>
+</fx:root>

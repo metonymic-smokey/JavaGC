@@ -1,0 +1,28 @@
+{
+  "name": "tree-visualizations",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "core-js": "^2.6.11",
+    "d3": "^5.16.0",
+    "raw-loader": "^4.0.2",
+    "vue": "^2.6.12",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^8.5.1",
+    "vue-router": "^3.4.6"
+  },
+  "devDependencies": {
+    "@types/d3": "^5.16.3",
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-typescript": "^3.12.1",
+    "@vue/cli-service": "^3.12.1",
+    "typescript": "^3.9.7",
+    "vue-template-compiler": "^2.6.12"
+  }
+}

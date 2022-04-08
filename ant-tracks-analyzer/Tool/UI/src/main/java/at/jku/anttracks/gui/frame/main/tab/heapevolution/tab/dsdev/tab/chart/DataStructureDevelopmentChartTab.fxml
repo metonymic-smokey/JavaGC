@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <tabContent>
+        <center>
+            <VBox alignment="BOTTOM_RIGHT">
+                <BarChart fx:id="growthBarChart" animated="false" VBox.vgrow="ALWAYS">
+                    <xAxis>
+                        <CategoryAxis fx:id="xAxis" side="BOTTOM" label="Data structure instance"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="yAxis" side="LEFT" label="Heap growth portion (HGP) [%]"/>
+                    </yAxis>
+                </BarChart>
+                <Button fx:id="configureButton" text="Configure"/>
+            </VBox>
+        </center>
+    </tabContent>
+</fx:root>

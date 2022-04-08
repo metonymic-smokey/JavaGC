@@ -1,0 +1,854 @@
+
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* GLOBAL DEFINITIONS */
+@import url('http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i');
+@import url('http://fonts.googleapis.com/css?family=Source+Code+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i');
+@import url('http://fonts.googleapis.com/css?family=Roboto:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i');
+
+* {
+    -fx-back-light: white;
+    -fx-back-disabled: #161a1c; /* #9E9E9E */
+    -fx-back-selection: #b2cce1; /* steelblue */
+    -fx-back-dark: #224059;
+
+    -fx-font-dark: #000000;
+    -fx-font-disabled: black;
+    -fx-font-selection: #000000;
+    -fx-font-light: #FFFFFF;
+
+    -fx-focus-color: transparent;
+}
+
+/* ROOT COMPONENT */
+.root, .popup-root {
+    -fx-font-family: 'Source Sans Pro', sans-serif;
+    -fx-base: -fx-font-light;
+    -fx-background-color: -fx-back-light;
+    -fx-font-size: 100%;
+    -fx-font-style: normal; /* [ normal | italic | oblique ] */
+    -fx-font-weight: normal; /* [ normal | bold | bolder | lighter | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 ] */
+    -fx-text-fill: -fx-font-dark;
+    -fx-focus-color: transparent;
+}
+
+/* Separator */
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1 0; /* its make really one-pixel-border */
+    -fx-border-color: black;
+}
+
+/* Tree table view */
+.tree-table-cell {
+    -fx-border-color: black;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 0;
+
+    -fx-font-family: 'Source Code Pro', sans-serif;
+    -fx-font-size: 110%;
+}
+
+.tree-table-cell .label {
+    -fx-font-family: 'Source Code Pro', sans-serif;
+    -fx-font-size: 110%;
+}
+
+.tree-table-row-cell {
+    -fx-border-color: #E8E8E8;
+    -fx-border-width: 0 0 1 0;
+}
+
+.tree-table-row-cell Text {
+    -fx-font-family: 'Source Code Pro', sans-serif;
+    -fx-font-size: 110%;
+}
+
+.tree-table-row-cell:hover {
+    -fx-background: derive(-fx-back-selection, 65%); /* Higher percent = move more away from original color */
+    -fx-cell-focus-inner-border: derive(-fx-back-selection, 65%); /* Higher percent = move more away from original color */
+    -fx-table-cell-border-color: derive(-fx-back-selection, 65%); /* Higher percent = move more away from original color */
+}
+
+.tree-table-row-cell:hover Text {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.tree-table-row-cell:hover .label {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.tree-table-row-cell:selected {
+    -fx-background: -fx-back-selection;
+    -fx-cell-focus-inner-border: -fx-back-selection;
+    -fx-table-cell-border-color: -fx-back-selection;
+}
+
+.tree-table-row-cell:selected Text {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.tree-table-row-cell:selected .label {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+/* pseudo ancestor-of-selection is manually set in backing code of RowFactory */
+.tree-table-row-cell:ancestor-of-selection {
+    -fx-background: derive(-fx-back-selection, 45%); /* Higher percent = move more away from original color */
+}
+
+.tree-table-row-cell:ancestor-of-selection Text {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.tree-table-row-cell:ancestor-of-selection .label {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+/* CHARTS */
+/*.data-label {*/
+/*-fx-font-size: 8pt;*/
+/*-fx-rotate: -30;*/
+/*}*/
+
+/*.focused {*/
+/*-fx-scale-x: 2;*/
+/*-fx-scale-y: 2;*/
+/*}*/
+
+/*.selected {*/
+/*-fx-background-color: black;*/
+/*-fx-scale-x: 2;*/
+/*-fx-scale-y: 2;*/
+/*}*/
+
+/*.selected.focused {*/
+/*-fx-background-color: black;*/
+/*-fx-scale-x: 3;*/
+/*-fx-scale-y: 3;*/
+/*}*/
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+/* Text area */
+.text-area {
+    -fx-focus-color: transparent;
+    -fx-text-box-border: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* VARIABLE DEFINITIONS for MENU BAR */
+* {
+    -fx-my-menu-color: -fx-back-dark; /* Change according to your needs */
+    -fx-my-menu-color-highlighted: -fx-back-selection; /* Change according to your needs */
+    -fx-my-menu-font-color: -fx-font-light; /* Change according to your needs */
+    -fx-my-menu-font-color-highlighted: -fx-font-selection; /* Change according to your needs */
+}
+
+/* MENU BAR + Top-level MENU */
+/*** The menu bar itself ***/
+.menu-bar {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+/*** Top-level menu itself (not selected / hovered) ***/
+.menu-bar > .container > .menu-button {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+/*** Top-level menu's label (not selected / hovered) ***/
+.menu-bar > .container > .menu-button > .label {
+    -fx-text-fill: -fx-my-menu-font-color;
+}
+
+/*** Top-level menu's label (disabled) ***/
+.menu-bar > .container > .menu-button > .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+/*** Top-level menu itself (selected / hovered) ***/
+.menu-bar > .container > .menu-button:hover,
+.menu-bar > .container > .menu-button:focused,
+.menu-bar > .container > .menu-button:showing {
+    -fx-background-color: -fx-my-menu-color-highlighted;
+}
+
+/*** Top-level menu's label (selected / hovered) ***/
+.menu-bar > .container > .menu-button:hover > .label,
+.menu-bar > .container > .menu-button:focused > .label,
+.menu-bar > .container > .menu-button:showing > .label {
+    -fx-text-fill: -fx-my-menu-font-color-highlighted;
+}
+
+/* MENU ITEM (children of a MENU) */
+/*** The item itself (not hovered / focused) ***/
+.menu-item {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+/*** The item's label (not hovered / focused) ***/
+.menu-item .label {
+    -fx-text-fill: -fx-my-menu-font-color;
+}
+
+/*** The item's label (disabled) ***/
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+/*** The item itself (hovered / focused) ***/
+.menu-item:focused, .menu-item:hovered {
+    -fx-background-color: -fx-my-menu-color-highlighted;
+}
+
+/*** The item's label (hovered / focused) ***/
+.menu-item:focused .label, .menu-item:hovered .label {
+    -fx-text-fill: -fx-my-menu-font-color-highlighted;
+}
+
+.radio-menu-item:checked {
+    -fx-font-weight: bold;
+}
+
+.check-menu-item:checked {
+    -fx-font-weight: bold;
+}
+
+/* CONTEXT MENU */
+/*** The context menu that contains a menu's menu items ***/
+.context-menu {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+/* TABBED PANE */
+/*.tab-pane .tab-header-area .tab-header-background {*/
+/*-fx-opacity: 0.0;*/
+/*}*/
+
+/*.tab-pane {*/
+/*-fx-tab-min-width: 90.0px;*/
+/*}*/
+
+/*.tab-pane .tab-content-area {*/
+/*-fx-border-color: -fx-color-300;*/
+/*-fx-border-width: 2.0;*/
+/*-fx-padding: 5.0, 5.0, 5.0, 5.0;*/
+/*}*/
+
+/*.tab-pane .tab {*/
+/*-fx-background-color: -fx-color-300;*/
+/*-fx-border-color: -fx-back-selection;*/
+/*-fx-border-width: 1.0;*/
+/*}*/
+
+/*.tab-pane .tab .tab-close-button {*/
+/*-fx-text-fill: #FFFFFF;*/
+/*}*/
+
+/*.tab-pane .tab .tab-label {*/
+/*-fx-alignment: CENTER;*/
+/*-fx-font-size: 12.0pt;*/
+/*-fx-font-weight: bold;*/
+/*-fx-text-fill: #FFFFFF;*/
+/*}*/
+
+/*.tab-pane .tab:selected {*/
+/*-fx-background-color: -fx-back-selection;*/
+/*}*/
+
+/*.tab-pane .tab:selected .tab-label {*/
+/*-fx-alignment: CENTER;*/
+/*}*/
+
+/* Scroll Pane */
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* TITLED PANE */
+/* from https://stackoverflow.com/questions/21451386/titled-pane-css-settings */
+.titled-pane {
+    -fx-text-fill: -fx-font-light; /* does not work if we move it to ".titled-pane .title" ... whatever... */
+}
+
+.titled-pane > .title {
+    -fx-background-color: -fx-back-dark;
+    -fx-border-color: white, black;
+    -fx-border-width: 2 0 0 0, 1;
+    -fx-border-insets: 0 0 0 0, 2 0 0 0;
+    -fx-padding: 1.0 0.0 2.0 4.0; /* top, right, bottom, left */
+    -fx-font-size: 100%;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.titled-pane:focused > .title > .arrow-button > .arrow {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.titled-pane > .content {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+}
+
+/* from https://stackoverflow.com/questions/29607725/remove-insets-in-javafx-titledpane-with-css-not-working */
+.titled-pane > .content > * {
+    -fx-padding: 4.0px 4.0px 4.0px 4.0px;
+}
+
+/* BUTTONS */
+.btn-record-sales {
+    -fx-padding: 8.0 15.0 15.0 15.0;
+    -fx-background-insets: 0.0, 0.0 0.0 5.0 0.0, 0.0 0.0 6.0 0.0, 0.0 0.0 7.0 0.0;
+    -fx-background-radius: 8.0;
+    -fx-background-color: linear-gradient(from 0.0% 93.0% to 0.0% 100.0%, #a34313 0.0%, #903b12 100.0%),
+    #9d4024,
+    #d86e3a,
+    radial-gradient(center 50.0% 50.0%, radius 100.0%, #d86e3a, #c54e2c);
+    -fx-effect: dropshadow(gaussian, rgba(0.0, 0.0, 0.0, 0.75), 4.0, 0.0, 0.0, 1.0);
+    -fx-font-weight: bold;
+    -fx-font-size: 150%;
+}
+
+.btn-record-sales:hover {
+    -fx-background-color: linear-gradient(from 0.0% 93.0% to 0.0% 100.0%, #a34313 0.0%, #903b12 100.0%),
+    #9d4024,
+    #d86e3a,
+    radial-gradient(center 50.0% 50.0%, radius 100.0%, #ea7f4b, #c54e2c);
+}
+
+.btn-record-sales:pressed {
+    -fx-padding: 10.0 15.0 13.0 15.0;
+    -fx-background-insets: 2.0 0.0 0.0 0.0, 2.0 0.0 3.0 0.0, 2.0 0.0 4.0 0.0, 2.0 0.0 5.0 0.0;
+}
+
+.btn-record-sales LabeledText {
+    -fx-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, #a30000, 0.0, 0.0, 0.0, 2.0);
+}
+
+/* Labels */
+#selectedLabel {
+    -fx-font-size: 100%;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+/* ClickablePane */
+
+ClickablePane {
+    -fx-background-color: white;
+    -fx-background-radius: 4;
+    -fx-border-style: solid;
+    -fx-border-color: -fx-back-dark;
+    -fx-border-radius: 0.5;
+    -fx-border-width: 1.5;
+    -fx-padding: 2, 3, 2, 3;
+    -fx-spacing: 5;
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+}
+
+ClickablePane .label {
+    -fx-text-fill: -fx-font-dark;
+    -fx-font-weight: bold;
+    -fx-font-size: 85%;
+}
+
+ClickablePane .button {
+    -fx-text-fill: -fx-font-dark;
+    -fx-background-color: white;
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 5, 5, 4;
+    -fx-padding: 3;
+    -fx-font-size: 95%;
+    -fx-font-weight: bold;
+
+    -fx-border-style: solid;
+    -fx-border-color: -fx-back-dark;
+    -fx-border-radius: 5, 5, 4;
+    -fx-border-width: 0.5;
+}
+
+ClickablePane .button:hover {
+    -fx-text-fill: -fx-font-light;
+    -fx-background-color: -fx-back-dark;
+}
+
+/* SHORT LIVED OBJECTS OVERVIEW TAB CHARTS */
+.gcOverheadChart .default-color0.chart-bar {
+    -fx-bar-fill: rgba(169, 169, 169, 0.5);
+}
+
+.gcFrequencyChart .default-color0.chart-bar {
+    -fx-bar-fill: rgba(169, 169, 169, 0.5);
+}
+
+.gcTimePerGCTypeChart .default-color0.chart-pie,
+.gcCountPerGCTypeChart .default-color0.chart-pie {
+    -fx-pie-color: skyblue;
+}
+
+.gcTimePerGCTypeChart .default-color1.chart-pie,
+.gcCountPerGCTypeChart .default-color1.chart-pie {
+    -fx-pie-color: blue;
+}
+
+.gcTimePerGCCauseChart .default-color0.chart-pie,
+.gcCountPerGCCauseChart .default-color0.chart-pie {
+    -fx-pie-color: brown;
+}
+
+.gcTimePerGCCauseChart .default-color1.chart-pie,
+.gcCountPerGCCauseChart .default-color1.chart-pie {
+    -fx-pie-color: orange;
+}
+
+.gcTimePerGCCauseChart .default-color2.chart-pie,
+.gcCountPerGCCauseChart .default-color2.chart-pie {
+    -fx-pie-color: yellow;
+}
+
+.gcTimePerGCCauseChart .default-color3.chart-pie,
+.gcCountPerGCCauseChart .default-color3.chart-pie {
+    -fx-pie-color: lime;
+}
+
+.gcTimePerGCCauseChart .default-color4.chart-pie,
+.gcCountPerGCCauseChart .default-color4.chart-pie {
+    -fx-pie-color: green;
+}
+
+.bornObjectsChart .default-color0.chart-series-area-line {
+    -fx-stroke: darkgrey;
+}
+
+.bornObjectsChart .default-color0.chart-series-area-fill {
+    -fx-fill: rgba(169, 169, 169, 0.5);
+}
+
+.bornMemoryChart .default-color0.chart-series-area-line {
+    -fx-stroke: darkgrey;
+}
+
+.bornMemoryChart .default-color0.chart-series-area-fill {
+    -fx-fill: rgba(169, 169, 169, 0.5);
+}
+
+.objectGarbagePerTypeChart .default-color0.chart-pie,
+.memoryGarbagePerTypeChart .default-color0.chart-pie {
+    -fx-pie-color: blue;
+}
+
+.objectGarbagePerTypeChart .default-color1.chart-pie,
+.memoryGarbagePerTypeChart .default-color1.chart-pie {
+    -fx-pie-color: skyblue;
+}
+
+.objectGarbagePerTypeChart .default-color2.chart-pie,
+.memoryGarbagePerTypeChart .default-color2.chart-pie {
+    -fx-pie-color: pink;
+}
+
+.objectGarbagePerTypeChart .default-color3.chart-pie,
+.memoryGarbagePerTypeChart .default-color3.chart-pie {
+    -fx-pie-color: red;
+}
+
+.objectGarbagePerTypeChart .default-color4.chart-pie,
+.memoryGarbagePerTypeChart .default-color4.chart-pie {
+    -fx-pie-color: darkred;
+}
+
+.objectGarbagePerAllocationSiteChart .default-color0.chart-pie,
+.memoryGarbagePerAllocationSiteChart .default-color0.chart-pie {
+    -fx-pie-color: brown;
+}
+
+.objectGarbagePerAllocationSiteChart .default-color1.chart-pie,
+.memoryGarbagePerAllocationSiteChart .default-color1.chart-pie {
+    -fx-pie-color: orange;
+}
+
+.objectGarbagePerAllocationSiteChart .default-color2.chart-pie,
+.memoryGarbagePerAllocationSiteChart .default-color2.chart-pie {
+    -fx-pie-color: yellow;
+}
+
+.objectGarbagePerAllocationSiteChart .default-color3.chart-pie,
+.memoryGarbagePerAllocationSiteChart .default-color3.chart-pie {
+    -fx-pie-color: lime;
+}
+
+.objectGarbagePerAllocationSiteChart .default-color4.chart-pie,
+.memoryGarbagePerAllocationSiteChart .default-color4.chart-pie {
+    -fx-pie-color: green;
+}
+
+/* IDEAS (i.e. suggestion system for anttracks) */
+.ideasPopup {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 0);
+    -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
+}
+
+.emptyIdeasIcon {
+    -fx-opacity: 0.15;
+}
+
+.ideaBox {
+    -fx-border-color: transparent;
+    -fx-border-style: solid;
+    -fx-border-width: 0px 0px 0px 5px;
+    -fx-opacity: 0.6;
+}
+
+.ideaBox Circle {
+    -fx-opacity: 0;
+}
+
+.ideaBox:hover {
+    -fx-border-color: black;
+    -fx-opacity: 1;
+}
+
+.ideaHighlightedNode {
+    /*-fx-effect: innershadow(gaussian, #039ed3, 10, 1.0, 0, 0);*/
+    -fx-border-color: red;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+}
+
+.ideaBoxTitle {
+    -fx-font-size: 120%;
+    -fx-font-style: italic;
+    -fx-font-weight: 900;
+}
+
+.ideaBoxTime {
+    -fx-font-family: "Source Code Pro", sans-serif;
+}
+
+.ideaBoxDescription {
+    -fx-font-family: 'Source Sans Pro', sans-serif;
+    -fx-fill: -fx-font-dark;
+    -fx-text-fill: -fx-font-dark;
+    -fx-font-size: 115%;
+}
+
+.ideaBoxDescriptionDefault {
+    -fx-font-family: 'Source Sans Pro', sans-serif;
+    -fx-fill: -fx-font-dark;
+    -fx-text-fill: -fx-font-dark;
+}
+
+.ideaBoxDescriptionEmphasize {
+    -fx-font-family: 'Source Sans Pro', sans-serif;
+    -fx-fill: -fx-font-dark;
+    -fx-text-fill: -fx-font-dark;
+    -fx-font-weight: bolder;
+}
+
+.ideaBoxDescriptionCode {
+    -fx-fill: -fx-font-dark;
+    -fx-text-fill: -fx-font-dark;
+    -fx-font-family: "Source Code Pro", sans-serif;
+    -fx-font-weight: bolder;
+}
+
+.ideaBoxUnread {
+    -fx-opacity: 1;
+}
+
+.ideaBoxUnread Circle {
+    -fx-opacity: 1;
+}
+
+.ideaBoxActionPane {
+    -fx-cursor: hand;
+    -fx-font-size: 85%;
+    -fx-font-weight: bold;
+    -fx-padding: 2 2 2 2;
+    -fx-border-style: solid;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+}
+
+.ideaBoxActionPane:hover {
+    -fx-text-fill: white;
+    -fx-background-color: black;
+    -fx-opacity: 1;
+}
+
+.ideaBoxActionPaneAlreadyTriggered {
+    -fx-opacity: 0.5;
+}
+
+/* Action tabbed pane */
+.action-tabbed-pane {
+    -fx-background-color: transparent;
+}
+
+.action-tabbed-pane .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.action-tabbed-pane .right .tabs {
+    -fx-background-color: -fx-back-dark;
+    -fx-border-color: white, black;
+    -fx-border-width: 5 5 5 10, 2 2 2 2;
+    -fx-border-insets: 0, 5 5 5 10;
+}
+
+.action-tabbed-pane .right .actions {
+    -fx-background-color: -fx-back-dark;
+    -fx-border-color: white, black;
+    -fx-border-width: 5 5 5 10, 2 2 2 2;
+    -fx-border-insets: 0, 5 5 5 10;
+}
+
+.action-tabbed-pane .center {
+    -fx-background-color: -fx-back-light;
+    -fx-border-color: white, black;
+    -fx-border-width: 5 2 5 5, 2 2 2 2;
+    -fx-border-insets: 0, 5 2 5 5;
+}
+
+.action-tabbed-pane .center .header-container-idea {
+    -fx-background-color: -fx-back-dark;
+    -fx-border-color: white, black;
+    -fx-border-width: 0 5 5 0, 0 2 2 0;
+    -fx-border-insets: 0, 0 5 5 0;
+}
+
+.action-tabbed-pane .center .header-container-idea .header-text {
+    -fx-font-size: 130%;
+    -fx-font-weight: bold;
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tabbed-pane .center .header-container-desc {
+    -fx-background-color: -fx-back-dark;
+    -fx-border-color: white, black;
+    -fx-border-width: 0 0 5 0, 0 0 2 2;
+    -fx-border-insets: 0, 0 0 5 0;
+}
+
+.action-tabbed-pane .center .header-container-desc .header-text {
+    -fx-font-size: 130%;
+    -fx-font-weight: bold;
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tabbed-pane .center .header-container-desc .desc-text {
+    -fx-font-weight: bold;
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tabbed-pane .header-text {
+    -fx-font-size: 130%;
+    -fx-font-weight: bold;
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tabbed-pane .sub-header-text {
+    -fx-font-size: 120%;
+    -fx-font-weight: bold;
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tab-side-panel {
+    -fx-padding: 5;
+    -fx-border-color: black;
+    -fx-border-width: 0 0 1 0;
+}
+
+.action-tab-side-panel * {
+    -fx-fill: -fx-font-light;
+    -fx-text-fill: -fx-font-light;
+}
+
+.action-tab-side-panel:hover {
+    -fx-background-color: -fx-back-selection;
+}
+
+.action-tab-side-panel:hover Text {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+    text-decoration: underline;
+}
+
+.action-tab-side-panel:hover .label {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+    text-decoration: underline;
+}
+
+.action-tab-side-panel:disabled {
+    -fx-background-color: -fx-back-disabled;
+}
+
+.action-tab-side-panel:selected {
+    -fx-background-color: -fx-back-selection;
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.action-tab-side-panel:selected * {
+    -fx-fill: -fx-font-selection;
+    -fx-text-fill: -fx-font-selection;
+}
+
+.action-tab-side-panel .main-text {
+    -fx-font-size: 110%;
+    -fx-font-weight: bold;
+}
+
+.action-tab-side-panel .sub-text {
+    -fx-font-weight: lighter;
+}
+
+.action-tab-side-panel:disabled .main-text {
+    -fx-font-size: 110%;
+    -fx-fill: -fx-font-disabled;
+    -fx-text-fill: -fx-font-disabled;
+    -fx-font-style: italic;
+    -fx-font-weight: normal;
+}
+
+.action-tab-side-panel:disabled .sub-text {
+    -fx-fill: -fx-font-disabled;
+    -fx-text-fill: -fx-font-disabled;
+    -fx-font-style: italic;
+    -fx-font-weight: lighter;
+}
+
+.config-panel {
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+}
+
+.object-group-trend-heading {
+    -fx-font-size: 130%;
+    -fx-font-weight: bold;
+}
+
+/* POPOVERS (for initial tab ideas describing tab components) */
+.componentDescriptionPopOverText {
+    -fx-text-fill: white;
+    -fx-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-scale: 1;
+    -fx-font-weight: normal;
+    -fx-font-style: normal;
+    -fx-font-family: "Source Sans";
+}
+
+/* popover default style copied from popover.css and adjusted */
+.popover {
+    -fx-background-color: transparent;
+}
+
+.popover > .border {
+    -fx-fill: rgba(0, 0, 0, .9);
+}
+
+.popover > .content {
+}
+
+.popover > .detached {
+}
+
+.popover > .content > .title > .text {
+    -fx-padding: 6.0 6.0 0.0 6.0;
+    -fx-text-fill: rgba(120, 120, 120, .8);
+    -fx-font-weight: bold;
+}
+
+.popover > .content > .title > .icon {
+    -fx-padding: 6.0 0.0 0.0 10.0;
+}
+
+.popover > .content > .title > .icon > .graphics > .circle {
+    -fx-fill: gray;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, .2), 3, 0.5, 1.0, 1.0);
+}
+
+.popover > .content > .title > .icon > .graphics > .line {
+    -fx-stroke: white;
+    -fx-stroke-width: 2;
+}
+
+/* ext jfx charts */
+.gc-range-indicator-rect {
+    -fx-fill: linear-gradient(to bottom, rgba(252, 93, 0, 0.35), transparent);
+}
+
+.gc-range-indicator-rect:hover {
+    -fx-fill: rgba(252, 93, 0, 0.35);
+}
+
+.mutator-range-indicator-rect {
+    -fx-fill: linear-gradient(to bottom, rgba(0, 110, 255, 0.35), transparent);
+}
+
+.mutator-range-indicator-rect:hover {
+    -fx-fill: rgba(0, 110, 255, 0.35);
+}
+
+.reduced-range-indicator-rect {
+    -fx-fill: linear-gradient(to bottom, rgba(156, 156, 156, 0.35), transparent);
+}
+
+.reduced-range-indicator-rect:hover {
+    -fx-fill: rgba(156, 156, 156, 0.35);
+}
+
+.gc-range-indicator-label, .mutator-range-indicator-label, .reduced-range-indicator-label {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-text-fill: white;
+}
+
+.extjfx-chart-controls-container > ImageView {
+    -fx-opacity: 0.25;
+    -fx-cursor: hand;
+}
+
+.extjfx-chart-controls-container > *:hover {
+    -fx-opacity: 0.75;
+}
+
+.chart-options-root-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 5, 0, 0, 0);
+    -fx-padding: 5px;
+}
+

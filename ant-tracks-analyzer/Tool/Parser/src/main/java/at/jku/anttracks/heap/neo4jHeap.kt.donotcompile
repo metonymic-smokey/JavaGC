@@ -1,0 +1,144 @@
+package at.jku.anttracks.heap
+
+import at.jku.anttracks.heap.objects.ObjectInfo
+import at.jku.anttracks.util.FileUtil
+import at.jku.anttracks.util.ParallelizationUtil
+import at.jku.anttracks.util.transactional
+import org.neo4j.graphdb.Direction
+import org.neo4j.graphdb.GraphDatabaseService
+import org.neo4j.graphdb.Label
+import org.neo4j.graphdb.RelationshipType
+import org.neo4j.graphdb.factory.GraphDatabaseFactory
+import org.neo4j.graphdb.factory.GraphDatabaseSettings
+import org.neo4j.graphdb.schema.IndexDefinition
+import java.io.File
+import java.util.concurrent.TimeUnit
+
+object REFERENCES : RelationshipType {
+    override fun name(): String = "REFERENCES"
+}
+
+class Neo4JHeap(detailedHeap: DetailedHeap) : IndexBasedHeap(detailedHeap) {
+
+    private lateinit var dbPath: String
+    private lateinit var graphDB: GraphDatabaseService
+
+    override fun setup(objectInfos: Array<out ObjectInfo>, addressesArray: LongArray, toPointersArray: Array<out IntArray?>, fromPointersArray: Array<out IntArray?>) {
+        dbPath = System.getProperty("user.home") + File.separator + ".testdatabase"
+        FileUtil.deleteRecursively(File(dbPath))
+        graphDB =
+                GraphDatabaseFactory()
+                        .newEmbeddedDatabaseBuilder(File(dbPath))
+                        .setConfig(GraphDatabaseSettings.keep_logical_logs, "false")
+                        .newGraphDatabase()
+
+        var indexDefinition: IndexDefinition? = null
+        // Index definition
+        transactional(graphDB) {
+            val heapObjectLabel = Label.label("HeapObject")
+
+            val schema = graphDB.schema()
+            indexDefinition = schema.indexFor(heapObjectLabel).on("index").create()
+        }
+
+        // Await index creation
+        transactional(graphDB) {
+            val schema = graphDB.schema()
+            schema.awaitIndexOnline(indexDefinition, 100, TimeUnit.SECONDS)
+        }
+
+        val granularity = 1_000
+
+        var groupCount = (objectCount / granularity)
+        if (objectCount % granularity == 0) {
+            groupCount--
+        }
+        groupCount++
+
+        // Add nodes
+        for (group in 0 until groupCount) {
+            transactional(graphDB) {
+                val heapObjectLabel = Label.label("HeapObject")
+                for (idx in group * granularity until group * granularity + granularity) {
+                    if (idx >= objectCount) {
+                        break
+                    }
+                    val node = graphDB.createNode(heapObjectLabel)
+                    node.setProperty("index", idx)
+                    node.setProperty("address", addressesArray[idx])
+                }
+            }
+            println("node group ${group + 1} of $groupCount")
+        }
+
+        // Add references
+        for (group in 0 until groupCount) {
+            transactional(graphDB) {
+                val heapObjectLabel = Label.label("HeapObject")
+
+                for (idx in group * granularity until group * granularity + granularity) {
+                    if (idx >= objectCount) {
+                        break
+                    }
+                    val startNode = graphDB.findNode(heapObjectLabel, "index", idx)
+                    val ptrs: IntArray? = toPointersArray[idx]
+                    if (ptrs != null) {
+                        for (ptrNr in ptrs.indices) {
+                            if (ptrs[ptrNr] >= 0) {
+                                val endNode = graphDB.findNode(heapObjectLabel, "index", ptrs[ptrNr])
+                                val relationship = startNode.createRelationshipTo(endNode, REFERENCES)
+                            }
+                        }
+                    }
+                }
+            }
+            println("edge group ${group + 1} of $groupCount")
+        }
+    }
+
+    override fun clear() {
+        graphDB.shutdown()
+        dbPath = System.getProperty("user.home") + File.separator + ".testdatabase"
+        FileUtil.deleteRecursively(File(dbPath))
+    }
+
+    override fun toIndex(address: Long): Int {
+        var index: Int = -1
+        transactional(graphDB) {
+            index = graphDB.findNode(Label.label("HeapObject"), "address", address).getProperty("index") as Int
+        }
+        return index
+    }
+
+    override fun getAddress(objIndex: Int): Long {
+        var addr: Long = -1
+        transactional(graphDB) {
+            addr = graphDB.findNode(Label.label("HeapObject"), "index", objIndex).getProperty("address") as Long
+        }
+        return addr
+    }
+
+    override fun getToPointers(objIndex: Int): IntArray? {
+        var ptrs: IntArray? = null
+        transactional(graphDB) {
+            ptrs = graphDB.findNode(Label.label("HeapObject"), "index", objIndex).getRelationships(REFERENCES, Direction.OUTGOING)
+                    .map { relationship -> relationship.endNode.getProperty("index") as Int }
+                    .toIntArray()
+        }
+        return ptrs
+    }
+
+    override fun getFromPointers(objIndex: Int): IntArray? {
+        var ptrs: IntArray? = null
+        transactional(graphDB) {
+            ptrs = graphDB.findNode(Label.label("HeapObject"), "index", objIndex).getRelationships(REFERENCES, Direction.INCOMING)
+                    .map { relationship -> relationship.endNode.getProperty("index") as Int }
+                    .toIntArray()
+        }
+        return ptrs
+    }
+
+    override fun getObjectInfo(objIndex: Int): ObjectInfo {
+        return objectInfoCache.getById(0)
+    }
+}

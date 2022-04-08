@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.component.actiontab.tab.ActionTab?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<fx:root type="ActionTab" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60">
+    <center>
+        <StackPane fx:id="overlayPane" alignment="TOP_LEFT">
+            <BorderPane fx:id="tabContent"/>
+        </StackPane>
+    </center>
+</fx:root>
