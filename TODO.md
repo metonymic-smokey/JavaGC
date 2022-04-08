@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] add modified AntTracks JVM code
+- [x] add modified AntTracks JVM code
 - [ ] add AntTracks Analyzer + CLI code
 - [ ] add built binaries for JVM and Analyzer (link to a different hosting service as the files will be quite large)
 - [ ] add analyzer scripts
