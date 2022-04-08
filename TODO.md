@@ -1,7 +1,7 @@
 # TODO
 
 - [ ] add modified AntTracks JVM code
-- [ ] add AntTracks Analyzer + CLI code
+- [x] add AntTracks Analyzer + CLI code
 - [ ] add built binaries for JVM and Analyzer (link to a different hosting service as the files will be quite large)
 - [ ] add analyzer scripts
 - [ ] add code (Dockerfile + scripts) for Hadoop benchmarks
