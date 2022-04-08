@@ -1,0 +1,8 @@
+Tool/.gradle/
+Tool/CallContextAnalyzer/build/
+Tool/HeapSizeSelector/build/
+Tool/Parser/.idea/
+Tool/Parser/build/
+Tool/UI/build/
+.gradle/
+stats.txt

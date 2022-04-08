@@ -1,0 +1,135 @@
+package at.jku.anttracks.experiments;
+
+import at.jku.anttracks.util.Counter;
+import at.jku.anttracks.util.LargeMmap;
+
+import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+
+public class MemoryMappedFilesExperiment {
+    public static void run() {
+        // ONLY FOR TESTING PURPOSE
+        RandomAccessFile memoryMappedFile = null;
+        try {
+            int runs = 1;
+            int sleepTime = 30_000;
+            long longLength = 70_000_000_000l;
+            long length = 2_000_000_000l;
+
+            Thread t;
+
+            for (int i = 0; i < runs; i++) {
+                File f = new File("./memory" + i + ".map");
+                f.delete();
+                f.createNewFile();
+                Counter c = new Counter();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+                t = new Thread(() -> {
+                    for (; c.get() < length / 4; c.inc()) {
+                        try {
+                            writer.write((int) c.get());
+                            if(Thread.currentThread().isInterrupted()) {
+                                return;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println("fin");
+                });
+                t.start();
+                Thread.sleep(sleepTime);
+                System.out.println("interrupt-file-"+i);
+                t.interrupt();
+                System.out.println(String.format("%,15d", c.get()));
+                f.delete();
+                System.gc();
+            }
+
+            for (int i = 0; i < runs; i++) {
+                Counter c2 = new Counter();
+                memoryMappedFile = new RandomAccessFile("./memory" + i + ".map", "rw");
+                MappedByteBuffer buffer = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, length);
+                t = new Thread(() -> {
+                    for (; c2.get() < length / 4; c2.inc()) {
+                        buffer.putInt((int) c2.get());
+                        if(Thread.currentThread().isInterrupted()) {
+                            return;
+                        }
+                    }
+                    System.out.println("fin");
+                });
+                t.start();
+                Thread.sleep(sleepTime);
+                System.out.println("interrupt-mmap-"+i);
+                t.interrupt();
+                System.out.println(String.format("%,15d", c2.get()));
+                System.gc();
+                File f = new File("./memory" + i + ".map");
+                f.delete();
+            }
+
+            for (int i = 0; i < runs; i++) {
+                Counter c3 = new Counter();
+                LargeMmap buffer = new LargeMmap("./memory" + i + ".map", longLength);
+                t = new Thread(() -> {
+                    for (; c3.get() < longLength / 4; c3.inc()) {
+                        buffer.putInt(c3.get() * 4, (int) c3.get());
+                        if(Thread.currentThread().isInterrupted()) {
+                            return;
+                        }
+                    }
+                    System.out.println("fin");
+                });
+                t.start();
+                Thread.sleep(sleepTime);
+                System.out.println("interrupt-largemmap-" + i);
+                t.interrupt();
+                System.out.println(String.format("%,15d", c3.get()));
+                System.gc();
+                File f = new File("./memory" + i + ".map");
+                f.delete();
+            }
+
+
+            /*
+            List<Thread> ts = new ArrayList<>();
+            Counter c2 = new Counter();
+            for (int i = 0; i < 40; i++) {
+                memoryMappedFile = new RandomAccessFile("./memory" + i + ".map", "rw");
+                MappedByteBuffer buffer = memoryMappedFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, length);
+                t = new Thread(() -> {
+                    for (; c2.get() < length / 4; c2.inc()) {
+                        buffer.putInt((int) c2.get());
+                        if(Thread.currentThread().isInterrupted()) {
+                            return;
+                        }
+                    }
+                    System.out.println("fin");
+                });
+                ts.add(t);
+                t.start();
+            }
+            Thread.sleep(1_000);
+            System.out.println("interrupt-all40");
+            ts.forEach(Thread::interrupt);
+            System.out.println(String.format("%,15d", c2.get()));
+            */
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        run();
+    }
+}

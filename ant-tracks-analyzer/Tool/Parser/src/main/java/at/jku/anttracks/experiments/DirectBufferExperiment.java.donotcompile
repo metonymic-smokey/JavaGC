@@ -1,0 +1,75 @@
+package at.jku.anttracks.experiments;
+
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DirectBufferExperiment {
+    public static void run() throws InterruptedException {
+        int size = 1_000_000; // 1MB
+        List<ByteBuffer> buffers = new ArrayList<>();
+        int i = 1;
+
+        for (; i < 5_000; i++) {
+            ByteBuffer buffer = ByteBuffer.allocateDirect(size);
+            buffers.add(buffer);
+            System.out.println("1MB direct buffer: " + i);
+        }
+
+        buffers.forEach(x -> x.putChar(0, 'x'));
+
+        Thread.sleep(5_000);
+
+        Unsafe unsafe = getUnsafe();
+        List<Long> unsafes = new ArrayList<>();
+        i = 1;
+        for (; i < 5_000; i++) {
+            long addr = unsafe.allocateMemory(size);
+            unsafes.add(addr);
+            System.out.println("1MB unsafe buffer: " + i + " @ " + addr);
+        }
+
+        unsafes.forEach(x -> {
+            for (int y = 0; y < size; y+=2) {
+                unsafe.putChar(x + y, 'x');
+            }
+        });
+
+        Thread.sleep(5_000);
+
+        List<byte[]> arrays = new ArrayList<>();
+        i = 1;
+        for (; i < 5_000; i++) {
+            arrays.add(new byte[size]);
+            System.out.println("1MB byte[]: " + i);
+        }
+        arrays.forEach(x -> x[0] = 'x');
+
+        Thread.sleep(5_000);
+
+        buffers.forEach(x -> System.out.print(x.getChar(0)));
+        System.out.println();
+        unsafes.forEach(x -> System.out.print(unsafe.getChar(x)));
+        System.out.println();
+        arrays.forEach(x -> System.out.print((char)x[0]));
+
+    }
+
+    public static Unsafe getUnsafe() {
+        try {
+            Field f = Unsafe.class.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            return (Unsafe) f.get(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        run();
+    }
+}

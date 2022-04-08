@@ -1,0 +1,24 @@
+// Comes from https://github.com/srs/gradle-node-plugin
+// used to handle npm stuff
+plugins {
+    id "com.moowork.node" version "1.3.1"
+}
+
+node {
+    download = true
+}
+
+task myDistZip(type: Zip) {
+    //dependsOn(':node_run_build')
+    //from(project.fileTree('.').include('*.sh').include('*.bat').include('*.config')) {
+    //into(".")
+    //}
+    from("$projectDir\\dist")
+    archiveName "dist.zip"
+    destinationDir(file("$projectDir"))
+}
+
+task clean(type: Delete) {
+    delete "$projectDir\\dist"
+    delete "$projectDir\\dist.zip"
+}

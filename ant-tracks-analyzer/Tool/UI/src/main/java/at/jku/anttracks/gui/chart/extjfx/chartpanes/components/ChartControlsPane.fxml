@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox styleClass="extjfx-chart-controls-container" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" alignment="CENTER">
+        <ImageView fx:id="zoomInControl" pickOnBounds="true"/>
+        <ImageView fx:id="zoomOutControl" pickOnBounds="true"/>
+        <ImageView fx:id="resetZoomControl" pickOnBounds="true"/>
+        <ImageView fx:id="chartOptionsControl" pickOnBounds="true"/>
+    </VBox>
+</fx:root>

@@ -1,0 +1,34 @@
+package java {
+    package util {
+        DS ArrayList {
+            java.lang.Object[];
+        }
+
+
+        DS Stack {
+            java.lang.Object[];
+        }
+
+
+        DS Vector {
+            java.lang.Object[];
+        }
+
+
+        LinkedList$Node {
+            LinkedList$Node;
+            *;
+        }
+        DS LinkedList {
+            LinkedList$Node;
+        }
+
+
+        package concurrent {
+            DS CopyOnWriteArrayList {
+                java.lang.Object[];
+                *;
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.frame.main.tab.heapstate.component.combinationselectionlistview.CombinationSelectionPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" spacing="20">
+    <CombinationSelectionPane fx:id="combinationSelectionPane"/>
+
+    <TitledPane text="Advanced settings" collapsible="true" expanded="false">
+        <content>
+            <VBox>
+                <CheckBox fx:id="calculateClosuresCB" text="Calculate closures (needed for deep size and retained size analysis)" selected="false"/>
+
+                <fx:define>
+                    <ToggleGroup fx:id="performanceToggleGroup"/>
+                </fx:define>
+                <RadioButton fx:id="parseAllHeapsRB" mnemonicParsing="false" selected="true" text="Parse all heaps" toggleGroup="$performanceToggleGroup"/>
+                <HBox spacing="10">
+                    <RadioButton fx:id="parseEveryNthHeapRB" mnemonicParsing="false" text="Parse every" toggleGroup="$performanceToggleGroup"/>
+                    <Spinner fx:id="parseEveryNthHeapSP" editable="true" prefWidth="80">
+                        <valueFactory>
+                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="1000" amountToStepBy="1"/>
+                        </valueFactory>
+                    </Spinner>
+                    <Label text=". heap"/>
+                </HBox>
+                <HBox spacing="10">
+                    <RadioButton fx:id="parseHeapEveryNSecsRB" mnemonicParsing="false" text="Parse a heap every" toggleGroup="$performanceToggleGroup"/>
+                    <Spinner fx:id="parseHeapEveryNSecsSP" editable="true" prefWidth="80">
+                        <valueFactory>
+                            <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="1000" amountToStepBy="1"/>
+                        </valueFactory>
+                    </Spinner>
+                    <Label text="second(s)"/>
+                </HBox>
+
+                <CheckBox fx:id="exportAsJsonCheckBox" selected="false">Export heap states to JSON files</CheckBox>
+            </VBox>
+        </content>
+    </TitledPane>
+</fx:root>

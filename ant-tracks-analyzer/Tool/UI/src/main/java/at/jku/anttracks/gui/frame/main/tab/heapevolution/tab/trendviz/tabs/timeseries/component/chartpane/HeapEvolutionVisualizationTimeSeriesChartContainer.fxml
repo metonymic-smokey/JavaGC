@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?import at.jku.anttracks.gui.chart.jfreechart.xy.mixed.objectgrouptrend.ObjectGroupTrendJFreeChartPane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8.0.60"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+
+    </top>
+    <center>
+        <VBox>
+            <VBox alignment="CENTER">
+                <!-- Arrow -->
+                <ImageView fx:id="arrow"/>
+                <!-- Selected key -->
+                <Label fx:id="label" alignment="CENTER" textAlignment="CENTER" styleClass="object-group-trend-heading"/>
+            </VBox>
+            <HBox alignment="CENTER" spacing="5">
+                <Button fx:id="settingsButton"/>
+                <!-- Settings -->
+                <VBox>
+                    <Region VBox.vgrow="ALWAYS"/> <!-- https://stackoverflow.com/questions/29707882/javafx-hbox-alignment -->
+                    <VBox fx:id="settings" spacing="10" visible="false" VBox.vgrow="NEVER" managed="false" styleClass="config-panel">
+                        <padding>
+                            <Insets top="5.0" right="5.0" bottom="5.0" left="5.0"></Insets>
+                        </padding>
+                        <!-- Chart type -->
+                        <HBox spacing="10">
+                            <Label prefWidth="125">
+                                Chart type:
+                                <padding>
+                                    <Insets bottom="0.0" left="0.0" right="0.0" top="5.0"/>
+                                </padding>
+                            </Label>
+                            <ComboBox fx:id="chartTypeComboBox" prefWidth="175"/>
+                        </HBox>
+                        <!-- Series count -->
+                        <HBox spacing="10">
+                            <Label prefWidth="125">
+                                Series count:
+                                <padding>
+                                    <Insets bottom="0.0" left="0.0" right="0.0" top="5.0"/>
+                                </padding>
+                            </Label>
+                            <ComboBox fx:id="seriesCountComboBox" prefWidth="175"/>
+                        </HBox>
+                        <!-- Series sort -->
+                        <HBox spacing="10">
+                            <Label prefWidth="125">
+                                Series sort by:
+                                <padding>
+                                    <Insets bottom="0.0" left="0.0" right="0.0" top="5.0"/>
+                                </padding>
+                            </Label>
+                            <ComboBox fx:id="seriesSortComboBox" prefWidth="175"/>
+                        </HBox>
+                        <!-- Memory metric -->
+                        <HBox spacing="10">
+                            <Label prefWidth="125">
+                                Memory metric:
+                                <padding>
+                                    <Insets bottom="0.0" left="0.0" right="0.0" top="5.0"/>
+                                </padding>
+                            </Label>
+                            <ComboBox fx:id="memoryMetricComboBox" prefWidth="175"/>
+                        </HBox>
+                        <!-- Other series -->
+                        <HBox spacing="10">
+                            <CheckBox fx:id="showOtherSeriesCheckBox" selected="false" text="Show 'other' series" prefWidth="300">
+                                <padding>
+                                    <Insets bottom="5.0" left="0.0" right="0.0" top="0.0"/>
+                                </padding>
+                            </CheckBox>
+                        </HBox>
+                    </VBox>
+                    <Region VBox.vgrow="ALWAYS"/>
+                </VBox>
+                <!-- Chart -->
+                <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <ObjectGroupTrendJFreeChartPane fx:id="chart"></ObjectGroupTrendJFreeChartPane>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</fx:root>

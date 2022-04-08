@@ -1,0 +1,135 @@
+svg {
+    border: 1px solid #999;
+    overflow: hidden;
+}
+
+.node {
+    white-space: nowrap;
+}
+
+.node:hover {
+    cursor: pointer;
+}
+
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+    stroke: #333;
+    fill: #fff;
+    stroke-width: 1.5px;
+}
+
+.node:hover rect,
+.node.hovered rect,
+.node:hover polygon,
+.node.hovered polygon,
+.node:hover circle,
+.node.hovered circle,
+.node:hover ellipse,
+.node.hovered ellipse {
+    fill: #eee;
+}
+
+.cluster rect {
+    fill: none;
+}
+
+.edgePath path.path {
+    stroke: #333;
+    stroke-width: 1.5px;
+    fill: none;
+    pointer-events: none;
+}
+
+.edgePath marker path {
+    stroke: #333;
+    fill: #333;
+}
+
+.edgePath.hovered path.path {
+    stroke: #777;
+}
+
+.edgePath.hovered marker path {
+    stroke: #777;
+    fill: #777;
+}
+
+.edgePath path.hover {
+    fill: none;
+    opacity: 0;
+    stroke-width: 0px;
+    pointer-events: fill;
+}
+
+.edgeLabel rect {
+    stroke: #fff;
+    fill: #fff;
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.edgeLabel.hovered text {
+    fill: #777;
+}
+
+.edgeLabel text {
+    pointer-events: none;
+}
+
+path.radialMenu {
+    stroke: white;
+    stroke-width: 2px;
+    fill: #274A67;
+}
+
+path.radialMenu:hover {
+    fill: #006788;
+}
+
+g.radialMenu:hover {
+    cursor: pointer;
+}
+
+text.radialMenu {
+    fill: white;
+    text-anchor: middle;
+    alignment-baseline: central;
+    pointer-events: none;
+}
+
+div.zoom {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    width: 125px;
+    height: 50px;
+    background-color: white;
+    border: 1px solid #999;
+    border-bottom-color: lightgray;
+    border-left-color: lightgray;
+}
+
+div.zoom button {
+    text-align: center;
+    vertical-align: middle;
+    height: 25px;
+    position: absolute;
+    top: 9px;
+}
+
+div.zoom button:nth-child(1) {
+    width: 25px;
+    right: 83px;
+}
+
+div.zoom button:nth-child(2) {
+    width: 25px;
+    right: 49px;
+}
+
+div.zoom button:nth-child(3) {
+    right: 9px;
+    width: 30px;
+}

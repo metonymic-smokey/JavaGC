@@ -1,0 +1,199 @@
+package at.jku.anttracks.gui.classification.classifier;
+
+import at.jku.anttracks.classification.Classifier;
+import at.jku.anttracks.classification.ClassifierChain;
+import at.jku.anttracks.classification.ClassifierException;
+import at.jku.anttracks.classification.Transformer;
+import at.jku.anttracks.classification.enumerations.ClassifierSourceCollection;
+import at.jku.anttracks.classification.enumerations.ClassifierType;
+import at.jku.anttracks.classification.nodes.GroupingNode;
+import at.jku.anttracks.heap.symbols.AllocatedType;
+import at.jku.anttracks.heap.symbols.AllocatedType.FieldInfo;
+import at.jku.anttracks.heap.symbols.AllocatedTypes;
+
+@at.jku.anttracks.classification.annotations.Classifier(name = "Instance Health", desc = "Based on 'The causes of bloat, the limits of health' by Mitchell and " +
+        "Sevitsky. " +
+        "Transforms each object into 4 sub-parts which categorize an object's " + "bytes.", example = "'primitive', 'header', 'pointer', and 'null'", type =
+        ClassifierType.ONE,
+        collection = ClassifierSourceCollection.FASTHEAP)
+public class InstanceHealthClassifier extends Transformer {
+
+    private static String PRIMITIVE_KEY = "primitive";
+    private static final Classifier<String> PRIMITIVE_CLASSIFIER = new Classifier<String>() {
+        @Override
+        public String classify() throws Exception {
+            return PRIMITIVE_KEY;
+        }
+    };
+    private static final ClassifierChain PRIMITIVE_CLASSIFIER_CHAIN = new ClassifierChain(PRIMITIVE_CLASSIFIER);
+
+    private static String POINTER_KEY = "pointer";
+    private static final Classifier<String> POINTER_CLASSIFIER = new Classifier<String>() {
+        @Override
+        public String classify() throws Exception {
+            return POINTER_KEY;
+        }
+    };
+    private static final ClassifierChain POINTER_CLASSIFIER_CHAIN = new ClassifierChain(POINTER_CLASSIFIER);
+
+    private static String NULL_KEY = "null";
+    private static final Classifier<String> NULL_CLASSIFIER = new Classifier<String>() {
+        @Override
+        public String classify() throws Exception {
+            return NULL_KEY;
+        }
+    };
+    private static final ClassifierChain NULL_CLASSIFIER_CHAIN = new ClassifierChain(NULL_CLASSIFIER);
+
+    private static String HEADER_KEY = "header";
+    private static final Classifier<String> HEADER_CLASSIFIER = new Classifier<String>() {
+        @Override
+        public String classify() throws Exception {
+            return HEADER_KEY;
+        }
+    };
+    private static final ClassifierChain HEADER_CLASSIFIER_CHAIN = new ClassifierChain(HEADER_CLASSIFIER);
+
+    private static String FRAGMENTATION_KEY = "fragmentation";
+    private static final Classifier<String> FRAGMENTATION_CLASSIFIER = new Classifier<String>() {
+        @Override
+        public String classify() throws Exception {
+            return FRAGMENTATION_KEY;
+        }
+    };
+    private static final ClassifierChain FRAGMENTATION_CLASSIFIER_CHAIN = new ClassifierChain(FRAGMENTATION_CLASSIFIER);
+
+    @Override
+    public GroupingNode classify(GroupingNode root) throws ClassifierException {
+        int primitiveSize = 0;
+        int pointerSize = 0;
+        int nullSize = 0;
+        int headerSize = 0;
+        int internalFragmentation = 0;
+        int externalFragmentation = 0;
+
+        int[] pointsTo = pointsToIndices();
+        if (isArray()) {
+            // Array
+            if (pointsTo == null || pointsTo.length == 0) {
+                // Primitive array
+
+                // (1) Primitive Array Element Size = Object's size - 8 (mark work) - 4 / 8 (klass word depending on compressed oops) - 4
+                // (array length)
+                primitiveSize = size() - 8 - (symbols().compressedOopsUsed() ? 4 : 8) - 4;
+                // (2) No "pointer" part in primitive arrays
+                pointerSize = 0;
+                // (3) No "null" part in primitive arrays
+                nullSize = 0;
+            } else {
+                // Pointer array
+
+                // (1) No "primitive" part in reference type arrays
+                for (int i = 0; i < pointsTo.length; i++) {
+                    if (pointsTo[i] >= 0) {
+                        // (2) Pointer
+                        // Use 4 / 8 bytes as pointer depending on compressed oops
+                        pointerSize += (symbols().compressedOopsUsed() ? 4 : 8);
+                    } else {
+                        // (3) Null pointer
+                        // Use 4 / 8 bytes as null depending on compressed oops
+                        nullSize += (symbols().compressedOopsUsed() ? 4 : 8);
+                    }
+                }
+            }
+            // (4) Header
+            // Array header size = 8 (mark work) + 4 / 8 (klass word depending on compressed oops) + 4 (array length) = 16 or 20 bytes
+            // Also take 8-byte object alignment into account
+            headerSize = (symbols().compressedOopsUsed() ? 16 : 20);
+        } else {
+            // Instance
+
+            // (1) Primitive part (if objects is not a Class<?> object)
+            AllocatedType type = type();
+            for (int i = 0; i < type.getNonStaticFieldInfos().length; i++) {
+                FieldInfo fi = type.getNonStaticFieldInfos()[i];
+
+                FieldInfo next = null;
+                int nextIndex = i + 1;
+                if (nextIndex < type.getNonStaticFieldInfos().length) {
+                    next = type.getNonStaticFieldInfos()[nextIndex];
+                }
+
+                int fieldSize = fi.getSize();
+                if (!fi.isInstance() && !fi.isArray()) {
+                    primitiveSize += fieldSize;
+                }
+                if (next != null && fi.offset + fi.getSize() != next.offset) {
+                    internalFragmentation += next.offset - (fi.offset + fi.getSize());
+                }
+            }
+
+            if (type.getExternalName(false, false).equals(AllocatedTypes.MIRROR_CLASS_EXTERNAL_NAME)) {
+                if (((AllocatedType.MirrorAllocatedType) type).mirrorKlass != null) {
+                    // For class objects, we also have to iterate the mirrored class's static fields and add them to the object size
+                    for (int i = 0; i < ((AllocatedType.MirrorAllocatedType) type).mirrorKlass.getStaticFieldInfos().length; i++) {
+                        FieldInfo fi = ((AllocatedType.MirrorAllocatedType) type).mirrorKlass.getStaticFieldInfos()[i];
+
+                        // Only count static fields for java.lang.Class<> objects (i.e., mirror objects)
+                        FieldInfo next = null;
+                        int nextIndex = i + 1;
+                        if (nextIndex < ((AllocatedType.MirrorAllocatedType) type).mirrorKlass.getStaticFieldInfos().length) {
+                            next = ((AllocatedType.MirrorAllocatedType) type).mirrorKlass.getStaticFieldInfos()[nextIndex];
+                        }
+
+                        int fieldSize = fi.getSize();
+                        if (!fi.isInstance() && !fi.isArray()) {
+                            primitiveSize += fieldSize;
+                        }
+                        if (next != null && fi.offset + fi.getSize() != next.offset) {
+                            internalFragmentation += next.offset - (fi.offset + fi.getSize());
+                        }
+                    }
+                }
+            }
+
+            // Pointer and null pointer
+            if (pointsTo != null && pointsTo.length != 0) {
+                for (int i = 0; i < pointsTo.length; i++) {
+                    if (pointsTo[i] >= 0) {
+                        // (2) Pointer
+                        // Use 4 / 8 bytes as pointer depending on compressed oops
+                        pointerSize += (symbols().compressedOopsUsed() ? 4 : 8);
+                    } else {
+                        // (3) Null pointer
+                        // Use 4 / 8 bytes as null depending on compressed oops
+                        nullSize += (symbols().compressedOopsUsed() ? 4 : 8);
+                    }
+                }
+            }
+            // (4) Header
+            // Array header size = 8 (mark work) + 4 / 8 (klass word depending on compressed oops) = 12 or 16 bytes
+            // Also take 8-byte object alignment into account
+            headerSize = (symbols().compressedOopsUsed() ? 12 : 16);
+        }
+
+        externalFragmentation = 8 - (primitiveSize + pointerSize + nullSize + headerSize + internalFragmentation) % 8;
+        externalFragmentation = externalFragmentation == 8 ? 0 : externalFragmentation;
+
+        // TODO fix for new classify()
+        //        root.classify(-1, null, null, primitiveSize, true, -1, null, null, null, null, PRIMITIVE_CLASSIFIER_CHAIN, null);
+        //        root.classify(-1, null, null, pointerSize, false, -1, null, null, null, null, POINTER_CLASSIFIER_CHAIN, null);
+        //        root.classify(-1, null, null, nullSize, false, -1, null, null, null, null, NULL_CLASSIFIER_CHAIN, null);
+        //        root.classify(-1, null, null, headerSize, false, -1, null, null, null, null, HEADER_CLASSIFIER_CHAIN, null);
+        //        root.classify(-1, null, null, internalFragmentation + externalFragmentation, false, -1, null, null, null, null, FRAGMENTATION_CLASSIFIER_CHAIN, null);
+
+        int fullCombinedSize = primitiveSize + pointerSize + nullSize + headerSize + internalFragmentation + externalFragmentation;
+
+        AllocatedType type = type();
+        if (fullCombinedSize != size() && !type.isKnownToHaveWrongPointerNumber(symbols())) {
+            System.out.println(String.format("Size of %s at %d is %d instead of %d", type.getExternalName(false, true), address(), fullCombinedSize, size()));
+        }
+
+        return root;
+    }
+
+    @Override
+    public String title() {
+        return "Instance Health";
+    }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ApplicationWebTab</title>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+</head>
+<body>
+<div id="app">
+    <h1>ApplicationWebTab</h1>
+    <div v-if="bridge" style="width: 100%">
+        <label>x is:</label>
+        <label> {{x}} </label>
+        <button @click="x++" style="width: 100%">Inc</button>
+    </div>
+
+    <div v-if="bridge" style="background: gray;">
+        <label>Bridge {{ bridge }} injected</label>
+        <div v-for="(value, key, index) in bridge">
+            {{ index }}. {{ key }}: {{ value }}
+        </div>
+    </div>
+</div>
+
+<script src="ApplicationWebTab.js"></script>
+</body>
+</html>

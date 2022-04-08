@@ -1,0 +1,255 @@
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.GarbageCollectionCause;
+import at.jku.anttracks.heap.GarbageCollectionType;
+import at.jku.anttracks.heap.HeapListener;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+import at.jku.anttracks.heap.space.Space;
+import at.jku.anttracks.parser.ParsingInfo;
+import at.jku.anttracks.util.TraceException;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class RootPointerDistributionListener implements HeapListener<DetailedHeap> {
+
+    private final File file;
+
+    public RootPointerDistributionListener(File file) {
+        this.file = file;
+    }
+
+    public static void init(DetailedHeap heap) {
+        String log = System.getProperty("statistics.rootptr.log");
+        if (log != null) {
+            File f = new File(log);
+            if (f.exists()) {
+                f.delete();
+            }
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                f = null;
+            }
+            heap.addListener(new RootPointerDistributionListener(f));
+        }
+    }
+
+    @Override
+    public void phaseChanging(GarbageCollectionType from,
+                              GarbageCollectionType to,
+                              GarbageCollectionCause cause,
+                              boolean concurrent,
+                              boolean failed,
+                              long time,
+                              long position,
+                              ParsingInfo parsingInfo,
+                              boolean withinSelectedTimeWindow) {
+
+    }
+
+    @Override
+    public void phaseChanged(GarbageCollectionType from,
+                             GarbageCollectionType to,
+                             GarbageCollectionCause cause,
+                             boolean concurrent,
+                             boolean failed,
+                             long time,
+                             long position,
+                             ParsingInfo parsingInfo,
+                             boolean withinSelectedTimeWindow) {
+
+    }
+
+    @Override
+            public void close() {
+        if (file == null) {
+            return;
+        }
+
+        final DecimalFormat percentFormat = new DecimalFormat("#.00%");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            // finding root duplicates...
+            Map<String, Long> rootTypesCount = heap.rootPtrs.values()
+                                                            .stream()
+                                                            .flatMap(List::stream)
+                                                            .collect(Collectors.groupingBy(root -> root.getTypeString(), Collectors.counting()));
+
+            Map<String, Long> rootTypesCountNoNull = heap.rootPtrs.values()
+                                                                  .stream()
+                                                                  .flatMap(List::stream)
+                                                                  .filter(root -> root.getAddr() != -1)
+                                                                  .collect(Collectors.groupingBy(root -> root.getTypeString(), Collectors.counting()));
+
+            writer.write("Root type distribution: (including null pointers)\n");
+            rootTypesCount.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).forEach(e -> {
+                try {
+                    writer.write(String.format("%s: %d", e.getKey(), e.getValue()));
+                    if (e.getValue() > 0 && rootTypesCountNoNull.get(e.getKey()) != null) {
+                        String text = String.format(" (%#.00f%% null ptrs)\n", (e.getValue() - rootTypesCountNoNull.get(e.getKey()).doubleValue()) / e.getValue());
+                        writer.write(text);
+                    } else if (rootTypesCountNoNull.get(e.getKey()) == null) {
+                        writer.write(" (100.00% null ptrs)\n");
+                    } else {
+                        writer.write("\n");
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+            writer.write("\n");
+
+            // overlaps within root types
+            Map<String, Map<Long, Long>> distinctsPerType = heap.rootPtrs.values()
+                                                                         .stream()
+                                                                         .flatMap(List::stream)
+                                                                         .filter(root -> root.getAddr() != -1)
+                                                                         .collect(Collectors.groupingBy(root -> root.getTypeString(),
+                                                                                                        Collectors.groupingBy(r -> r.getAddr(), Collectors.counting())));
+
+            writer.write("Overlaps within root types: (omitting null pointers)\n");
+            distinctsPerType.entrySet().stream().forEach(entry -> {
+                try {
+                    String text = String.format("%s: %d of %d (%#.00f%%) addresses are distinct \n",
+                                                entry.getKey(),
+                                                entry.getValue().values().size(),
+                                                rootTypesCountNoNull.get(entry.getKey()),
+                                                entry.getValue().values().size() / rootTypesCountNoNull.get(entry.getKey()).doubleValue());
+                    writer.write(text);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            writer.write("\n");
+
+            // overlaps between root types
+            Map<String, Map<String, Map<Long, Long>>> overlapsBetweenTypes = new HashMap<>();
+            rootTypesCountNoNull.keySet().stream().forEach(rootType -> {
+                overlapsBetweenTypes.put(rootType,
+                                         // all roots that are of a different type than rootType but point an address that is also
+                                         // pointed by
+                                         // roots of
+                                         // rootType. All these roots are grouped by their type and counted
+                                         heap.rootPtrs.values()
+                                                      .stream()
+                                                      .flatMap(List::stream)
+                                                      .filter(root -> !root.getTypeString().equals(rootType) && root.getAddr() != -1 &&
+                                                              (heap.rootPtrs.values()
+                                                                            .stream()
+                                                                            .flatMap(List::stream)
+                                                                            .filter(r -> r.getTypeString().equals(rootType))
+                                                                            .anyMatch(r -> r.getAddr() == root.getAddr())))
+                                                      .collect(Collectors.groupingBy(root -> root.getTypeString(),
+                                                                                     Collectors.groupingBy(r -> r.getAddr(), Collectors.counting()))));
+            });
+
+            writer.write("Overlaps between root types: (omitting null pointers, taking only distinct roots)\n");
+            overlapsBetweenTypes.entrySet().stream().forEach(entry -> {
+                try {
+                    writer.write(distinctsPerType.get(entry.getKey()).size() + " " + entry.getKey() + " 100.00% (100.00%):\n");
+                    entry.getValue().entrySet().stream().forEach(subentry -> {
+                        try {
+                            writer.write(" - " + subentry.getValue().size() + " " + subentry.getKey() +
+                                                 " " +
+                                                 percentFormat.format((double) subentry.getValue().size() / distinctsPerType.get(entry.getKey()).size()) +
+                                                 " (" +
+                                                 percentFormat.format((double) subentry.getValue().size() / distinctsPerType.get(subentry.getKey()).size()) +
+                                                 ")\n");
+                            writer.write("\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            });
+
+            // classloader oops pointing class objects
+            //            long cldsPointingClass = heap.rootPtrs.values().stream().flatMap(List::stream)
+            //                                                  .filter(root -> {
+            //                                                      Space s = heap.getSpace(root.getAddr());
+            //                                                      ObjectInfo oi = null;
+            //                                                      if (s != null) {
+            //                                                          try {
+            //                                                              oi = s.getObjectInfo(root.getAddr(), false);
+            //                                                          } catch (TraceException e) {
+            //                                                              e.printStackTrace();
+            //                                                          }
+            //                                                      }
+            //
+            //                                                      return root.getTypeString().startsWith("Class loader") && oi != null && oi.type.name.contains
+            // ("java/lang/Class");
+            //                                                  }).collect(Collectors.groupingBy(
+            //                            root -> root.getAddr()
+            //                    )).entrySet().stream().count();
+            //            String text =
+            //                    String.format("%s distinct CLD oops (%s of all distinct CLD oops) point to java/lang/Class objects\n",
+            //                                  cldsPointingClass,
+            //                                  percentFormat.format((double) cldsPointingClass / distinctsPerType.get("Class loader data graph - strong cld").values()
+            // .size()));
+            //            writer.write(text);
+
+            writer.write("\nDuplicates in root pointer DS:\n");
+            Map<Long, Map<String, Long>> rootDuplicates = heap.rootPtrs.values()
+                                                                       .stream()
+                                                                       .flatMap(List::stream)
+                                                                       .collect(Collectors.groupingBy(root -> root.getAddr(),
+                                                                                                      Collectors.groupingBy(root -> root.getTypeString(),
+                                                                                                                            Collectors.counting())));
+
+            // filter for duplicate roots
+            // sort by number of duplicates
+            // print...
+            rootDuplicates.entrySet()
+                          .stream()
+                          .filter(e -> e.getValue().size() > 1 || e.getValue().entrySet().stream().anyMatch(f -> f.getValue() > 1))
+                          .sorted((e1, e2) -> new Integer(e2.getValue().size()).compareTo(e1.getValue().size()))
+                          .forEach(e -> {
+                              // ...address
+                              try {
+                                  writer.write(e.getKey() + ":");
+
+                                  // ...object info
+                                  Space s = heap.getSpace(e.getKey());
+                                  ObjectInfo oi = null;
+                                  if (s != null) {
+                                      try {
+                                          oi = s.getObjectInfo(e.getKey(), false);
+                                      } catch (TraceException e1) {
+                                      }
+                                  }
+                                  writer.write(" (" + (oi != null ? oi.toString() : " ... ") + ")\n");
+
+                                  // ...duplicate root pointers and their count
+                                  e.getValue().entrySet().forEach(f -> {
+
+                                      try {
+                                          writer.write(" - " + f.getKey() + " " + f.getValue());
+                                          writer.write(" (" + percentFormat.format(((f.getValue().doubleValue() / rootTypesCount.get(f.getKey())
+                                                                                                                                .doubleValue()))) + ")\n");
+                                      } catch (IOException e1) {
+                                          e1.printStackTrace();
+                                      }
+                                  });
+                                  writer.write("\n");
+                              } catch (IOException e1) {
+                                  e1.printStackTrace();
+                              }
+                          });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+}

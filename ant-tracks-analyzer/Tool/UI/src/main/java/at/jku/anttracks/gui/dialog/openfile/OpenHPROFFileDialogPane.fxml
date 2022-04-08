@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<fx:root type="DialogPane" prefHeight="223.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.60"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox prefHeight="178.0" prefWidth="420.0">
+            <children>
+                <Label text="Application Name"/>
+                <TextField fx:id="applicationNameTextField" prefHeight="25.0" prefWidth="232.0"/>
+                <Label text="HRPOF file"/>
+                <HBox prefHeight="15.0" prefWidth="333.0" spacing="2.0">
+                    <children>
+                        <TextField fx:id="hprofTextField" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="hprofChooseButton" mnemonicParsing="false" text="..."/>
+                        <Button fx:id="hprofClearButton" mnemonicParsing="false"/>
+                    </children>
+                </HBox>
+<!--                <Label text="* Optional">-->
+<!--                    <font>-->
+<!--                        <Font name="System Italic" size="12.0"/>-->
+<!--                    </font>-->
+<!--                    <padding>-->
+<!--                        <Insets top="15.0"/>-->
+<!--                    </padding>-->
+<!--                </Label>-->
+            </children>
+        </VBox>
+    </content>
+    <buttonTypes>
+        <ButtonType fx:constant="APPLY"/>
+        <ButtonType fx:constant="CANCEL"/>
+    </buttonTypes>
+</fx:root>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<fx:root type="DialogPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox alignment="CENTER">
+            <children>
+                <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true"/>
+
+                <VBox alignment="TOP_LEFT">
+                    <children>
+                        <Label text="Designed and developed"/>
+                        <Label text="   - at the Institute for System Software, Johannes Kepler University, Linz, Austria"/>
+                        <Label text="   - at the Christian Doppler Laboratory for Monitoring and Evolution of Very-large-scale Systems, Johannes Kepler University, Linz, Austria"/>
+                        <Label text="   - in cooperation with Dynatrace Austria."/>
+
+                        <Label text=""/>
+
+                        <TextFlow fx:id="textFlow" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label text="See "/>
+                                <Hyperlink fx:id="downloadLink" text="http://mevss.jku.at/AntTracks" wrapText="true"/>
+                                <Label text=" for downloads of the newest version and scientific publications." wrapText="true"/>
+                            </children>
+                        </TextFlow>
+
+                        <Label text=""/>
+
+                        <Label text="Contact markus.weninger@jku.at for bug reports, questions, or contributions." wrapText="true"/>
+
+                        <Label text=""/>
+
+                        <!-- This was some test -->
+                        <!--
+                        <TextFlow>
+                            <Text text="Normal text and "/>
+                            <Text text="bold text and " style="-fx-font-weight: bold"/>
+                            <Text text="italic text and " style="-fx-font-style: italic"/>
+                            <Text text="red text." style="-fx-stroke: red"/>
+                        </TextFlow>
+                        -->
+
+                        <Label text=""/>
+
+                        <TextFlow>
+                            <Text text="Developed by "/>
+                            <Text text="Markus Weninger (current lead, 2017 - dato), "/>
+                            <Text text="Elias Gander (current team member), "/>
+                            <Text text="Philipp Lengauer (former lead, 2014 - 2017), "/>
+                            <Text text="Verena Bitto (former team member) and "/>
+                            <Text text="Stefan Fitzek (former team member)."/>
+                        </TextFlow>
+
+                        <Label text=""/>
+
+                        <TextFlow>
+                            <Text text="Student contributions by "/>
+                            <Text text="Christina Rammerstorfer, "/>
+                            <Text text="Christian Niederer, "/>
+                            <Text text="Daniel Hinterreiter, "/>
+                            <Text text="Patrick Schöppl, "/>
+                            <Text text="David Pfeffer, "/>
+                            <Text text="Daniel Pucher, "/>
+                            <Text text="Peter Feichtinger, "/>
+                            <Text text="Michael Jäger, "/>
+                            <Text text="Lukas Makor, "/>
+                            <Text text="and others."/>
+                        </TextFlow>
+
+                        <Label text=""/>
+
+                        <Label text="This tool is under the GPL Licence, Copyright Dynatrace 2014, 2015, 2016, and 2017." wrapText="true"/>
+
+                        <Label text="Icons used in this tool are authored by Freepik, SmashIcons and Dave Gandy from www.flaticon.com." wrapText="true"/>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</fx:root>

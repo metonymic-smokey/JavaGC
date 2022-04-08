@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.chart.jfreechart.xy.line.base.LineJFreeChartPane?>
+<fx:root type="LineJFreeChartPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+</fx:root>

@@ -1,0 +1,109 @@
+
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+import at.jku.anttracks.heap.symbols.AllocatedType;
+import at.jku.anttracks.heap.symbols.AllocationSite;
+import at.jku.anttracks.heap.symbols.AllocationSites;
+import at.jku.anttracks.heap.symbols.Symbols;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLongArray;
+
+public class TotalAllocationListener extends NewObjectLogListener {
+
+    private final Symbols symbols;
+    private AtomicLongArray allocationSiteCounts;
+
+    public TotalAllocationListener(DetailedHeap heap) {
+        this.symbols = heap.getSymbols();
+        this.allocationSiteCounts = new AtomicLongArray(getAllocationSiteCountsArrayLength(symbols));
+    }
+
+    private int getAllocationSiteCountsArrayLength(Symbols symbols) {
+        AllocationSites sites = symbols.sites;
+        Integer index = -1;
+        Iterator<AllocationSite> iter = sites.iterator();
+        while (iter.hasNext()) {
+            AllocationSite site = iter.next();
+            if (site != null && index < site.id) {
+                index = site.id;
+            }
+        }
+        return index + 1;
+    }
+
+    @Override
+            public void close() {
+        try {
+            writeAllocSiteDump(new OutputStreamWriter(System.out));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void record(ObjectInfo obj) {
+        int allocationSiteId = obj.allocationSite.id;
+        allocationSiteCounts.incrementAndGet(allocationSiteId);
+
+    }
+
+    public static void init(DetailedHeap heap) {
+        // heap.addListener(new TotalAllocationListener(heap));
+    }
+
+    private synchronized void writeAllocSiteDump(Writer writer) throws IOException {
+        long total = 0;
+        Iterator<AllocationSite> iter = symbols.sites.iterator();
+        List<String> lines = new LinkedList<>();
+        while (iter.hasNext()) {
+            AllocationSite site = iter.next();
+            if (site == null) {
+                continue;
+            }
+            int allocationSiteId = site.id;
+            long count = allocationSiteCounts.get(allocationSiteId);
+            // writer.append(getAllocationSiteString(site, count));
+            // writer.append("\n");
+            lines.add(getAllocationSiteLine(site, count));
+            total += count;
+        }
+        lines.sort((a, b) -> a.compareTo(b));
+        for (String line : lines) {
+            writer.append(line);
+        }
+        writer.append("\n");
+        writer.append("Total allocations: " + total);
+        writer.flush();
+    }
+
+    private String getAllocationSiteLine(AllocationSite site, long count) {
+        StringBuilder builder = new StringBuilder();
+        int typeId = site.allocatedTypeId;
+        AllocatedType type = symbols.types.getById(typeId);
+        builder.append(type + "@");
+        String duckTracksComparableAllocationSite = getDuckTracksComparableAllocationSite(site.toString());
+        builder.append(duckTracksComparableAllocationSite);
+        builder.append("=");
+        builder.append(count);
+        builder.append("\n");
+        return builder.toString();
+    }
+
+    private String getDuckTracksComparableAllocationSite(String allocationSite) {
+        int firstLineBreakIndex = allocationSite.indexOf("\n");
+        if (firstLineBreakIndex < 0) {
+            return allocationSite;
+        } else {
+            return allocationSite.substring(0, firstLineBreakIndex);
+        }
+    }
+
+}

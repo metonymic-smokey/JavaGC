@@ -1,0 +1,445 @@
+package at.jku.anttracks.classification.nodes;
+
+import at.jku.anttracks.classification.Classifier;
+import at.jku.anttracks.diff.AddressCollection;
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.FastHeap;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+import at.jku.anttracks.heap.roots.RootPtr;
+import at.jku.anttracks.heap.space.SpaceInfo;
+import at.jku.anttracks.heap.symbols.AllocatedType;
+import at.jku.anttracks.heap.symbols.AllocationSite;
+import at.jku.anttracks.parser.EventType;
+import at.jku.anttracks.util.Counter;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+public class FileGroupingNode implements GroupingNode.FastHeapGroupingNode {
+    protected final Logger LOGGER = Logger.getLogger(this.getClass().getSimpleName());
+
+    /**
+     * This member is set if this is a non-leaf node. If this {@link FileGroupingNode} instance is a leaf node, this must be null.
+     */
+    private final Map<Object, FastHeapGroupingNode> children;
+
+    /**
+     * This member will be set as soon as the first leaf is added to this node. In that case a temp file will be created that contains the
+     * addresses of all leaves of this node.
+     */
+    private ArrayList<Path> data;
+
+    /**
+     * This member allows to carry out {@link #setHeap(DetailedHeap)} thus we don't have to change the interface of {@link ListGroupingNode}.
+     * Instead of setting lastHeap of {@link AddressCollection} we store it in the node and set it for the {@link AddressCollection} before
+     * returning it in {@link #getData(boolean)}.
+     */
+    private IndexBasedHeap lastHeap;
+
+    /**
+     * This member is set for every {@link FileGroupingNode} instance, except root. It gives the parent HeapObjectGrouping.
+     */
+    private FileGroupingNode parent;
+
+    /**
+     * This member is set for every {@link FileGroupingNode} instance, except root. It gives the key with which this
+     * HeapObjectGrouping is connected to the parent.
+     */
+    private final Object[] key;
+
+    /**
+     * This member is set for every {@link FileGroupingNode} instance. It represents the level of this {@link FileGroupingNode}
+     * instance within its HeapObjectGrouping tree. The root HeapObjectGrouping is on level 0, its children on level 1, and so on.
+     */
+    private final int level;
+
+    /**
+     * A HeapObjectGrouping instance may contain multiple subtrees. Such a subtree can be detected, if the parents subTreeLevel is lower
+     * than this' subTreeLevel.
+     */
+    private int subTreeLevel;
+
+    private double summedObjects = -1;
+
+    private boolean calculatedOnSampling = false;
+    private static long time = 0;
+    /**
+     * This member is set if this is a non-leaf node. If this {@link FileGroupingNode} instance is a leaf node, this must be null.
+     */
+    protected Classifier<?> classifier;
+    private long summedBytes = -1;
+    private final ArrayList<GroupingException> exceptions;
+
+    public FileGroupingNode() {
+        this(null, 0, 0, null, "Overall");
+    }
+
+    public FileGroupingNode(Classifier<?> classifier,
+                            int level,
+                            int subTreeLevel,
+                            FileGroupingNode parent,
+                            Object key) {
+        children = new HashMap<>();
+        this.parent = parent;
+        this.key = new Object[level + 1];
+        if (this.parent != null) {
+            System.arraycopy(parent.getFullKey(), 0, this.key, 0, level);
+        }
+        this.key[level] = key;
+        this.level = level;
+        this.subTreeLevel = subTreeLevel;
+        exceptions = new ArrayList<>();
+        this.classifier = classifier;
+    }
+
+    private void removeLeaves() {
+        if (data == null) {
+            return;
+        }
+
+        try {
+            for (Path p : data) {
+                Files.write(p, new String().getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Executes a depth-first-traversal to clear the whole tree, destroying its structure.
+     */
+    public void clear() {
+        for (GroupingNode g : children.values()) {
+            g.clear();
+        }
+        children.clear();
+        removeLeaves();
+        parent = null;
+    }
+
+    @Override
+    public void setCalculatedOnSampling(boolean b) {
+        this.calculatedOnSampling = b;
+    }
+
+    @Override
+    public void addException(long address,
+                             ObjectInfo objectInfo,
+                             SpaceInfo space,
+                             AllocatedType type,
+                             int size,
+                             boolean isArray,
+                             int arrayLength,
+                             AllocationSite allocationSite,
+                             EventType eventType,
+                             List<RootPtr> rootPtrs,
+                             Exception ex) {
+        exceptions.add(new GroupingException(address, objectInfo, space, type, size, isArray, arrayLength, allocationSite, eventType, rootPtrs, ex));
+    }
+
+    public boolean containsChild(Object key) {
+        return children.containsKey(key);
+    }
+
+    public GroupingNode addChild(Classifier<?> classifier, int level, int subTreeLevel, Object key) {
+        children.put(key, new FileGroupingNode(classifier, level, subTreeLevel, this, key));
+        return children.get(key);
+    }
+
+    public GroupingNode merge(GroupingNode other, int refSubTreeLevel) {
+        if ((other instanceof FileGroupingNode)) {
+            throw new Error("Only can merge tree nodes of same type");
+        }
+
+        this.summedObjects = -1;
+        this.summedBytes = -1;
+
+        // General merging activities
+        if (classifier == null && other.getClassifier() != null) {
+            classifier = other.getClassifier();
+        } else {
+            if (other.getClassifier() != null) {
+                assert classifier.getName() == other.getClassifier().getName() : String.format(
+                        "Classifier must match on merge if set on both HeapObjectGroupings (%s <-> %s)", classifier, other.getClassifier());
+            }
+        }
+
+        // Sum up all leafs on this HeapObjectGrouping
+        data.addAll(((FileGroupingNode) other).data);
+
+        // This does not have to be the case for list groupings, since we merge
+        // transformers into the main tree.
+        // If two objects point to the same object, this object will only exist
+        // once in the child node.
+        // assert before + other.leafs.getObjectCount() ==
+        // this.leafs.getObjectCount() : "Number of objects must match";
+
+        // Merge classification groups, recursively repeat in children
+        for (GroupingNode otherChild : other.getChildren()) {
+            int relSubTreeLevel = refSubTreeLevel + otherChild.getSubTreeLevel();
+            GroupingNode child = addChildIfNeeded(otherChild.getClassifier(), otherChild.getKey(), relSubTreeLevel);
+            child.merge(otherChild, refSubTreeLevel);
+        }
+        return this;
+    }
+
+    @Override
+    public List<GroupingNode> getChildren() {
+        return new ArrayList<>(children.values());
+    }
+
+    public Object[] getFullKey() {
+        return key;
+    }
+
+    @Override
+    public void setObjectCount(double count) {
+        this.summedObjects = count;
+    }
+
+    @Override
+    public void setByteCount(long bytes) {
+        this.summedBytes = bytes;
+    }
+
+    @Override
+    public Object getKey() {
+        return key[level];
+    }
+
+    protected void setKey(Object newKey) {
+        key[level] = newKey;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        sb.append(getSubTreeLevel());
+        sb.append(") ");
+        sb.append(new String(new char[level]).replace("\0", "-"));
+        if (level > 0) {
+            sb.append(" ");
+        }
+        sb.append(getKey());
+        sb.append(" -> ");
+        sb.append(getObjectCount());
+        sb.append(" (");
+        sb.append("0"); // TODO
+        sb.append(" duplicates subtracted)");
+        for (GroupingNode child : children.values()) {
+            sb.append("\n");
+            sb.append(child.toString());
+        }
+        return sb.toString();
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    @Override
+    public long getObjectCount() {
+        if (summedObjects < 0) {
+            summedObjects = getData(true).count();
+        }
+        return (long) summedObjects;
+    }
+
+    /**
+     * @param key
+     * @return The child HeapObjectGrouping to which the specified key is mapped, or null if this HeapObjectGrouping contains no children
+     * for the key
+     */
+    public FastHeapGroupingNode getChild(Object key) {
+        return children.get(key);
+    }
+
+    @Override
+    public void setSubTreeLevel(int subTreeLevel) {
+        this.subTreeLevel = subTreeLevel;
+    }
+
+    @Override
+    public int getSubTreeLevel() {
+        return subTreeLevel;
+    }
+
+    @Override
+    public AddressCollection getData() {
+        AddressCollection ret = new AddressCollection();
+        try {
+            for (Path p : data) {
+                for (String addr : Files.readAllLines(p)) {
+                    // uncomment to see that put() takes way too long
+                    // long now = System.nanoTime();
+                    ret.putWithoutSync(Long.parseLong(addr));
+                    // time += System.nanoTime() - now;
+                    // System.out.println(time/1_000_000_000d);
+                }
+            }
+        } catch (IOException e) {
+            // TODO: Handle exception
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public AddressCollection getData(int refSubTreeLevel) {
+        AddressCollection dataSum;
+
+        if (getSubTreeLevel() == refSubTreeLevel) {
+            dataSum = getData();
+        } else {
+            dataSum = new AddressCollection();
+        }
+
+        for (GroupingNode child : children.values()) {
+            if (!(child instanceof FileGroupingNode)) {
+                dataSum.unionWith((AddressCollection) child.getData(refSubTreeLevel));
+            }
+        }
+
+        return dataSum;
+    }
+
+    public void setData(AddressCollection data) {
+        removeLeaves();
+        for (AddressCollection.AddressCollectionIterator it = data.getIterator(); it.hasNext(); ) {
+            // TODO adjust to FastHeap but this class isn't used anyway...
+//            addLeaf(it.next(), null, null, -1, false, -1, null, null, null, null, 1);
+        }
+    }
+
+    @Override
+    public FileGroupingNode getParent() {
+        return this.parent;
+    }
+
+    public FileGroupingNode sampleTopDown() {
+        if (children.size() == 0) {
+            // No children, nowhere to push down
+            return this;
+        }
+        if (getObjectCount() > 0) {
+            // Push down all our leafs into the children
+
+            Counter sum = new Counter();
+            List<? extends GroupingNode> children = getFirstChildrenOnSameSubtreeLevel();
+            for (GroupingNode child : children) {
+                sum.add(child.getObjectCount());
+            }
+            // TODO: Check how to push down
+            /*
+             * if (sum.get() == 0) { double count = toPush.get() / children.size(); for (BaseHeapObjectGrouping<R> child : children) {
+			 * HeapObjectGroupingCounter childCount = child.addLeaf(key, 0); childCount = child.getLeafs().get(key);
+			 * childCount.sampled.add(count); } } else { for (BaseHeapObjectGrouping<R> child : children) { HeapObjectGroupingCounter
+			 * childCount = child.getSummedAmount(this.subTreeLevel).get(key); if (childCount != null) { HeapObjectGroupingCounter
+			 * childCounter = child.getLeafs().get(key); if (childCounter == null) { childCounter = child.addLeaf(key, 0); }
+			 * childCounter.sampled.add(toPush.get() * childCount.get() / sum.get()); child.calculatedOnSampling = true; } } } if
+			 * (getChildrenOnSameSubtreeLevel().size() > 0) { // Check that leafs were pushed down (= there is at least one // child)
+			 * leafs.clear(); }
+			 */
+        }
+        for (GroupingNode child : getChildren()) {
+            child.sampleTopDown();
+        }
+
+        return this;
+    }
+
+    @Override
+    public boolean isCalculatedOnSampling() {
+        return calculatedOnSampling;
+    }
+
+    @Override
+    public Classifier<?> getClassifier() {
+        if (getParent() != null) {
+            assert classifier != null : "If we are not root, the HeapObjectGrouping must have an assigned classifier";
+        }
+        return classifier;
+    }
+
+    @Override
+    public long getByteCount() {
+        if (summedBytes < 0) {
+            summedBytes = ((AddressCollection) getData(true)).getBytes();
+        }
+
+        return summedBytes;
+    }
+
+    @Override
+    public void calculateClosures() {
+        // TODO
+    }
+
+    @Override
+    public synchronized long getClosureSize() {
+        return 0;   // TODO
+    }
+
+    @Override
+    public synchronized boolean isClosureSizeCalculated() {
+        return false;
+    }
+
+    @Override
+    public synchronized long getGCSize() {
+        return 0; // TODO
+    }
+
+    @Override
+    public synchronized boolean isGCSizeCalculated() {
+        return false;
+    }
+
+    @Override
+    public void setClassifier(Classifier<?> classifier) {
+        this.classifier = classifier;
+    }
+
+    @Override
+    public ArrayList<GroupingException> getExceptions() {
+        return exceptions;
+    }
+
+    @Override
+    public void addLeaf(int objIndex,
+                        long n) {
+        if (n > 1) {
+            throw new Error("HeapObjectFileGrouping assumes that no address appears more than one time in one node");
+        }
+
+        if (data.isEmpty()) {
+            try {
+                Path leaf = Files.createTempFile("AntTracks-HeapObjectGroupingNode-", null);
+                leaf.toFile().deleteOnExit();   // NIO doesn't seem to provide that :(
+                data.add(leaf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            Files.write(data.get(0), (Long.toString(lastHeap.getAddress(objIndex)) + '\n').getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addDuplicate(int objIndex,
+                             long n) {
+        // Does not have to be implemented since AddressCollection can handle duplication using UNION
+    }
+}
