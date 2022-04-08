@@ -9,5 +9,3 @@ ADD . /anttracks
 WORKDIR /anttracks
 
 RUN ["sh", "-c", "./gradlew jar"]
-
-CMD ["sh", "-c", "./run.sh"]
