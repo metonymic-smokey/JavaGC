@@ -38,6 +38,6 @@ RUN sh -c "cp /anttracks/jdk8u/hotspot/build-scripts/build_AntTracksVM* /anttrac
 # we have already done the required apt install previously, so remove it from the build script
 RUN sed -i 's/sudo apt install .*//g' /anttracks/jdk8u/build_AntTracksVM_type_FixJavaFX.sh
 
-# (when container is run) build time!
+# build time!
 # look in the "dist" folder for the builds
-CMD bash build_AntTracksVM.sh 0 0 ./dist; bash
+RUN bash build_AntTracksVM.sh 0 0 ./dist
