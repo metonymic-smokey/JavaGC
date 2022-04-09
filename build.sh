@@ -14,4 +14,4 @@ docker build -t samyaks/object-analyzer-analyzer .
 popd
 
 docker build -t samyaks/object-analyzer .
-# docker push samyaks/object-analyzer
+docker push samyaks/object-analyzer
