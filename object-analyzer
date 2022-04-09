@@ -23,15 +23,12 @@ popd
 
 echo "$logprefix Got trace files. Running analyzer."
 
-# required by the CLI
-mkdir -p data/
 tracefilepattern="trace_files/trace_*"
-alltracefiles=( $tracefilepattern )
-firsttracefile="${alltracefiles[0]}"
+# run on the largest trace file!
+firsttracefile=`ls -S $tracefilepattern | head -1`
 firsttracefilepath="$PWD/$firsttracefile"
 echo "$logprefix Running on trace file: $firsttracefilepath"
-java -jar /workdir/CLI.jar "$firsttracefilepath"
-
-/workdir/analyzer/run.sh "data/lifetimes.csv"
 
 popd
+
+/workdir/trace-analyzer "$firsttracefilepath"

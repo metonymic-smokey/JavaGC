@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euox pipefail
+
+tracefilepath="$1"
+logprefix="Trace-Analyzer:"
+
+echo "$logprefix setting up directory structure."
+
+mkdir -p outputs/
+
+pushd outputs
+
+# required by the CLI
+mkdir -p data/
+
+echo "$logprefix running AntTracks Analyzer on $tracefilepath."
+
+java -jar /workdir/CLI.jar "$tracefilepath"
+
+echo "$logprefix running analysis script"
+
+/workdir/analyzer/run.sh "data/lifetimes.csv"
+
+popd

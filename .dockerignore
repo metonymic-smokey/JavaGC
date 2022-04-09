@@ -1,0 +1,20 @@
+# shared libraries (add explicitly if you really want to push these)
+*.so
+
+# CMake related files
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# clangd cache
+vmtrace/.cache
+
+# pipeline outputs
+outputs

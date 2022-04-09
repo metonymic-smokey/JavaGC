@@ -7,5 +7,6 @@ COPY --from=samyaks/object-analyzer-ant-tracks-jvm /anttracks/jdk8u/dist/slowdeb
 ENV PATH="/workdir/jvm/bin:${PATH}"
 
 COPY object-analyzer .
+COPY trace-analyzer .
 
 CMD ./object-analyzer
