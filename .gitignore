@@ -15,3 +15,6 @@ CTestTestfile.cmake
 
 # clangd cache
 vmtrace/.cache
+
+# pipeline outputs
+outputs

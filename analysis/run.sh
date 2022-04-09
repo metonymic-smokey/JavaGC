@@ -2,7 +2,12 @@
 
 set -euox pipefail
 
-python3 to_parquet.py $1
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+csvfile="$1"
+csvfilewithoutextension="${csvfile%.*}"
+parquetfile="$csvfilewithoutextension.parquet"
 
-python3 analysis_02-dask.py $1
+python3 "$SCRIPT_DIR/to_parquet.py" $csvfile
+
+python3 "$SCRIPT_DIR/analysis_02-dask.py" $parquetfile
 

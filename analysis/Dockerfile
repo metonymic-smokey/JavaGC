@@ -10,6 +10,6 @@ RUN pip install --no-cache pandas dask matplotlib seaborn tqdm pyarrow
 
 WORKDIR /workdir
 
-ADD . .
+ADD . analyzer/
 
 EXPOSE 8888

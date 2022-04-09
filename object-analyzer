@@ -10,19 +10,28 @@ logprefix="Object-Analyzer:"
 # remove first arg so that "$@" gives all args
 shift
 
-mkdir -p trace_files/
+mkdir -p outputs/
 
-pushd trace_files
+pushd outputs
 
 echo "$logprefix Running given program"
 
-java -jar "$jardir/$jarfilename" $@
+mkdir -p trace_files/
+pushd trace_files
+java -XX:+TraceObjects -XX:+TraceObjectsPointers -jar "$jardir/$jarfilename" $@
+popd
 
 echo "$logprefix Got trace files. Running analyzer."
 
-alltracefiles=(trace_*)
+# required by the CLI
+mkdir -p data/
+tracefilepattern="trace_files/trace_*"
+alltracefiles=( $tracefilepattern )
 firsttracefile="${alltracefiles[0]}"
-echo "$logprefix Running on trace file: $firsttracefile"
-java -jar /workdir/CLI.jar "$firsttracefile"
+firsttracefilepath="$PWD/$firsttracefile"
+echo "$logprefix Running on trace file: $firsttracefilepath"
+java -jar /workdir/CLI.jar "$firsttracefilepath"
+
+/workdir/analyzer/run.sh "data/lifetimes.csv"
 
 popd

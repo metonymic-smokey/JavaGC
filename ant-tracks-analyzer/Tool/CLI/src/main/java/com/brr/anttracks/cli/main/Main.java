@@ -69,7 +69,7 @@ public class Main {
 
     static {
         try {
-            file = new FileWriter("outputs/lifetimes.csv");
+            file = new FileWriter("data/lifetimes.csv");
             bf = new BufferedWriter(file);
             numObjects = new AtomicLong(1);
             lastTag = new AtomicLong(1);
@@ -436,7 +436,7 @@ public class Main {
                 // logObject("MOVED", address, obj, gcInfo);
             }
 
-            Path outputPath = Paths.get("outputs/lifetimes.csv");
+            Path outputPath = Paths.get("data/lifetimes.csv");
 
             private void objectYeeted(long address, AddressHO obj, @NotNull ParserGCInfo gcInfo) {
                 // logObject("DELETED", address, obj, gcInfo);
