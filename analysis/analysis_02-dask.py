@@ -79,7 +79,7 @@ num_objects_threshold = 1000
 
 
 # directory to store graphs, etc.
-output_dir_name = filename.replace(os.path.sep, "___").replace(".", "_._")
+output_dir_name = os.path.join("output", filename.replace(os.path.sep, "___").replace(".", "_._"))
 os.makedirs(output_dir_name, exist_ok=True)
 
 # In[7]:
@@ -269,5 +269,4 @@ plot_aggs_alloc_site("max")
 # In[ ]:
 
 
-
-
+print(f"**** Saved outputs to {output_dir_name} *****")
