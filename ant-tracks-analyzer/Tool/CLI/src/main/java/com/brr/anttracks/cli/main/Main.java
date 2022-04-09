@@ -80,25 +80,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        // Class.forName("org.postgresql.Driver");
-        Properties props = new Properties();
-        props.put("jdbc.url", "jdbc:postgresql://localhost:5432/postgres");
-        props.put("user", "postgres");
-        props.put("password", "password");
-        props.put("ssl", "false");
-
-        try {
-            Connection c = DriverManager.getConnection(props.getProperty("jdbc.url"), props);
-            System.out.println("Success");
-            System.out.println(c.getClientInfo());
-            String createSensorTableQuery = "CREATE TABLE test_data (id SERIAL PRIMARY KEY, type TEXT NOT NULL, location TEXT NOT NULL)";
-            try (Statement stmt = c.createStatement()) {
-                stmt.execute(createSensorTableQuery);
-            }
-            // c.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         // Turn off other logging (e.g., AdditionalPrintingEventHandler)
         LogManager.getLogManager().reset();
 

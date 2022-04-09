@@ -6,3 +6,5 @@ Tool/Parser/build/
 Tool/UI/build/
 .gradle/
 stats.txt
+./analysis/.ipynb_checkpoints/
+./analysis/outputs/
