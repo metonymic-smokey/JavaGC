@@ -18,10 +18,11 @@ do
     echo "$logprefix running AntTracks Analyzer on $tracefilepath."
 
     java -jar /workdir/CLI.jar "$tracefilepath"
+
+    /workdir/analyzer/to_parquet.sh "data/lifetimes.csv"
 done
 
 echo "$logprefix running analysis script"
-
-/workdir/analyzer/run.sh "data/lifetimes.csv"
+/workdir/analyzer/run_parquet.sh "data/lifetimes.parquet"
 
 popd

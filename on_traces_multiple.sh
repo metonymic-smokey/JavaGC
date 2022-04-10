@@ -4,7 +4,12 @@ set -euox pipefail
 
 tracefiledir="$1"
 shift
-tracefilenames="$@"
+tracefilenames=( "$@" )
+for i in "${!tracefilenames[@]}"
+do
+    tracefilenames[$i]="/workdir/trace_files/${tracefilenames[$i]}"
+done
+
 
 mkdir -p outputs/
 
@@ -17,6 +22,6 @@ docker run -it --rm --name object-analyzer \
     -v "$tracefiledir:/workdir/trace_files:ro" \
     samyaks/object-analyzer \
     ./trace-analyzer \
-    $tracefilenames
+    ${tracefilenames[@]}
 
 echo "Saved outputs to $outputdir"
