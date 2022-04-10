@@ -18,3 +18,6 @@ vmtrace/.cache
 
 # pipeline outputs
 outputs
+
+# dont need this in main docker file
+wchadoop/
