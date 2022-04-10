@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab?>
+<?import at.jku.anttracks.gui.frame.main.tab.heapevolution.tab.dsdev.component.configurationpane.DataStructureDevelopmentClassificationConfigurationPane?>
+<?import at.jku.anttracks.gui.frame.main.tab.heapevolution.tab.dsdev.component.tree.DataStructureDevelopmentClassificationTreeTableView?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="at.jku.anttracks.gui.frame.main.component.applicationbase.ApplicationBaseTab" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <tabContent>
+        <center>
+            <VBox>
+                <DataStructureDevelopmentClassificationConfigurationPane fx:id="configurationPane"/>
+                <DataStructureDevelopmentClassificationTreeTableView fx:id="treeTableView" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </center>
+    </tabContent>
+</fx:root>

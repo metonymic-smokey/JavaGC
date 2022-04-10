@@ -1,0 +1,261 @@
+package at.jku.anttracks.experiments;
+
+import at.jku.anttracks.util.TraceException;
+import sun.misc.Unsafe;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentSkipListMap;
+
+public class DirectBufferAccessTimeExperiment {
+    public static int LAB_COUNT = 10_000;
+
+    private static class ExampleObjectAccessor {
+        private static Unsafe unsafe = getUnsafe();
+
+        public static int getAddress(long map, long id) {
+            return unsafe.getInt(map + id * ExampleObject.OBJECT_FIELD_SIZE);
+        }
+
+        public static int getSize(long map, long id) {
+            return unsafe.getInt(map + id * ExampleObject.OBJECT_FIELD_SIZE + 8);
+        }
+
+        public static int getObjectInfoId(long map, long id) {
+            return unsafe.getInt(map + id * ExampleObject.OBJECT_FIELD_SIZE + 12);
+        }
+
+        public static int getPtrTo(long map, long id) {
+            return unsafe.getInt(map + id * ExampleObject.OBJECT_FIELD_SIZE + 16);
+        }
+
+        public static int getPtrFrom(long map, long id) {
+            return unsafe.getInt(map + id * ExampleObject.OBJECT_FIELD_SIZE + 24);
+        }
+
+        public static void write(long map, int id, long address, int size, int objectInfoId, long ptrTo, long ptrFrom) {
+            long base = map + id * ExampleObject.OBJECT_FIELD_SIZE;
+            unsafe.putLong(base, address);
+            unsafe.putInt(base + 8, size);
+            unsafe.putInt(base + 12, objectInfoId);
+            unsafe.putLong(base + 16, ptrTo);
+            unsafe.putLong(base + 24, ptrFrom);
+        }
+
+        public static String toString(long address, int size, int objectInfoId, long ptrTo, long ptrFrom) {
+            StringBuilder builder = new StringBuilder("(@");
+            builder.append(address);
+            builder.append(" ");
+            builder.append(size);
+            builder.append(" ");
+            builder.append(objectInfoId);
+            builder.append(" ");
+            builder.append(ptrTo);
+            builder.append(" ");
+            builder.append(ptrFrom);
+            builder.append(")");
+            return builder.toString();
+        }
+    }
+
+    private static class ExampleObject {
+        public static int OBJECT_FIELD_SIZE = 32; // 1xlong + 2xint + 2xlong = 8+8+16=32 byte
+        public static int OBJECT_SIZE = 100;
+        public static int OBJECT_INFO_ID = 1;
+        public static int PTR_TO = 1;
+        public static int PTR_FROM = 1;
+
+        public final long address;
+        public final int size = OBJECT_SIZE;
+        public final int objectInfoId = OBJECT_INFO_ID;
+        public final long ptrsTo = PTR_TO;
+        public final long ptrsFrom = PTR_FROM;
+
+        public ExampleObject(long address) {
+            this.address = address;
+        }
+
+        @Override
+        public String toString() {
+            return ExampleObjectAccessor.toString(address, size, objectInfoId, ptrsTo, ptrsFrom);
+        }
+    }
+
+    private static class ExampleLab {
+        public static int LAB_OBJECT_COUNT = 1_000;
+        private final long startAddress;
+        ExampleObject[] objects = new ExampleObject[LAB_OBJECT_COUNT];
+
+        public ExampleLab(long startAddress) {
+            this.startAddress = startAddress;
+            for (int i = 0; i < objects.length; i++) {
+                objects[i] = new ExampleObject(startAddress + i * ExampleObject.OBJECT_SIZE);
+            }
+        }
+
+        public int getIndex(long objectAddress) throws TraceException {
+            long addr = this.startAddress;
+            for (int i = 0; i < objects.length; i++) {
+                if (addr == objectAddress) {
+                    return i;
+                }
+                addr += objects[i].size;
+            }
+            throw new TraceException("Object not found in example-lab");
+        }
+
+        public ExampleObject getObject(long objectAddress) throws TraceException {
+            long addr = this.startAddress;
+            for (int i = 0; i < objects.length; i++) {
+                if (addr == objectAddress) {
+                    return getObject(i);
+                }
+                addr += objects[i].size;
+            }
+            throw new TraceException("Object not found in example-lab");
+        }
+
+        public ExampleObject getObject(int index) throws TraceException {
+            return objects[index];
+        }
+    }
+
+    public static void run(int labCount, int labObjectCount, int runs) throws InterruptedException, TraceException {
+        LAB_COUNT = labCount;
+        ExampleLab.LAB_OBJECT_COUNT = labObjectCount;
+
+        long top = 0;
+        ConcurrentSkipListMap<Long, ExampleLab> labs = new ConcurrentSkipListMap<>();
+
+        System.out.println("==========================================\n==========================================");
+        System.out.println(String.format("=== SET UP HASHMAP (%,d x %,d) -> %,d OBJECTS ===", LAB_COUNT, ExampleLab.LAB_OBJECT_COUNT, LAB_COUNT * ExampleLab
+                .LAB_OBJECT_COUNT));
+        for (int i = 0; i < LAB_COUNT; i++) {
+            labs.put(((long) i) * ExampleLab.LAB_OBJECT_COUNT * ExampleObject.OBJECT_SIZE,
+                     new ExampleLab(i * ExampleLab.LAB_OBJECT_COUNT * ExampleObject.OBJECT_SIZE));
+            top = ((long) i + 1) * ExampleLab.LAB_OBJECT_COUNT * ExampleObject.OBJECT_SIZE;
+        }
+        System.out.println("=== HASHMAP IS SET UP ===");
+
+
+        System.out.println(String.format("=== SET UP NATIVE MEMORY -> %,d OBJECTS ===", LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT));
+        Unsafe unsafe = getUnsafe();
+        long mapStart = unsafe.allocateMemory(LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT * ExampleObject.OBJECT_FIELD_SIZE);
+        for (int i = 0; i < LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT; i++) {
+            ExampleObjectAccessor.write(mapStart, i, i * ExampleObject.OBJECT_SIZE, ExampleObject.OBJECT_SIZE, ExampleObject.OBJECT_INFO_ID, ExampleObject.PTR_TO,
+                                        ExampleObject.PTR_FROM);
+        }
+        System.out.println("=== NATIVE IS SET UP ===");
+
+        System.out.println("=== GENERATE ORIGINAL ADDRESSES TO VISIT ===");
+        long[] externalAddressesToQuery = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        for (long i = 0, curAddr = 0; i < externalAddressesToQuery.length; i++, curAddr += 100) {
+            externalAddressesToQuery[(int) i] = curAddr;
+        }
+        System.out.println("=== ORIGINAL ADDRESSES TO VISIT GENERATED ===");
+
+        long[] collectedAddressesFromHashMap = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        int[] collectedSizesFromHashMap = new int[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        int[] collectedObjectIdsFromHashMap = new int[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] collectedPtrToFromHashMap = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] collectedPtrFromFromHashMap = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] runTimesHashMap = new long[runs];
+        for (int run = 0; run < runs; run++) {
+            System.out.println(String.format("=== QUERY FROM HASHMAP - RUN %,d ===", run));
+            long startTime = System.currentTimeMillis();
+            for (int i = 0; i < externalAddressesToQuery.length; i++) {
+                ExampleLab lab = labs.floorEntry(externalAddressesToQuery[i]).getValue();
+                int indexInLab = lab.getIndex(externalAddressesToQuery[i]);
+                collectedAddressesFromHashMap[i] = lab.getObject(indexInLab).address;
+                collectedSizesFromHashMap[i] = lab.getObject(indexInLab).size;
+                collectedObjectIdsFromHashMap[i] = lab.getObject(indexInLab).objectInfoId;
+                collectedPtrToFromHashMap[i] = lab.getObject(indexInLab).ptrsTo;
+                collectedPtrFromFromHashMap[i] = lab.getObject(indexInLab).ptrsFrom;
+            }
+            long endTime = System.currentTimeMillis();
+            runTimesHashMap[run] = endTime - startTime;
+            System.out.println(String.format("### %,dms ###", runTimesHashMap[run]));
+        }
+        System.out.println("=== HASHMAP QUERY FINISHED ===");
+        System.out.println(String.format("### AVG = %,.2fms, MIN = %,dms, MAX = %,dms ###",
+                                         Arrays.stream(runTimesHashMap).average().getAsDouble(),
+                                         Arrays.stream(runTimesHashMap).min().getAsLong(),
+                                         Arrays.stream(runTimesHashMap).max().getAsLong()));
+
+        long[] collectedAddressesFromNative = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        int[] collectedSizesFromNative = new int[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        int[] collectedObjectIdsFromNative = new int[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] collectedPtrToFromNative = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] collectedPtrFromFromNative = new long[LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT];
+        long[] runTimesNative = new long[runs];
+        for (int run = 0; run < runs; run++) {
+            System.out.println(String.format("=== QUERY FROM NATIVE - RUN %,d ===", run));
+            long startTime = System.currentTimeMillis();
+            for (int i = 0; i < LAB_COUNT * ExampleLab.LAB_OBJECT_COUNT; i++) {
+                collectedAddressesFromNative[i] = ExampleObjectAccessor.getAddress(mapStart, i);
+                collectedSizesFromNative[i] = ExampleObjectAccessor.getSize(mapStart, i);
+                collectedObjectIdsFromNative[i] = ExampleObjectAccessor.getObjectInfoId(mapStart, i);
+                collectedPtrToFromNative[i] = ExampleObjectAccessor.getPtrTo(mapStart, i);
+                collectedPtrFromFromNative[i] = ExampleObjectAccessor.getPtrFrom(mapStart, i);
+            }
+            long endTime = System.currentTimeMillis();
+            runTimesNative[run] = endTime - startTime;
+            System.out.println(String.format("### %,dms ###", runTimesNative[run]));
+        }
+        System.out.println("=== NATIVE QUERY FINISHED ===");
+
+        System.out.println(String.format("### AVG = %,.2fms, MIN = %,dms, MAX = %,dms ###",
+                                         Arrays.stream(runTimesNative).average().getAsDouble(),
+                                         Arrays.stream(runTimesNative).min().getAsLong(),
+                                         Arrays.stream(runTimesNative).max().getAsLong()));
+
+        /*
+        System.out.print(String.format("=== HashMap objects: "));
+        for (int i = 0; i < ExampleLab.LAB_OBJECT_COUNT; i++) {
+            System.out.print(String.format("%s ", collectedFromHashMap[i].toString()));
+        }
+        System.out.println();
+        System.out.print(String.format("=== Native objects: "));
+        for (int i = 0; i < ExampleLab.LAB_OBJECT_COUNT; i++) {
+            System.out.print(String.format("%s ", ExampleObjectAccessor.toString(collectedAddressesFromNative[i],
+                                                                                 collectedSizesFromNative[i],
+                                                                                 collectedObjectIdsFromNative[i],
+                                                                                 collectedPtrToFromNative[i],
+                                                                                 collectedPtrFromFromNative[i])));
+        }
+        System.out.println();
+        */
+
+        System.out.println("==========================================\n==========================================");
+
+    }
+
+    public static Unsafe getUnsafe() {
+        try {
+            Field f = Unsafe.class.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            return (Unsafe) f.get(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) throws InterruptedException, TraceException {
+        int runs = 10;
+
+        run(1_000, 10_000, runs);
+        run(2_000, 5_000, runs);
+        run(10_000, 1_000, runs);
+        run(100_000, 100, runs);
+        run(1_000_000, 10, runs);
+        run(10_000_000, 1, runs);
+
+        run(10_000_000, 1, runs);
+        run(1_000_000, 10, runs);
+        run(100_000, 100, runs);
+        run(10_000, 1_000, runs);
+        run(2_000, 5_000, runs);
+        run(1_000, 10_000, runs);
+    }
+}

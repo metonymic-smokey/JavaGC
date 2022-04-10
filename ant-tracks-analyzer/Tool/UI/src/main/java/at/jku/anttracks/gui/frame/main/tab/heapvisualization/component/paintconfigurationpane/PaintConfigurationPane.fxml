@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root collapsible="false" text="Configure" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.60"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox spacing="5.0">
+            <children>
+                <VBox>
+                    <children>
+                        <Label text="Cluster (per Pixel)"/>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Spinner fx:id="clusterSizeSpinner" prefWidth="80"/>
+                                <ComboBox fx:id="unitComboBox"/>
+                                <ComboBox fx:id="clusterLevelComboBox"/>
+                                <Button fx:id="autoButton" mnemonicParsing="false"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox>
+                    <children>
+                        <Label text="Zoom"/>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                            <children>
+                                <Label fx:id="zoomLabel" text="100%"/>
+                                <Button fx:id="zoomInButton" mnemonicParsing="false"/>
+                                <Button fx:id="zoomOutButton" mnemonicParsing="false"/>
+                                <CheckBox fx:id="showPointersCheckBox" mnemonicParsing="false" text="Show Pointers"/>
+                                <Button fx:id="resetObjectsButton" disable="true" mnemonicParsing="false" text="Reset Selection"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</fx:root>

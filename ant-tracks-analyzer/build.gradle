@@ -1,0 +1,243 @@
+group 'at.jku'
+
+allprojects {
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        compileKotlin {
+            kotlinOptions {
+                jvmTarget = '1.8'
+            }
+        }
+
+        sourceSets {
+            main {
+                kotlin {
+                    srcDirs = ['src/main/java']
+                }
+            }
+
+            test {
+                kotlin {
+                    srcDirs = ['src/test/java']
+                }
+            }
+        }
+    }
+
+    // Set main class in jar for every "Application" project
+    plugins.withType(ApplicationPlugin) {
+        task setJarMainClass { doLast {jar {manifest {attributes("Main-Class": mainClassName == null ? "" : mainClassName)}}} }
+        jar.dependsOn(setJarMainClass)
+    }
+
+    // Do not create tar files, only zip
+    plugins.withType(DistributionPlugin) {
+        distTar.enabled = false
+    }
+
+    plugins.withType(JavaPlugin) {
+        ext {
+            appVersion = project.hasProperty('appVersion') ? project.property('appVersion') : '0.0.0-unversioned'
+            kotlinVersion = '1.3.50'
+        }
+
+        sourceCompatibility = 1.8
+        group 'at.jku'
+
+        repositories {
+            mavenCentral()
+            maven {url 'https://repo1.maven.org/maven2'}
+            maven {url 'https://repo.spring.io/libs-snapshot'}
+            maven {url 'https://jitpack.io'}
+        }
+
+        dependencies {
+            // Kotlin
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.50'
+            implementation 'org.jetbrains.kotlin:kotlin-reflect:1.3.50'
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.3.50'
+            // compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.0.1'
+            implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+
+            // Datastructures
+            compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
+            compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+            //compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+            //compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+            //compile 'com.goldmansachs:gs-collections-api:7.0.0'
+            //compile 'com.goldmansachs:gs-collections:7.0.0'
+            //compile 'com.goldmansachs:gs-collections-forkjoin:7.0.0'
+            //compile 'com.koloboke:koloboke-api-jdk8:1.0.0'
+            //runtime 'com.koloboke:koloboke-impl-jdk8:1.0.0'
+            //testCompile 'com.goldmansachs:gs-collections-testutils:7.0.0'
+
+            // Graph handling
+            compile group: 'jgrapht', name: 'jgrapht', version: '0.7.3'
+            // compile group: 'org.neo4j', name: 'neo4j', version: '3.5.0-beta01'
+
+            // GUI
+            compile group: 'org.openjfx', name: 'javafx', version: '13'
+            compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+            compile group: 'org.jfree', name: 'jfreechart-fx', version: '1.0.1'
+            compile 'com.github.extjfx:extjfx:v0.0.1'
+
+            // Utilities
+            compile group: 'org.openjdk.jol', name: 'jol-core', version: '0.9'
+            compile group: 'org.javassist', name: 'javassist', version: '3.22.0-CR1'
+            compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+
+            // Performance Testing
+            compile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
+            compile group: 'org.openjdk.jmh', name: 'jmh-kotlin-benchmark-archetype', version: '1.21'
+            compile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
+
+            // Monitoring
+            compile group: 'io.micrometer', name: 'micrometer-core', version: '1.1.3'
+            compile group: 'io.micrometer', name: 'micrometer-registry-jmx', version: '1.1.3'
+            compile group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.1.3'
+            compile group: 'io.micrometer', name: 'micrometer-registry-graphite', version: '1.1.3'
+
+            // WebSocket
+            compile group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.4.0'
+
+            // Testing
+            testCompile group: 'junit', name: 'junit', version: '4.12'
+        }
+
+        sourceSets {
+            main {
+                java {
+                    srcDirs = ['src/main/java']
+                }
+                resources {
+                    srcDirs = ['src/main/java', 'src/main/resources', 'resources']
+                    excludes = ["**/*.java", '**/*.kt']
+                }
+            }
+
+            test {
+                java {
+                    srcDirs = ['src/test/java']
+                }
+                resources {
+                    srcDirs = ['src/main/java', 'src/test/java', 'src/test/resources', 'resources']
+                    excludes = ['**/*.java', '**/*.kt']
+                }
+            }
+        }
+
+        tasks.withType(JavaCompile) {
+            // options.compilerArgs << "-XDenableSunApiLintControl" << "-Xlint:all" << "-Werror" << "-Xlint:-sunapi"
+        }
+
+        // http://mrhaki.blogspot.co.at/2015/09/gradle-goodness-pass-java-system.html
+        tasks.withType(JavaExec) {
+            // Assign all Java system properties from
+            // the command line to the JavaExec task.
+            systemProperties System.properties
+        }
+
+        test {
+            ignoreFailures = true
+            reports.html.enabled = false
+
+            testLogging {
+                // Make sure output from
+                // standard out or error is shown
+                // in Gradle output.
+                showStandardStreams = true
+            }
+        }
+
+        task setClassPathInJar {
+            doLast {
+            jar {
+                manifest {
+                    attributes(
+                            // 'Class-Path': configurations.runtimeClasspath.files.collect {it.getName()}.join(' ')
+                            'Class-Path': configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.join(' ')
+                            //'Class-Path': configurations.compile.collect {it.getName()}.join(' ')
+                    )
+                }
+            }
+            }
+        }
+        jar.dependsOn(setClassPathInJar)
+        jar {
+            manifest {
+                attributes(
+                        'Version': appVersion
+                )
+            }
+            zip64 = true
+            from {
+              configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+            }
+        }
+
+        // task fatJar(type: Jar) {
+        //     classifier = 'all'
+        //     manifest {
+        //         attributes(
+        //                 'Version': appVersion
+        //         )
+        //     }
+        //     zip64 = true
+        //     from {
+        //       configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        //     }
+        //     with jar
+        // }
+
+        // task uberJar(type: Jar) {
+        //     classifier = 'uber'
+
+        //     from sourceSets.main.output
+
+        //     dependsOn configurations.runtimeClasspath
+        //     from {
+        //         configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+        //     }
+        // }
+
+        task myDistZip(type: Zip) {
+            dependsOn('assemble')
+            dependsOn('copyToLib')
+            from(project.fileTree('.').include('run*.sh').include('run*.bat').include('*.config')) {
+                //into(".")
+            }
+            from("$buildDir/libs") {
+                into("lib")
+            }
+        }
+
+        task copyToLib(type: Copy) {
+            println "copyToLib: ${project.configurations.runtime} -> $buildDir/libs"
+            into "$buildDir/libs"
+            from project.configurations.runtime
+        }
+    }
+
+    /*
+    test {
+      testResultsDir = rootProject.testResultsDir
+       //testReportDir = rootProject.testReportDir
+     }
+     */
+
+    task testReport(type: TestReport) {
+        doLast {
+            println "Test results located at $buildDir/reports/allTests"
+        }
+
+        dependsOn(subprojects.collect {it.tasks.withType(Test)})
+        destinationDir = file("$buildDir/reports/allTests")
+
+        // Include the results from the `test` task in all subprojects
+        reportOn subprojects.collect {it.tasks.withType(Test)}
+    }
+}
+

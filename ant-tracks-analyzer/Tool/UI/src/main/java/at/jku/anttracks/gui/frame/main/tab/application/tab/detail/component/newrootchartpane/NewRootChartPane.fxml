@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.chart.extjfx.chartpanes.application.ReducedAliveDeadChartPane?>
+<?import at.jku.anttracks.gui.chart.extjfx.chartpanes.application.ReducedMemoryChartPane?>
+<?import at.jku.anttracks.gui.chart.extjfx.chartpanes.application.ReducedObjectKindsChartPane?>
+<?import javafx.scene.layout.*?>
+<fx:root type="GridPane" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="50"/>
+    </rowConstraints>
+
+    <ReducedMemoryChartPane fx:id="objectsChartPane" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+
+    <ReducedMemoryChartPane fx:id="bytesChartPane" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+    <ReducedObjectKindsChartPane fx:id="objectKindsChartPane" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+
+    <ReducedAliveDeadChartPane fx:id="aliveDeadChartPane" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+</fx:root>

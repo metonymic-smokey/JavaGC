@@ -1,0 +1,12 @@
+rootProject.name = "AntTracks"
+
+//include ":Tool"
+apply from: "Tool/settings.gradle"
+project(':CallContextAnalyzer').projectDir = new File(rootDir, 'Tool/CallContextAnalyzer')
+project(':HeapSizeSelector').projectDir = new File(rootDir, 'Tool/HeapSizeSelector')
+project(':Parser').projectDir = new File(rootDir, 'Tool/Parser')
+project(':UI').projectDir = new File(rootDir, 'Tool/UI')
+project(':CLI').projectDir = new File(rootDir, 'Tool/CLI')
+
+include "WebTreeViz"
+project(':WebTreeViz').projectDir = new File(rootDir, 'WebTreeViz')

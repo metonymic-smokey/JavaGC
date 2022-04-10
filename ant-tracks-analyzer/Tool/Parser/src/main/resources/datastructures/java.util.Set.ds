@@ -1,0 +1,20 @@
+package java {
+    package util {
+        DS HashSet {
+            HashMap;
+        }
+
+        DS LinkedHashSet {
+            HashMap;
+        }
+
+        DS TreeSet {
+            TreeMap;
+        }
+
+        DS EnumSet {
+            java.lang.Class;
+            java.lang.Enum[];
+        }
+    }
+}

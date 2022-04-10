@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<fx:root type="BorderPane"
+         styleClass="action-tabbed-pane"
+         xmlns:fx="http://javafx.com/fxml/1"
+         xmlns="http://javafx.com/javafx/8.0.60">
+    <right>
+        <VBox alignment="TOP_CENTER">
+            <StackPane VBox.vgrow="ALWAYS" alignment="TOP_CENTER" maxWidth="400">
+                <BorderPane fx:id="sidebar" styleClass="right" VBox.vgrow="ALWAYS">
+                    <center>
+                        <ScrollPane fx:id="sidebarScrollPane" fitToHeight="true" fitToWidth="true">
+                            <BorderPane>
+                                <center>
+                                    <VBox styleClass="tabs">
+                                        <VBox alignment="TOP_CENTER">
+                                            <Label styleClass="header-text" text="Tabs:"/>
+                                            <Separator/>
+                                        </VBox>
+                                        <VBox fx:id="tabPanels" styleClass="tab-container"/>
+                                    </VBox>
+                                </center>
+                                <bottom>
+                                    <VBox styleClass="actions">
+                                        <VBox alignment="TOP_CENTER">
+                                            <Label styleClass="header-text" text="Actions:" alignment="TOP_CENTER"/>
+                                            <Separator/>
+                                        </VBox>
+                                        <VBox fx:id="actionPanels" styleClass="action-container"/>
+                                    </VBox>
+                                </bottom>
+                            </BorderPane>
+                        </ScrollPane>
+                    </center>
+                </BorderPane>
+                <AnchorPane prefHeight="30" maxHeight="30">
+                    <Button fx:id="collapseSidebarButton" text="&gt;" AnchorPane.topAnchor="6" AnchorPane.rightAnchor="7" AnchorPane.bottomAnchor="10"/>
+                    <Button fx:id="expandSidebarButton" text="&lt;" managed="false" visible="false" AnchorPane.topAnchor="6" AnchorPane.rightAnchor="7" AnchorPane.bottomAnchor="10"/>
+                </AnchorPane>
+            </StackPane>
+        </VBox>
+    </right>
+    <center>
+        <BorderPane styleClass="center" fx:id="centerPane">
+            <top>
+                <HBox alignment="CENTER">
+                    <VBox styleClass="header-container-idea" alignment="TOP_CENTER" minWidth="100" prefWidth="100" maxWidth="100" spacing="5">
+                        <Label text="Guidance:" styleClass="header-text"/>
+                        <ImageView fx:id="ideasIcon" pickOnBounds="true" preserveRatio="true" fitWidth="32"/>
+                        <ToggleSwitch fx:id="guidanceSwitch" selected="true" translateX="-8"/>
+                    </VBox>
+                    <VBox styleClass="header-container-desc" HBox.hgrow="ALWAYS">
+                        <HBox HBox.hgrow="ALWAYS" alignment="TOP_LEFT">
+                            <Label text="Description:" styleClass="header-text" alignment="TOP_LEFT"/>
+                        </HBox>
+                        <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                            <padding>
+                                <Insets top="2" right="2" bottom="2" left="5"/>
+                            </padding>
+                            <Label fx:id="longDescLabel" wrapText="true" styleClass="desc-text"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </top>
+        </BorderPane>
+    </center>
+</fx:root>

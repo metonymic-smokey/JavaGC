@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2014, 2015, 2016, 2017, dynatrace and/or its affiliates. All rights reserved.
+This file is part of the AntTracks Tool.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License
+along with with this work.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?import javafx.scene.control.*?>
+<fx:root type="MenuBar" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+    <menus>
+        <Menu mnemonicParsing="false" text="File">
+            <items>
+                <MenuItem fx:id="loadAntTracksTraceMenuItem" mnemonicParsing="false" text="Load AntTracks Trace..."/>
+                <MenuItem fx:id="loadHprofMenuItem" mnemonicParsing="false" text="Load HPROF File..."/>
+                <!--<MenuItem fx:id="preprocessMenuItem" mnemonicParsing="false" text="Preprocess..."/>-->
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" text="Exit"/>
+            </items>
+        </Menu>
+        <Menu fx:id="windowMenu" mnemonicParsing="false" text="Window">
+            <items>
+                <CheckMenuItem fx:id="extendedChartsMenuItem" mnemonicParsing="false" text="Display Extended Charts"/>
+                <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" text="Preferences..."/>
+            </items>
+        </Menu>
+        <Menu fx:id="applicationMenu" disable="true" mnemonicParsing="false" text="Application">
+            <items>
+                <MenuItem fx:id="redefineMenuItem" mnemonicParsing="false" text="Redefine"/>
+                <Menu mnemonicParsing="false" text="Alive / Dead Panel">
+                    <fx:define>
+                        <ToggleGroup fx:id="aliveDeadToggleGroup"/>
+                    </fx:define>
+                    <items>
+                        <RadioMenuItem fx:id="aliveDeadRelativeMenuItem" mnemonicParsing="false" selected="true" text="Relative (Default)"
+                                       toggleGroup="$aliveDeadToggleGroup"/>
+                        <RadioMenuItem fx:id="aliveDeadNObjectsMenuItem" mnemonicParsing="false" text="Objects"
+                                       toggleGroup="$aliveDeadToggleGroup"/>
+                        <RadioMenuItem fx:id="aliveDeadBytesMenuItem" mnemonicParsing="false" text="Memory"
+                                       toggleGroup="$aliveDeadToggleGroup"/>
+                    </items>
+                </Menu>
+                <CheckMenuItem fx:id="featureChartMenuItem" mnemonicParsing="false" text="Display Features"/>
+                <MenuItem fx:id="addDataStructureDefinitionFileMenuItem" mnemonicParsing="false" text="Add data structure definition"/>
+            </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <items>
+                <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About"/>
+            </items>
+        </Menu>
+    </menus>
+</fx:root>

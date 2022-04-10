@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import at.jku.anttracks.gui.chart.jfreechart.xy.stackedarea.base.StackedAreaJFreeChartPane?>
+<fx:root type="StackedAreaJFreeChartPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+</fx:root>

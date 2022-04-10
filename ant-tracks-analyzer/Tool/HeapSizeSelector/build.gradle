@@ -1,0 +1,4 @@
+apply plugin: "application"
+apply plugin: "eclipse"
+
+mainClassName = "at.jku.anttracks.heapsizeselector.Main"

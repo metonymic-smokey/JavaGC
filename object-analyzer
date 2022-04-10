@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euox pipefail
+
+# assuming gives jar file is inside /host
+jardir="/host"
+jarfilename="$1"
+logprefix="Object-Analyzer:"
+
+# remove first arg so that "$@" gives all args
+shift
+
+mkdir -p outputs/
+
+pushd outputs
+
+echo "$logprefix Running given program"
+
+mkdir -p trace_files/
+pushd trace_files
+java -XX:+TraceObjects -XX:+TraceObjectsPointers -jar "$jardir/$jarfilename" $@
+popd
+
+echo "$logprefix Got trace files. Running analyzer."
+
+tracefilepattern="trace_files/trace_*"
+# run on the largest trace file!
+firsttracefile=`ls -S $tracefilepattern | head -1`
+firsttracefilepath="$PWD/$firsttracefile"
+echo "$logprefix Running on trace file: $firsttracefilepath"
+
+popd
+
+/workdir/trace-analyzer "$firsttracefilepath"

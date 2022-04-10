@@ -1,0 +1,88 @@
+
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+import at.jku.anttracks.heap.symbols.AllocationSite;
+import at.jku.anttracks.heap.symbols.Symbols;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
+public class StackTraceLogListener extends NewObjectLogListener {
+
+    private final File file_static, file_dynamic;
+
+    private final Object lock;
+    private final Map<Integer, AtomicLong> depths;
+    private final Symbols symbols;
+
+    public StackTraceLogListener(String file, Symbols symbols) {
+        file_static = new File(file.replace("{0}", "static"));
+        file_dynamic = new File(file.replace("{0}", "dynamic"));
+        if (file_static.exists()) {
+            file_static.delete();
+        }
+        if (file_dynamic.exists()) {
+            file_dynamic.delete();
+        }
+        this.symbols = symbols;
+        lock = new Object();
+        depths = new ConcurrentHashMap<>();
+    }
+
+    public static void init(DetailedHeap heap) {
+        String log = System.getProperty("statistics.stacktrace.log");
+        if (log != null) {
+            heap.addListener(new StackTraceLogListener(log, heap.getSymbols()));
+        }
+    }
+
+    @Override
+    protected void record(ObjectInfo obj) {
+        int depth = symbols.sites.getById(obj.allocationSite.id).callSites.length;
+        AtomicLong counter = depths.get(depth);
+        if (counter == null) {
+            synchronized (lock) {
+                counter = depths.get(depth);
+                if (counter == null) {
+                    counter = new AtomicLong(0);
+                    depths.put(depth, counter);
+                }
+            }
+        }
+        counter.incrementAndGet();
+    }
+
+    @Override
+            public void close() {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(file_static))) {
+            for (AllocationSite site : symbols.sites) {
+                if (site == null) {
+                    continue;
+                }
+                out.write(String.valueOf(site.callSites.length));
+                out.write(" 1\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(file_dynamic))) {
+            for (Integer depth : depths.keySet()) {
+                long count = depths.get(depth).get();
+                out.write(String.valueOf(depth));
+                out.write(" ");
+                out.write(String.valueOf(count));
+                out.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
+}

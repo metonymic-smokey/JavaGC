@@ -1,0 +1,71 @@
+
+package at.jku.anttracks.gui.graphstream;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.stream.file.FileSinkDOT;
+
+import at.jku.anttracks.gui.component.treetable.TreeNode;
+
+public abstract class GraphstreamGraph<DATA> {
+
+	private static long c = 0;
+	private final MultiGraph graph;
+
+	public GraphstreamGraph(TreeNode<DATA> node) {
+		graph = new MultiGraph("Export of node \"" + node + "\"");
+		addNode(graph, null, node);
+	}
+
+	public MultiGraph getGraph() {
+		return graph;
+	}
+
+	public void writeToDotFile(String path) {
+		FileSinkDOT dotSink = new FileSinkDOT();
+		File f = new File(path);
+		f.delete();
+		try {
+			f.createNewFile();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try (OutputStream os = new FileOutputStream(f)) {
+			dotSink.writeAll(graph, os);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void display() {
+		graph.display();
+	}
+
+	protected abstract Node dataToNode(MultiGraph graph, TreeNode<DATA> data);
+
+	protected abstract void setEdgeAttributes(Edge edge, TreeNode<DATA> to);
+
+	private void addNode(MultiGraph graph, Node parent, TreeNode<DATA> treeNode) {
+		Node node = dataToNode(graph, treeNode);
+		if (parent != null) {
+			Edge e = graph.addEdge(String.valueOf(c++), parent.getId(), node.getId());
+			setEdgeAttributes(e, treeNode);
+		}
+		for (TreeNode<DATA> child : treeNode.getChildren()) {
+			addNode(graph, node, child);
+		}
+	}
+}

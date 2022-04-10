@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <HBox fx:id="HBox">
+        <Label fx:id="textLabel"/>
+    </HBox>
+    <TitledPane fx:id="additionalTextPane" text="" expanded="false">
+        <Label fx:id="additionalTextLabel"/>
+    </TitledPane>
+</fx:root>

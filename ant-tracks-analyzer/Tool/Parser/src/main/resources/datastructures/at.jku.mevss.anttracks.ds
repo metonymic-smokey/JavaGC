@@ -1,0 +1,143 @@
+namespace at.jku.mevss.anttracks {
+    namespace callcontext {
+        DS CallContextAnalyzer {
+            *Set*;
+            *Map*;
+        }
+
+        DS namespace util {
+            SetMultimap {
+                *;
+            }
+        }
+    }
+
+    namespace features {
+        DS FeatureMapCache {
+            *.Symbols;
+            *Map*;
+        }
+
+        DS FeatureMap {
+            *;
+        }
+
+        Feature {
+            *;
+        }
+    }
+
+    namespace heap {
+        DS DetailedHeap {
+            *.Symbols;
+            *.ObjectInfoCache;
+            *.Space[];
+            *Map*;
+            *List*;
+            *Statistics;
+            *Logger;
+        }
+
+        namespace labs {
+            DS SingleObjectLab {
+                *;
+            }
+
+            DS MultiObjectLab {
+                *;
+            }
+        }
+
+        namespace objects {
+            DS ObjectInfoCache {
+                *Map*;
+            }
+
+            DS ObjectInfo {
+                *;
+            }
+        }
+
+        namespace space {
+            DS Space {
+                *.SpaceInfo;
+                *.SpaceImpl;
+                *Map*;
+            }
+
+            DS SpaceImpl {
+                *Map*;
+            }
+        }
+
+        namespace statistics {
+            DS Statistics {
+                *.SpaceStatistics;
+            }
+
+            SpaceStatistics {
+                *;
+            }
+        }
+
+        namespace symbols {
+            DS Symbols {
+                java.lang.String;
+                int[];
+                *Map*;
+                *Set*;
+
+                *.GarbageCollectionCauses;
+                *.AllocationSites;
+                *.AllocatedTypes;
+                *.FeatureMap;
+                *.FeatureMapCache;
+                *.CallContextAnalyzer;
+                *.IntBooleanMap;
+                *.LongAdder;
+            }
+
+            DS AllocationSites {
+                *;
+            }
+
+            AllocationSite {
+                *;
+            }
+
+            DS AllocatedTypes {
+                *;
+            }
+
+            AllocatedType {
+                *;
+            }
+
+            AllocatedType$FieldInfo {
+                *;
+            }
+
+            AllocatedType$MethodInfo {
+                *;
+            }
+        }
+    }
+
+    namespace util {
+        DS IntBooleanMap {
+            *;
+        }
+
+        DS ApplicationStatistics {
+            *Map*;
+        }
+
+        ApplicationStatistics$Measurement {
+            *String*;
+        }
+
+        ApplicationStatistics$MeasurementGroup {
+            *;
+        }
+    }
+}

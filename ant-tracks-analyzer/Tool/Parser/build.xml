@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="Build" basedir=".">
+
+	<property name="buildfile" value="build.xml" />
+
+	<!--
+	
+	Author: Dipl.-Ing. Philipp Lengauer, BSc
+	Bugreports to p.lengauer@gmail.com
+	
+	readme:
+	-> copy this buildfile in the designated workspace
+	-> fill out the next 4 property values
+	-> run "ant Prepare"
+	-> put the used libraries in the directory "lib"
+	-> put the used files (like config files) in the directory "resources"
+	-> create and develop your source files in the directory "src"
+	-> run "ant Build" or "ant" to build your project
+	-> run "ant Run" to run it in debug mode (assertions enabled)
+	-> run "ant Clean" to clean up your workspace
+	
+	-->
+
+	<property name="projectname" value="AntTracks" />
+	<!-- enter the project name here -->
+	<property name="mainclass" value="at.jku.anttracks.parser.main.Main" />
+	<!-- enter the full classname with the main method here or leave empty if no such class exists -->
+	<property name="junittestregex" value="*Test" />
+	<!-- enter a regular expression of the names of all junit test classes here -->
+
+	<!-- directories for sourcefiles(srcdir), libraries(libdir) and non-code files(filedir) -->
+	<property name="srcdir" value="src" />
+	<property name="libdir" value="lib" />
+	<property name="resdir" value="resources" />
+	<property name="testdir" value="test" />
+	<property name="testlibdir" value="${testdir}/lib"/>
+
+	<!-- directories for .class files(bindir) und other created files(builddir)-->
+	<property name="builddir" value="build" />
+	<property name="bindir" value="${builddir}/bin" />
+	<property name="docdir" value="${builddir}/doc" />
+
+	<!-- names for created files -->
+	<property name="jarname" value="${projectname}.jar" />
+	<property name="testjarname" value="${projectname}TestSuite.jar" />
+	<property name="zipname" value="${projectname}-bin.zip" />
+	<property name="srczipname" value="${projectname}-src.zip" />
+
+	<!-- compile classpath definition -->
+	<fileset id="libraries" dir="${libdir}">
+		<include name="*.jar" />
+		<include name="*.zip" />
+	</fileset>
+	<fileset id="testlibraries" dir="${testlibdir}">
+		<include name="*.jar" />
+		<include name="*.zip" />
+	</fileset>
+	<path id="classpath">
+		<fileset refid="libraries" />
+		<fileset refid="testlibraries" />
+	</path>
+
+	<!-- target to clean up -->
+
+	<target name="Clean">
+		<delete dir="${builddir}" />
+		<delete>
+			<fileset dir="${srcdir}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<!-- target to prepare the workspace -->
+
+	<target name="Prepare">
+		<mkdir dir="${srcdir}" />
+		<mkdir dir="${resdir}" />
+		<mkdir dir="${libdir}" />
+		<mkdir dir="${testdir}" />
+		<mkdir dir="${testlibdir}" />
+	</target>
+
+	<!-- target to build the project -->
+
+	<target name="Build">
+		<mkdir dir="${builddir}" />
+		<antcall target="BuildSourceZip" />
+		<antcall target="BuildZip" />
+	</target>
+
+	<target name="BuildJavaDoc">
+		<mkdir dir="${docdir}" />
+		<javadoc sourcepath="${srcdir}" destdir="${docdir}" classpathref="classpath" access="protected" Version="true" Author="true" />
+	</target>
+
+	<target name="BuildSourceZip">
+		<zip destfile="${builddir}/${srczipname}">
+			<zipfileset dir="${srcdir}" prefix="${srcdir}" filemode="666" />
+			<zipfileset dir="${resdir}" prefix="${resdir}" filemode="666" />
+			<zipfileset dir="${libdir}" prefix="${libdir}" filemode="666" />
+			<zipfileset dir="${testdir}" prefix="${testdir}" filemode="666" />
+			<zipfileset dir="." includes="*.*" excludes="*.log.* .*"/>
+		</zip>
+	</target>
+
+	<target name="Compile">
+		<mkdir dir="${bindir}" />
+		<!-- Source files -->
+		<javac srcdir="${srcdir}" destdir="${bindir}" classpathref="classpath" listfiles="yes" fork="true" encoding="UTF-8" includeAntRuntime="true" debug="true" debuglevel="lines,vars,source">
+			<compilerarg value="-Xlint:all,-auxiliaryclass"/>
+			<compilerarg value="-Werror"/>
+		</javac>
+		<!-- Test files -->
+		<javac srcdir="${testdir}" destdir="${bindir}" classpathref="classpath" listfiles="yes" fork="true" encoding="UTF-8" includeAntRuntime="true" debug="true" debuglevel="lines,vars,source">
+			<!--<compilerarg value="-Xlint:all"/>-->
+			<compilerarg value="-Werror"/>
+		</javac>
+	</target>
+
+	<target name="RunAllTests" depends="Compile">
+		<!--
+		<junit showoutput="yes" printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="yes">
+			<classpath>
+				<fileset refid="libraries" />
+				<fileset refid="testlibraries" />
+				<pathelement path="${bindir}" />
+			</classpath>
+			<batchtest haltonerror="yes" haltonfailure="yes" fork="yes">
+				<fileset dir="${bindir}">
+					<include name="**/${junittestregex}.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		-->
+	</target>
+
+	<target name="BuildJar" depends="RunAllTests">
+		<!-- Source -->
+		<property name="liblocation" location="${libdir}" />
+		<pathconvert property="jarclasspathstring" pathsep=" ">
+			<path>
+				<fileset dir="${liblocation}">
+					<include name="*.jar" />
+				</fileset>
+			</path>
+			<map from="${liblocation}" to="." />
+		</pathconvert>
+		<jar destfile="${builddir}/${jarname}" basedir="${bindir}" excludes="**/${junittestregex}.class" update="true" level="9" index="false" filesOnly="true">
+			<manifest>
+				<attribute name="Main-Class" value="${mainclass}" />
+				<attribute name="Class-Path" value="${jarclasspathstring}" />
+			</manifest>
+		</jar>
+
+		<!-- Tests -->
+		<property name="testliblocation" location="${testlibdir}" />
+		<pathconvert property="testjarclasspathstring" pathsep=" ">
+			<path>
+				<fileset dir="${liblocation}">
+					<include name="*.jar" />
+				</fileset>
+				<!--
+				<fileset dir="${testliblocation}">
+					<include name="*.jar" />
+				</fileset>
+				-->
+			</path>
+			<map from="${liblocation}" to="." />
+			<map from="${testliblocation}" to="." />
+		</pathconvert>
+		<jar destfile="${builddir}/${testjarname}" basedir="${bindir}" includes="**/${junittestregex}.class" update="true" level="9" index="false" filesOnly="true">
+			<manifest>
+				<attribute name="Class-Path" value="${testjarclasspathstring}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="BuildZip" depends="BuildJar">
+		<zip destfile="${builddir}/${zipname}">
+			<zipfileset file="${builddir}/${jarname}" filemode="666" />
+			<zipfileset file="${builddir}/${testjarname}" filemode="666" />
+			<zipfileset dir="${resdir}" prefix="${resdir}" filemode="666" />
+			<zipfileset dir="${libdir}" prefix="" filemode="666" />
+			<zipfileset dir="${testlibdir}" prefix="" filemode="666" />
+			<zipfileset dir="." includes="*.*" excludes="build.xml *.log.* .*"/>
+		</zip>
+	</target>
+
+	<!-- target to run the project -->
+
+	<target name="Run" depends="Compile">
+		<java classname="${mainclass}" fork="true">
+			<classpath>
+				<fileset refid="libraries" />
+				<pathelement path="${bindir}" />
+			</classpath>
+			<assertions enablesystemassertions="yes">
+				<enable />
+			</assertions>
+		</java>
+	</target>
+
+</project>

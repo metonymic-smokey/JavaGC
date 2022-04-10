@@ -1,0 +1,8 @@
+Package: anttracks-vm-jre
+Architecture: amd64
+Maintainer: Markus Weninger <markus.weninger@jku.at>
+Depends: openjdk-8-jdk, openjfx, libpng16-16
+Suggests: anttracks-tool
+Priority: optional
+Version: VERSION
+Description: An awesome memory monitoring tool for Java.

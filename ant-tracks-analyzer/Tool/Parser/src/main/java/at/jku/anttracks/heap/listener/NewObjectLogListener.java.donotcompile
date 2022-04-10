@@ -1,0 +1,85 @@
+
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.*;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+import at.jku.anttracks.heap.space.Space;
+import at.jku.anttracks.parser.ParsingInfo;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public abstract class NewObjectLogListener implements HeapListener {
+
+    private final Map<Space, Long> fills;
+
+    {
+        fills = new HashMap<>();
+    }
+
+    @Override
+    public void phaseChanging(GarbageCollectionType from,
+                              GarbageCollectionType to,
+                              GarbageCollectionCause cause,
+                              boolean concurrent,
+                              boolean failed,
+                              long time,
+                              long position,
+                              ParsingInfo parsingInfo,
+                              boolean withinSelectedTimeWindow) {
+        if (from == GarbageCollectionType.MUTATOR) {
+            ExecutorService threadPool = Executors.newCachedThreadPool();
+            for (Space space : heap.getSpacesCloned()) {
+                if (space == null) {
+                    continue;
+                }
+                final Long first_addr = fills.get(space);
+                space.iterate(
+                        heap,
+                        (address, objectInfo, spaze, type, size, isArray, arrayLength, allocationSite, pointedFrom, pointsTo, eventType, rootPtrs, age) -> {
+                            if (first_addr != null && address < first_addr) {
+                                return;
+                            }
+                            record(objectInfo);
+                        },
+                        ObjectVisitor.Settings.NO_INFOS,
+                        null,
+                        true,
+                        threadPool,
+                        null);
+            }
+            try {
+                threadPool.shutdown();
+                threadPool.awaitTermination(0, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    protected abstract void record(ObjectInfo obj);
+
+    @Override
+    public void phaseChanged(GarbageCollectionType from,
+                             GarbageCollectionType to,
+                             GarbageCollectionCause cause,
+                             boolean concurrent,
+                             boolean failed,
+                             long time,
+                             long position,
+                             ParsingInfo parsingInfo,
+                             boolean withinSelectedTimeWindow) {
+        if (to == GarbageCollectionType.MUTATOR) {
+            fills.clear();
+            for (Space space : heap.getSpacesCloned()) {
+                if (space == null) {
+                    continue;
+                }
+                fills.put(space, space.getFill());
+            }
+        }
+    }
+}

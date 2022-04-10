@@ -1,0 +1,80 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
+plugins {
+    id 'application'
+    id 'java'
+    id "org.jetbrains.kotlin.jvm" version "1.3.50"
+}
+
+mainClassName = "at.jku.anttracks.gui.frame.main.GUILauncher"
+
+dependencies {
+    compile project(':CallContextAnalyzer')
+    compile project(':Parser')
+    compile project(':HeapSizeSelector')
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:1.3.50"
+    // testCompile project(':Examples')
+}
+
+task copyTreeVizPage(type: Copy) {
+    println "copyTreeVizPage: ${project(':WebTreeViz').projectDir}\\dist -> ${sourceSets.main.output.resourcesDir}\\treeViz"
+    from "${project(':WebTreeViz').projectDir}\\dist"
+    into file("${sourceSets.main.output.resourcesDir}\\treeViz")
+}
+jar.dependsOn(copyTreeVizPage)
+assemble.dependsOn(copyTreeVizPage)
+
+task myDistDeb(type: Exec) {
+    dependsOn('myDistZip')
+    workingDir = project.projectDir
+    executable "bash"
+    args "-c",
+         (project.projectDir.getAbsolutePath().replace('\\', '/') + '/package_linux.sh' + ' ' + appVersion + ' ' + project.projectDir.getAbsolutePath().
+                 replace('\\', '/'))
+}
+
+task myDistExe(type: Exec) {
+    dependsOn('myDistZip')
+    workingDir = project.projectDir
+    executable "bash"
+    args "-c",
+         (project.projectDir.getAbsolutePath().replace('\\', '/') + '/package_windows.sh' + ' ' + appVersion + ' ' + project.projectDir.getAbsolutePath().
+                 replace('\\', '/'))
+}
+
+// https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html
+task runEa(type: JavaExec) {
+    test
+    jvmArgs = ["-Xmx16G", "-XX:+UseG1GC"]
+
+    enableAssertions = true
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+}
+
+task runWithoutEa(type: JavaExec) {
+    jvmArgs = ["-Xmx16G", "-XX:+UseG1GC"]
+    enableAssertions = false
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+}
+
+def tracingJavaPath = Files.exists(Paths.get(rootProject.projectDir.getAbsolutePath(), "/Testing/VM/bin/java")) ?
+                      Paths.get(rootProject.projectDir.getAbsolutePath(), "/Testing/VM/bin/java") :
+                      Paths.get(rootProject.projectDir.getAbsolutePath(), "/Testing/VM/bin/java.exe")
+
+task runWithAntTracksTraceObjects(type: Exec) {
+    dependsOn('myDistZip')
+    workingDir = rootProject.projectDir
+    executable = tracingJavaPath
+    args = ["-Xmx4G", "-XX:+TraceObjects", "-XX:-TraceObjectsCompressTraceAdaptively", "-jar", jar.archivePath] // The arguments passed to the executable.
+}
+
+task runWithAntTracksTraceObjectsPointers(type: Exec) {
+    dependsOn('myDistZip')
+    workingDir = rootProject.projectDir
+    executable = tracingJavaPath
+    args = ["-Xmx4G", "-XX:+TraceObjectsPointers", "-XX:-TraceObjectsCompressTraceAdaptively", "-jar", jar.archivePath]  // The arguments passed to the executable.
+}

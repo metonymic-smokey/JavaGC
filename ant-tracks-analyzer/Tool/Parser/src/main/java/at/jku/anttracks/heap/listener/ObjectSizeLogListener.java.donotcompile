@@ -1,0 +1,74 @@
+
+package at.jku.anttracks.heap.listener;
+
+import at.jku.anttracks.heap.DetailedHeap;
+import at.jku.anttracks.heap.objects.ObjectInfo;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
+public class ObjectSizeLogListener extends NewObjectLogListener {
+
+    private final File file;
+
+    private final Object lock;
+    private final Map<Integer, AtomicLong> sizes;
+
+    public ObjectSizeLogListener(File file) {
+        this.file = file;
+        if (file.exists()) {
+            file.delete();
+        }
+        lock = new Object();
+        sizes = new ConcurrentHashMap<>();
+    }
+
+    public static void init(DetailedHeap heap) {
+        String log = System.getProperty("statistics.objectsize.log");
+        if (log != null) {
+            heap.addListener(new ObjectSizeLogListener(new File(log)));
+        }
+    }
+
+    @Override
+    protected void record(ObjectInfo obj) {
+        record(obj.size);
+    }
+
+    private void record(int size) {
+        AtomicLong counter = sizes.get(size);
+        if (counter == null) {
+            synchronized (lock) {
+                counter = sizes.get(size);
+                if (counter == null) {
+                    counter = new AtomicLong(0);
+                    sizes.put(size, counter);
+                }
+            }
+        }
+        counter.incrementAndGet();
+    }
+
+    @Override
+            public void close() {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+            for (Integer size : sizes.keySet()) {
+                long count = sizes.get(size).get();
+                if (count == 0) {
+                    continue;
+                }
+                out.write(String.valueOf(size));
+                out.write(" ");
+                out.write(String.valueOf(count));
+                out.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+        }
+    }
+}
