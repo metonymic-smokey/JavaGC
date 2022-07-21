@@ -6,7 +6,7 @@
 
 The Object Analyzer runs a given Java program in a modified JVM ([AntTracks JVM](./ant-tracks-jvm/)) that collects profiling information for every single object that was allocated and details of every garbage collection event. The JVM writes this information to highly compressed trace files which are read by the [Analyzer](./ant-tracks-analyzer) and converted to Parquet files. The processed file is used to generate a few visualizations using the [analysis scripts](./analysis).
 
-More details can be found in the paper titled "Analysis of Garbage Collection Patterns to Extend Microbenchmarks for Big Data Workloads" (TODO: the ACM digital library link will be provided here once published.).
+More details can be found in the paper titled ["Analysis of Garbage Collection Patterns to Extend Microbenchmarks for Big Data Workloads"](https://dl.acm.org/doi/10.1145/3491204.3527473).
 
 ## Usage
 
@@ -59,6 +59,29 @@ The output directory structure is similar to [Running on a JAR file](#running-on
 - Only Java 8 applications (or compiled JARs targeted for Java 8 compatibility) are supported. See the [sample program](./sample-program) for an example on how to configure Gradle to target Java 8 even if a higher Java version is used for compilation.
     - This is due to a limitation in AntTracks JVM since it's a modified Java 8 JVM.
     - The analysis scripts are agnostic of the data source and only expect the data in a particular format. If it's possible to get the same data through another source that supports newer JVMs (perhaps something like [vmtrace](./vmtrace)), the same lifetime analysis can be performed.
+
+## Citing
+
+If you find this work useful, please cite our work - [Analysis of Garbage Collection Patterns to Extend Microbenchmarks for Big Data Workloads](https://dl.acm.org/doi/10.1145/3491204.3527473). A BibTeX is given below:
+```bibtex
+@inproceedings{10.1145/3491204.3527473,
+author = {Sarnayak, Samyak S. and Ahuja, Aditi and Kesavarapu, Pranav and Naik, Aayush and Kumar V., Santhosh and Kalambur, Subramaniam},
+title = {Analysis of Garbage Collection Patterns to Extend Microbenchmarks for Big Data Workloads},
+year = {2022},
+isbn = {9781450391597},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3491204.3527473},
+doi = {10.1145/3491204.3527473},
+abstract = {Java uses automatic memory allocation where the user does not have to explicitly free used memory. This is done by the garbage collector. Garbage Collection (GC) can take up a significant amount of time, especially in Big Data applications running large workloads where garbage collection can take up to 50 percent of the application's run time. Although benchmarks have been designed to trace garbage collection events, these are not specifically suited for Big Data workloads, due to their unique memory usage patterns. We have developed a free and open source pipeline to extract and analyze object-level details from any Java program including benchmarks and Big Data applications such as Hadoop. The data contains information such as lifetime, class and allocation site of every object allocated by the program. Through the analysis of this data, we propose a small set of benchmarks designed to emulate some of the patterns observed in Big Data applications. These benchmarks also allow us to experiment and compare some Java programming patterns.},
+booktitle = {Companion of the 2022 ACM/SPEC International Conference on Performance Engineering},
+pages = {121–128},
+numpages = {8},
+keywords = {big data, java, java virtual machine, garbage collection, hadoop},
+location = {Bejing, China},
+series = {ICPE '22}
+}
+```
 
 ## License
 
